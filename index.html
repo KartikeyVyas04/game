@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,7 @@
     <title>iSEC Executive Boardroom | Venture Term Sheet Simulation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
@@ -29,54 +29,42 @@
             background: #05070b; color: var(--text-main);
         }
 
+        /* Scrollbar styling for internal panels */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
+
         /* 3D BOARDROOM WORLD */
         #world {
             position: absolute; inset: 0; perspective: 1200px;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-
         #room {
-            width: 100vw; height: 100vh; position: absolute;
-            transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100vw; height: 100vh; position: absolute; transform-style: preserve-3d;
         }
-
-        /* Ambient Boardroom Elements */
         .skyline {
             position: absolute; top: 0; left: 0; width: 100%; height: 55%;
             background: linear-gradient(to bottom, #020617 0%, #0f172a 70%, #1e1b4b 100%);
-            display: flex; justify-content: space-around; align-items: flex-end; opacity: 0.6;
-            filter: blur(1px);
+            display: flex; justify-content: space-around; align-items: flex-end; opacity: 0.6; filter: blur(1px);
         }
         .window-frame {
-            position: absolute; top: 0; left: 0; width: 100%; height: 55%;
-            border-bottom: 8px solid #0f172a;
+            position: absolute; top: 0; left: 0; width: 100%; height: 55%; border-bottom: 8px solid #0f172a;
             box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
             background: repeating-linear-gradient(90deg, transparent 0, transparent calc(25% - 6px), #0b1120 calc(25% - 6px), #0b1120 25%);
         }
-
-        /* 3D Boardroom Table */
         .table-surface {
             position: absolute; bottom: -120px; left: -10%; width: 120%; height: 60%;
             background: radial-gradient(ellipse at 50% 0%, var(--wood-light) 0%, var(--wood-dark) 60%, var(--dark-leather) 100%);
             transform: rotateX(68deg);
             box-shadow: inset 0 20px 80px rgba(0,0,0,0.9), 0 -20px 100px rgba(212, 175, 55, 0.08);
-            border-top: 3px solid rgba(212, 175, 55, 0.4);
-            border-radius: 50% 50% 0 0 / 20% 20% 0 0;
-        }
-        .table-reflection {
-            position: absolute; inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%);
-            pointer-events: none;
+            border-top: 3px solid rgba(212, 175, 55, 0.4); border-radius: 50% 50% 0 0 / 20% 20% 0 0;
         }
 
-        /* Founder 3D Presence */
+        /* Founder */
         #founder-avatar {
-            position: absolute; top: 22%; left: 50%;
-            transform: translateX(-50%) translateZ(-150px);
+            position: absolute; top: 22%; left: 50%; transform: translateX(-50%) translateZ(-150px);
             display: flex; flex-direction: column; align-items: center;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .avatar-card {
             width: 170px; height: 170px; border-radius: 50%;
@@ -84,217 +72,143 @@
             border: 3px solid var(--gold);
             box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(16, 185, 129, 0.3);
             display: flex; align-items: center; justify-content: center;
-            position: relative; animation: founderBreathe 4s ease-in-out infinite;
+            animation: founderBreathe 4s ease-in-out infinite;
         }
-        @keyframes founderBreathe {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-8px) scale(1.02); }
-        }
+        @keyframes founderBreathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.02); } }
         .founder-tag {
             margin-top: 14px; padding: 6px 18px; border-radius: 20px;
             background: rgba(15, 23, 42, 0.9); border: 1px solid var(--gold);
-            font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px;
-            color: var(--gold-light); text-transform: uppercase;
+            font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px; color: var(--gold-light);
         }
 
         /* HUD Header */
         #executive-hud {
             position: absolute; top: 0; left: 0; width: 100%; height: 75px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 40px; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 40px; z-index: 100;
             background: linear-gradient(180deg, rgba(5,7,11,0.95) 0%, transparent 100%);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .hud-brand {
-            font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 900;
-            letter-spacing: 3px; color: var(--gold); display: flex; align-items: center; gap: 12px;
-        }
+        .hud-brand { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 900; color: var(--gold); display: flex; align-items: center; gap: 12px; }
         .hud-stats { display: flex; gap: 30px; }
-        .hud-item {
-            background: rgba(255,255,255,0.03); padding: 8px 18px;
-            border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);
-            font-size: 0.85rem; letter-spacing: 1px;
-        }
+        .hud-item { background: rgba(255,255,255,0.03); padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; }
         .hud-item span { color: var(--gold-light); font-weight: 700; font-size: 1rem; }
 
-        /* Speech/Dialogue Terminal */
+        /* Speech Terminal */
         #dialogue-terminal {
-            position: absolute; bottom: 35%; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 780px; z-index: 50;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 16px;
-            padding: 24px 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            text-align: center; transition: all 0.5s ease;
+            position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 800px; z-index: 50;
+            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 24px 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); text-align: center;
         }
-        #dialogue-text {
-            font-size: 1.25rem; font-weight: 400; line-height: 1.6;
-            color: #f1f5f9; min-height: 50px;
-        }
+        #dialogue-text { font-size: 1.25rem; line-height: 1.6; color: #f1f5f9; min-height: 50px; margin-bottom: 20px;}
+        
         .cta-btn {
-            margin-top: 18px; padding: 12px 36px;
-            font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase;
-            background: linear-gradient(135deg, var(--gold) 0%, #997b19 100%);
+            padding: 12px 24px; font-family: 'Cinzel', serif; font-size: 0.90rem; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(135deg, var(--gold) 0%, #997b19 100%);
             color: #05070b; border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-            transition: all 0.25s ease;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35); transition: all 0.25s ease; margin: 0 5px;
         }
-        .cta-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
-            background: linear-gradient(135deg, #fae084 0%, var(--gold) 100%);
-        }
+        .cta-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6); }
+        .cta-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+        .cta-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+        .cta-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
 
-        /* INTERACTION PANELS (3D Modals) */
+        /* INTERACTION PANELS */
         .stage-panel {
-            position: absolute; inset: 0; z-index: 80;
-            display: none; align-items: center; justify-content: center;
-            background: rgba(2, 6, 23, 0.75); backdrop-filter: blur(8px);
-            opacity: 0; transition: opacity 0.4s ease;
+            position: absolute; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center;
+            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s ease;
         }
         .stage-panel.active { display: flex; opacity: 1; }
 
-        /* 1. DOSSIER / DUE DILIGENCE */
-        .dossier-box {
-            width: 900px; max-height: 85vh; background: #0f172a;
-            border: 1px solid var(--gold); border-radius: 14px;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.9); display: flex; flex-direction: column;
-            overflow: hidden; animation: slideUp3D 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        /* MODAL CONTAINERS */
+        .modal-box {
+            width: 95vw; max-width: 1000px; height: 88vh; background: #0f172a;
+            border: 1px solid var(--gold); border-radius: 14px; display: flex; flex-direction: column;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.9); animation: slideUp3D 0.4s ease;
         }
-        @keyframes slideUp3D {
-            from { transform: translateY(60px) scale(0.95); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        @keyframes slideUp3D { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-header {
+            padding: 20px 30px; background: rgba(212, 175, 55, 0.08); border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
         }
-        .dossier-header {
-            padding: 20px 30px; background: rgba(212, 175, 55, 0.08);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .dossier-grid {
-            padding: 25px 30px; display: grid; grid-template-columns: 1fr 1fr;
-            gap: 14px; overflow-y: auto; max-height: 55vh;
-        }
+        .modal-body { padding: 25px 30px; overflow-y: auto; flex-grow: 1; }
+        .modal-footer { padding: 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); text-align: right; flex-shrink: 0; }
+
+        /* DOSSIER (Questions) */
+        .category-header { font-family: 'Cinzel', serif; color: var(--gold-light); margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-size: 1.1rem; }
+        .category-header:first-child { margin-top: 0; }
+        .dossier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 14px; }
         .q-card {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px; padding: 16px; cursor: pointer; text-align: left;
-            transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between;
+            border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s ease;
         }
-        .q-card:hover:not(.locked) {
-            border-color: var(--gold); background: rgba(212, 175, 55, 0.06);
-            transform: translateY(-2px);
-        }
-        .q-card.locked { opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.05); }
-        .q-card.investigated { border-color: var(--emerald); background: rgba(16, 185, 129, 0.08); }
-        .q-badge {
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1px; color: var(--gold); margin-bottom: 8px;
-        }
+        .q-card:hover:not(.locked):not(.investigated) { border-color: var(--gold); background: rgba(212, 175, 55, 0.06); transform: translateY(-2px); }
+        .q-card.locked { opacity: 0.4; cursor: not-allowed; }
+        .q-card.investigated { border-color: var(--emerald); background: rgba(16, 185, 129, 0.08); cursor: default; }
 
-        /* 2. REALISTIC BANK CHEQUE & CLAUSES */
-        .cheque-desk {
-            width: 950px; background: #0b1120; border: 1px solid var(--glass-border);
-            border-radius: 18px; padding: 35px; box-shadow: 0 35px 100px rgba(0,0,0,0.95);
-            animation: slideUp3D 0.5s ease;
+        /* HISTORY PANEL */
+        .history-item {
+            background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--emerald);
+            padding: 15px 20px; margin-bottom: 15px; border-radius: 0 8px 8px 0;
         }
+        .history-q { font-weight: bold; color: var(--gold-light); margin-bottom: 8px; font-size: 0.95rem;}
+        .history-a { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; font-style: italic;}
+
+        /* CHEQUE DESK */
         .bank-cheque {
             background: linear-gradient(135deg, #fef9e7 0%, #f9e79f 40%, #fcf3cf 100%);
             color: #1a1a1a; border-radius: 10px; padding: 25px 30px; position: relative;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(212, 175, 55, 0.2);
-            border: 2px solid #b7950b; font-family: 'Special Elite', monospace;
-            overflow: hidden; margin-bottom: 25px;
+            border: 2px solid #b7950b; font-family: 'Special Elite', monospace; overflow: hidden; margin-bottom: 25px;
         }
-        .cheque-watermark {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
-            font-family: 'Cinzel', serif; font-size: 4.5rem; font-weight: 900;
-            color: rgba(183, 149, 11, 0.08); pointer-events: none; white-space: nowrap;
-        }
-        .cheque-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .cheque-bank-title { font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: #5b4606; }
+        .cheque-top { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .cheque-row { display: flex; align-items: center; margin-bottom: 16px; border-bottom: 1px dashed #7d6608; padding-bottom: 4px; }
-        .cheque-label { font-size: 0.85rem; font-weight: bold; width: 80px; text-transform: uppercase; color: #7d6608; }
+        .cheque-label { font-size: 0.85rem; font-weight: bold; width: 80px; color: #7d6608; }
         .cheque-val-written { flex: 1; font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: #0a192f; padding-left: 10px; }
-        .cheque-box {
-            border: 2px solid #7d6608; background: #fffdf2; padding: 6px 16px;
-            font-size: 1.3rem; font-weight: bold; font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #0b1120; border-radius: 4px; letter-spacing: 1px;
-        }
-        .cheque-sig-zone {
-            display: flex; justify-content: flex-end; align-items: flex-end; margin-top: 15px; position: relative;
-        }
-        .signature-line {
-            width: 240px; border-top: 1px solid #7d6608; text-align: center;
-            font-size: 0.75rem; text-transform: uppercase; padding-top: 4px;
-        }
-        .animated-pen-sig {
-            position: absolute; right: 40px; bottom: 15px;
-            font-family: 'Great Vibes', cursive; font-size: 2.4rem; color: #0f2b5c;
-            opacity: 0; transform: scale(0.8); transition: all 0.8s ease;
-        }
-        .animated-pen-sig.signed { opacity: 1; transform: scale(1); }
-
-        /* Term Sliders */
+        .cheque-box { border: 2px solid #7d6608; background: #fffdf2; padding: 6px 16px; font-size: 1.3rem; font-weight: bold; font-family: 'Plus Jakarta Sans', sans-serif; color: #0b1120; }
         .controls-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 20px; }
         .term-group { background: rgba(255,255,255,0.03); padding: 16px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); }
-        .term-label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 10px; }
-        .term-slider {
-            width: 100%; height: 6px; border-radius: 3px; background: #1e293b;
-            outline: none; accent-color: var(--gold); cursor: pointer;
-        }
+        .term-slider { width: 100%; height: 6px; border-radius: 3px; background: #1e293b; outline: none; accent-color: var(--gold); cursor: pointer; margin-top: 10px;}
 
-        /* 3. DRAFTING THE LEGAL INVESTMENT MEMO */
-        .memo-desk {
-            width: 900px; background: #0f172a; border: 1px solid var(--gold);
-            border-radius: 16px; padding: 35px; box-shadow: 0 35px 100px rgba(0,0,0,0.95);
-            display: flex; flex-direction: column; animation: slideUp3D 0.5s ease;
+        /* CHIPS GRID */
+        .chips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .chip-btn {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+            color: #e2e8f0; padding: 12px; border-radius: 8px; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.2s; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 60px;
         }
+        .chip-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
+        .chip-btn.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.25); color: var(--gold-light); box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2); }
+
+        /* MEMO GRID */
+        .memo-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .memo-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1; padding: 14px 18px; border-radius: 8px; font-size: 0.85rem;
+            cursor: pointer; text-align: left; transition: 0.2s;
+        }
+        .memo-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .memo-btn.selected { border-left: 4px solid var(--gold); background: rgba(212, 175, 55, 0.15); color: white;}
+
+        /* PARCHMENT */
         .parchment-sheet {
-            background: #fffdf5; color: #1e293b; border-radius: 8px; padding: 25px 30px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1), 0 10px 30px rgba(0,0,0,0.5);
-            font-family: 'Special Elite', monospace; position: relative; margin-bottom: 20px;
-            min-height: 200px; border-left: 6px solid var(--gold);
-        }
-        .parchment-header {
-            text-align: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;
-            margin-bottom: 15px; font-family: 'Cinzel', serif; font-weight: 700; color: #0f172a;
-        }
-        .memo-clause-item {
-            padding: 8px 12px; margin-bottom: 8px; background: rgba(0,0,0,0.03);
-            border-left: 3px solid #64748b; font-size: 0.95rem; animation: typeClause 0.4s ease forwards;
-        }
-        @keyframes typeClause {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            background: #fffdf5; color: #1e293b; border-radius: 8px; padding: 25px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1); font-family: 'Special Elite', monospace;
+            margin-bottom: 25px; min-height: 120px; border-left: 6px solid var(--gold);
         }
         .stamp-mark {
-            position: absolute; bottom: 20px; right: 30px;
-            border: 4px double var(--crimson); color: var(--crimson);
-            font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 900;
-            padding: 6px 20px; text-transform: uppercase; letter-spacing: 3px;
-            transform: rotate(-12deg) scale(2); opacity: 0; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            position: absolute; bottom: 30px; right: 40px; border: 4px double var(--crimson); color: var(--crimson);
+            font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 900; padding: 8px 24px;
+            transform: rotate(-15deg) scale(2); opacity: 0; transition: all 0.3s; pointer-events: none;
         }
-        .stamp-mark.stamped { opacity: 0.85; transform: rotate(-12deg) scale(1); }
+        .stamp-mark.stamped { opacity: 0.85; transform: rotate(-15deg) scale(1); }
 
-        .memo-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .memo-btn {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-            color: #e2e8f0; padding: 12px 16px; border-radius: 8px; font-size: 0.85rem;
-            text-align: left; cursor: pointer; transition: all 0.2s;
-        }
-        .memo-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
-        .memo-btn.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.2); color: var(--gold-light); }
+        /* VERDICT */
+        .verdict-box { width: 800px; text-align: center; padding: 40px; background: #0a0e17; border: 2px solid var(--gold); border-radius: 16px; animation: slideUp3D 0.5s ease; }
+        .verdict-title { font-family: 'Cinzel', serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; }
+        .verdict-log { text-align: left; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin: 20px 0; line-height: 1.6; font-size: 0.95rem;}
 
-        /* FINAL RESULTS / VERDICT STAGE */
-        .verdict-desk {
-            width: 800px; background: #0a0e17; border: 2px solid var(--gold);
-            border-radius: 20px; padding: 45px; text-align: center;
-            box-shadow: 0 40px 120px rgba(0,0,0,0.95); animation: slideUp3D 0.6s ease;
-        }
-        .verdict-title { font-family: 'Cinzel', serif; font-size: 2.8rem; font-weight: 900; letter-spacing: 3px; margin-bottom: 10px; }
-        .verdict-score { font-size: 3.5rem; font-weight: 800; color: var(--gold); margin: 15px 0; }
-        .verdict-log {
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px; padding: 20px; text-align: left; line-height: 1.8;
-            font-size: 0.95rem; color: #cbd5e1; margin-bottom: 25px;
-        }
     </style>
 </head>
 <body>
@@ -302,517 +216,553 @@
     <!-- HUD -->
     <header id="executive-hud">
         <div class="hud-brand">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 12 12 16 14"></polygon></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 12 12 16 14"></polygon></svg>
             iSEC VENTURE BOARDROOM
         </div>
         <div class="hud-stats">
             <div class="hud-item">STAGE: <span id="hud-stage">BRIEFING</span></div>
-            <div class="hud-item">DILIGENCE FUND: <span id="hud-funds">₹5,00,00,000</span></div>
-            <div class="hud-item">QUESTIONS REMAINING: <span id="hud-questions">5 / 5</span></div>
+            <div class="hud-item">FUND: <span id="hud-funds">₹5,00,00,000</span></div>
+            <div class="hud-item">QUERIES LEFT: <span id="hud-questions">5</span></div>
         </div>
     </header>
 
-    <!-- 3D WORLD -->
     <main id="world">
+        <!-- 3D Environment -->
         <div id="room">
-            <!-- Skyline & Boardroom Backing -->
             <div class="skyline">
                 <div style="width:70px; height:240px; background:#0b1120;"></div>
                 <div style="width:110px; height:320px; background:#090d16;"></div>
-                <div style="width:85px; height:190px; background:#0d1527;"></div>
                 <div style="width:140px; height:280px; background:#080c14;"></div>
-                <div style="width:90px; height:220px; background:#0e1726;"></div>
             </div>
             <div class="window-frame"></div>
-
-            <!-- 3D Table -->
-            <div class="table-surface">
-                <div class="table-reflection"></div>
-            </div>
-
-            <!-- Founder 3D Entity -->
+            <div class="table-surface"></div>
             <div id="founder-avatar">
                 <div class="avatar-card">
                     <svg width="85" height="85" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                        <path d="M12 14l3-3m0 0l-3-3m3 3H9"></path>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle><path d="M12 14l3-3m0 0l-3-3m3 3H9"></path>
                     </svg>
                 </div>
                 <div class="founder-tag">Vikram Sethi • Founder, Prakruti ColdChain</div>
             </div>
         </div>
 
-        <!-- Central Speech/Dialogue Glass Terminal -->
+        <!-- Dialogue Terminal -->
         <section id="dialogue-terminal">
             <div id="dialogue-text"></div>
-            <button id="primary-action-btn" class="cta-btn" onclick="handlePrimaryAction()">Initiate Due Diligence</button>
+            <div id="terminal-controls">
+                <button id="primary-action-btn" class="cta-btn" onclick="openDossier()">Enter Data Room</button>
+            </div>
         </section>
 
-        <!-- MODAL 1: CLASSIFIED DUE DILIGENCE DOSSIER -->
+        <!-- MODAL 1: DOSSIER & HISTORY -->
         <div id="dossier-modal" class="stage-panel">
-            <div class="dossier-box">
-                <div class="dossier-header">
+            <div class="modal-box">
+                <div class="modal-header">
                     <div>
                         <h2 style="font-family:'Cinzel', serif; color:var(--gold);">CONFIDENTIAL DATA ROOM</h2>
-                        <p style="font-size:0.85rem; color:var(--text-dim);">Select up to 5 strategic inquiries. Each filing incurs ₹50,000 in diligence audit costs.</p>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Queries cost ₹50,000 each. Uncover hidden risks before drafting your term sheet.</p>
                     </div>
-                    <button class="cta-btn" style="padding: 8px 20px;" onclick="closeDossier()">Conclude Inquiries</button>
+                    <div>
+                        <button class="cta-btn cta-secondary" id="btn-toggle-history" onclick="toggleHistoryView()">View Answers History</button>
+                    </div>
                 </div>
-                <div class="dossier-grid" id="dossier-grid"></div>
+                
+                <!-- Questions View -->
+                <div class="modal-body" id="dossier-questions-view">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- History View -->
+                <div class="modal-body" id="dossier-history-view" style="display:none;">
+                    <h3 style="color:var(--gold); margin-bottom: 20px;">Diligence History Log</h3>
+                    <div id="history-container">
+                        <p style="color:var(--text-dim); font-style:italic;">No questions asked yet.</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="cta-btn" onclick="goToTermSheet()">Proceed to Term Sheet</button>
+                </div>
             </div>
         </div>
 
-        <!-- MODAL 2: EXECUTIVE TERM SHEET & CHEQUE DESK -->
+        <!-- MODAL 2: TERM SHEET & STRATEGIC CHIPS -->
         <div id="cheque-modal" class="stage-panel">
-            <div class="cheque-desk">
-                <!-- Realistic Cheque -->
-                <div class="bank-cheque">
-                    <div class="cheque-watermark">IMPACT VENTURES</div>
-                    <div class="cheque-top">
-                        <div>
-                            <div class="cheque-bank-title">IMPERIAL VENTURE BANK • INDIA</div>
-                            <small style="font-size:0.65rem; color:#7d6608; letter-spacing:1px;">INSTITUTIONAL SOCIAL ENTERPRISE CELL (iSEC)</small>
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h2 style="font-family:'Cinzel', serif; color:var(--gold);">DRAFT TERM SHEET & STRATEGY</h2>
+                    <button class="cta-btn cta-secondary" onclick="backToDossier()" id="btn-back-diligence">← Back to Due Diligence</button>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- Cheque -->
+                    <div class="bank-cheque">
+                        <div class="cheque-top">
+                            <div style="font-family:'Cinzel'; font-weight:bold; color:#5b4606;">IMPERIAL VENTURE BANK • INDIA</div>
+                            <div style="color:#7d6608; font-size:0.8rem; font-weight:bold;">DATE: 29 AUG 2026</div>
                         </div>
-                        <div style="text-align: right; font-size:0.8rem; color:#7d6608;">
-                            DATE: <span style="font-weight:bold; color:#1a1a1a;">29 AUG 2026</span>
+                        <div class="cheque-row"><div class="cheque-label">PAY TO:</div><div style="font-weight:bold; font-size:1.1rem;">PRAKRUTI COLDCHAIN PVT LTD</div></div>
+                        <div class="cheque-row"><div class="cheque-label">SUM OF:</div><div class="cheque-val-written" id="cheque-words">Rupees Two Crore Only</div><div class="cheque-box" id="cheque-amount-num">₹ 2,00,00,000</div></div>
+                    </div>
+
+                    <!-- Sliders -->
+                    <div class="controls-row">
+                        <div class="term-group">
+                            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>Investment Capital</span><span id="slider-inv-label" style="color:var(--gold);">₹2.00 Cr</span></div>
+                            <input type="range" class="term-slider" id="slider-inv" min="5000000" max="50000000" step="1000000" value="20000000" oninput="updateChequeUI()">
+                        </div>
+                        <div class="term-group">
+                            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>Equity Demanded</span><span id="slider-eq-label" style="color:var(--gold);">15%</span></div>
+                            <input type="range" class="term-slider" id="slider-eq" min="5" max="40" step="1" value="15" oninput="updateChequeUI()">
                         </div>
                     </div>
-                    <div class="cheque-row">
-                        <div class="cheque-label">PAY TO:</div>
-                        <div style="font-weight: bold; font-size:1.1rem; color:#0f172a;">PRAKRUTI COLDCHAIN PRIVATE LIMITED</div>
+                    <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; margin-bottom:25px; display:flex; justify-content:space-between;">
+                        <span>IMPLIED VALUATION: <strong id="slider-implied-label" style="color:var(--emerald);">₹13.33 Cr</strong></span>
+                        <span style="color:var(--text-dim); font-size:0.85rem;">Founder Ask: ₹33.33 Cr (₹5 Cr for 15%)</span>
                     </div>
-                    <div class="cheque-row">
-                        <div class="cheque-label">SUM OF:</div>
-                        <div class="cheque-val-written" id="cheque-words">Rupees Two Crore Only</div>
-                        <div class="cheque-box" id="cheque-amount-num">₹ 2,00,00,000</div>
-                    </div>
-                    <div class="cheque-sig-zone">
-                        <div class="animated-pen-sig" id="animated-signature">Kartikey Vyas</div>
-                        <div class="signature-line">AUTHORIZED PARTNER SIGNATORY</div>
-                    </div>
+
+                    <!-- Chips Selection -->
+                    <h3 style="color:var(--gold); margin-bottom:15px; font-size:1rem;">Select up to TWO (2) Strategic Value-Adds for the company:</h3>
+                    <div class="chips-grid" id="chips-container"></div>
                 </div>
 
-                <!-- Term Sheet Sliders -->
-                <div class="controls-row">
-                    <div class="term-group">
-                        <div class="term-label">
-                            <span>Investment Capital:</span>
-                            <span id="slider-inv-label" style="color:var(--gold);">₹2.00 Cr</span>
-                        </div>
-                        <input type="range" class="term-slider" id="slider-inv" min="5000000" max="50000000" step="1000000" value="20000000" oninput="handleTermUpdate()">
-                    </div>
-                    <div class="term-group">
-                        <div class="term-label">
-                            <span>Equity Demanded:</span>
-                            <span id="slider-eq-label" style="color:var(--gold);">15%</span>
-                        </div>
-                        <input type="range" class="term-slider" id="slider-eq" min="5" max="40" step="1" value="15" oninput="handleTermUpdate()">
-                    </div>
+                <div class="modal-footer">
+                    <span style="color:var(--text-dim); margin-right: 20px; font-size:0.9rem;" id="chip-counter">0 / 2 Selected</span>
+                    <button class="cta-btn" onclick="goToMemo()" id="btn-proceed-memo" disabled>Draft Investment Memo →</button>
                 </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:12px 20px; border-radius:8px; margin-bottom:20px;">
-                    <div>IMPLIED VALUATION: <strong id="slider-implied-label" style="color:var(--emerald); font-size:1.2rem; margin-left:8px;">₹13.33 Cr</strong></div>
-                    <div style="font-size:0.85rem; color:var(--text-dim);">Founder Ask: ₹33.33 Cr (₹5 Cr for 15%)</div>
-                </div>
-
-                <h4 style="font-family:'Cinzel', serif; color:var(--gold); margin-bottom:10px;">Select 1 Strategic Value-Add Offering:</h4>
-                <div class="memo-options" id="chips-container" style="margin-bottom:20px;"></div>
-
-                <button class="cta-btn" style="width:100%;" onclick="signChequeAndProceed()">Sign Cheque & Draft Memo</button>
             </div>
         </div>
 
-        <!-- MODAL 3: DRAFTING THE LEGAL INVESTMENT MEMO -->
+        <!-- MODAL 3: INVESTMENT MEMO (Anti-Cheat) -->
         <div id="memo-modal" class="stage-panel">
-            <div class="memo-desk">
-                <div class="parchment-sheet">
-                    <div class="parchment-header">CONFIDENTIAL INVESTMENT MEMORANDUM</div>
-                    <div id="memo-clauses-container">
-                        <p style="color:#64748b; font-style:italic;">Select exactly 3 core justifications below to draft your formal stance...</p>
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h2 style="font-family:'Cinzel', serif; color:var(--gold);">BOARD JUSTIFICATION MEMO</h2>
+                    <button class="cta-btn cta-secondary" onclick="backToTermSheet()">← Back to Terms</button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="parchment-sheet" style="position:relative;">
+                        <h3 style="text-align:center; border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom:15px; font-family:'Cinzel';">MEMORANDUM OF UNDERSTANDING</h3>
+                        <div id="memo-clauses-container" style="line-height:1.8; font-size:0.95rem;">
+                            <span style="color:#94a3b8; font-style:italic;">Select exactly 3 documented findings below to justify your valuation...</span>
+                        </div>
+                        <div class="stamp-mark" id="memo-stamp">EXECUTED</div>
                     </div>
-                    <div class="stamp-mark" id="memo-stamp">EXECUTED</div>
+
+                    <h3 style="color:var(--gold); margin-bottom:15px; font-size:1rem;">Select exactly THREE (3) Justifications based on your Data Room Audits:</h3>
+                    <div class="memo-options-grid" id="memos-container"></div>
                 </div>
 
-                <h4 style="font-family:'Cinzel', serif; color:var(--gold); margin-bottom:10px;">Select 3 Validated Justifications for the Board:</h4>
-                <div class="memo-options" id="memo-options-grid" style="margin-bottom:20px;"></div>
-
-                <button id="seal-memo-btn" class="cta-btn" style="width:100%; display:none;" onclick="sealAndSubmitMemo()">Stamp Memo & Transmit to Founder</button>
+                <div class="modal-footer">
+                    <span style="color:var(--text-dim); margin-right: 20px; font-size:0.9rem;" id="memo-counter">0 / 3 Selected</span>
+                    <button class="cta-btn" onclick="submitFinalDeal()" id="btn-submit-deal" disabled>Seal & Submit to Founder</button>
+                </div>
             </div>
         </div>
 
-        <!-- MODAL 4: VERDICT & SCOREBOARD -->
+        <!-- MODAL 4: VERDICT -->
         <div id="verdict-modal" class="stage-panel">
-            <div class="verdict-desk">
-                <div class="verdict-title" id="verdict-title">TERM SHEET RATIFIED</div>
-                <p id="verdict-subtitle" style="color:var(--text-dim); letter-spacing:2px; font-weight:600;"></p>
-                <div class="verdict-score" id="verdict-score">0</div>
+            <div class="verdict-box">
+                <div class="verdict-title" id="verdict-title">EVALUATING...</div>
+                <div style="font-weight:bold; letter-spacing:2px; color:var(--text-dim);" id="verdict-subtitle"></div>
+                
+                <div style="font-size:3.5rem; font-weight:800; color:var(--gold); margin:15px 0;" id="verdict-score"></div>
+                
                 <div class="verdict-log" id="verdict-log"></div>
+                
                 <button class="cta-btn" onclick="location.reload()">Initiate New Negotiation</button>
             </div>
         </div>
     </main>
 
     <script>
-        // --- REALISTIC AUDIO SYNTHESIZER (No external asset dependency) ---
-        class BoardroomAudio {
-            constructor() {
-                this.ctx = null;
-            }
-            init() {
-                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            playScribble() {
-                this.init();
-                const bufferSize = this.ctx.sampleRate * 0.4;
-                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-                const noise = this.ctx.createBufferSource();
-                noise.buffer = buffer;
-                const filter = this.ctx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 1200;
-                filter.Q.value = 3;
-                noise.connect(filter);
-                filter.connect(this.ctx.destination);
-                noise.start();
-            }
-            playStamp() {
-                this.init();
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.frequency.setValueAtTime(140, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.25);
-                gain.gain.setValueAtTime(1, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + 0.25);
-            }
-            playSuccess() {
-                this.init();
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.1 + 0.6);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start(this.ctx.currentTime + idx * 0.1);
-                    osc.stop(this.ctx.currentTime + idx * 0.1 + 0.6);
-                });
-            }
-        }
-        const sfx = new BoardroomAudio();
-
-        // --- GAME STATE ---
+        // --- GAME DATA & STATE ---
         const gameState = {
             budget: 50000000,
-            questionsRemaining: 5,
-            askedQuestions: [],
-            selectedChip: null,
+            maxQuestions: 5,
+            questionsAsked: [],
+            selectedChips: [],
             selectedMemos: [],
             startTime: Date.now(),
-            
+            viewingHistory: false,
+
+            // ~26 Comprehensive Questions
             questions: [
-                { id: 'q1', category: 'Hardware & CapEx', text: "What is the replacement and degradation lifecycle of the solar batteries in rural heat?", answer: "Our lithium-ion batteries degrade rapidly after 24 months in 45°C ambient conditions. Replacing them will completely wipe out our Year 3 margins.", type: 'bullseye_battery' },
-                { id: 'q2', category: 'Mission Alignment', text: "Can you provide the demographic breakdown of cold storage unit utilization?", answer: "72% of our cold volume is being monopolized by wealthy middlemen and commission traders, crowding out the smallholder farmers we set out to empower.", type: 'bullseye_trader' },
-                { id: 'q3', category: 'Cash Flow & Runway', text: "Given your ₹25 Lakh/month cash burn, what is your verified cash runway?", answer: "We have exactly 85 days of operational cash remaining in the bank before we risk defaulting on vendor payments.", type: 'bullseye_cash' },
-                { id: 'q4', category: 'Market Sizing', text: "What is the Total Addressable Market for decentralized cold storage across India?", answer: "The rural post-harvest loss sector represents a ₹90,000 Crore addressable problem across agricultural belts.", type: 'fluff' },
-                { id: 'q5', category: 'Unit Economics', text: "What is the gross margin on a single installed 5MT micro-cold unit?", answer: "Each unit yields approximately 38% gross margin on subscription billing before servicing overhead.", type: 'standard' },
-                { id: 'q6', category: 'Competition', text: "How do you defend against centralized industrial ammonia cold rooms?", answer: "Industrial plants require grid access and 20-ton minimums. We operate at the farm gate off-grid.", type: 'standard' },
-                { id: 'q7', category: 'Intellectual Property', text: "Do you hold registered utility patents on the thermal storage architecture?", answer: "No, we rely on off-the-shelf components with proprietary phase-change controller firmware.", type: 'standard' },
-                { id: 'q8', category: 'Scale Vision', text: "What is the projected 5-year deployment target across cooperative networks?", answer: "We aim to deploy 1,200 micro-units across Gujarat and Maharashtra by 2030.", type: 'fluff' }
+                { id: 'q1', cat: 'Hardware & CapEx', text: "What is the degradation curve of the solar batteries in rural heat?", answer: "Our lithium-ion packs degrade in 24 months due to extreme ambient temps. Replacing them will wipe out Year 3 margins completely.", type: 'flaw_battery' },
+                { id: 'q2', cat: 'Hardware & CapEx', text: "What is the failure rate of the phase-change compressor?", answer: "Less than 2%. The compressor is solid, it's just the power storage that concerns us.", type: 'neutral' },
+                { id: 'q3', cat: 'Hardware & CapEx', text: "Who is your primary supplier for solar panels?", answer: "We import Tier-1 panels from a reliable vendor in Vietnam. Supply chain is stable.", type: 'neutral' },
+                
+                { id: 'q4', cat: 'Mission & Impact', text: "What percentage of unit volume is utilized by smallholder farmers vs middlemen?", answer: "Currently, 72% of our cold volume is monopolized by wealthy traders bulk-booking the units, pushing out the small farmers.", type: 'flaw_mission' },
+                { id: 'q5', cat: 'Mission & Impact', text: "What is the average income increase for a farmer using the unit?", answer: "Farmers who actually get space see a 35% increase in crop realization value by avoiding distress sales.", type: 'neutral' },
+                { id: 'q6', cat: 'Mission & Impact', text: "How are you tracking ESG metrics for investors?", answer: "We do annual surveys, but mostly rely on aggregate volume metrics.", type: 'neutral' },
+                
+                { id: 'q7', cat: 'Financials & Runway', text: "At your current ₹25L/month burn, what is your verified cash runway?", answer: "We have exactly 85 days of cash remaining. If we don't close this round, we default on vendor payments.", type: 'flaw_cash' },
+                { id: 'q8', cat: 'Financials & Runway', text: "What is your blended Customer Acquisition Cost (CAC)?", answer: "Around ₹45,000 per village, mostly spent on initial awareness campaigns.", type: 'neutral' },
+                { id: 'q9', cat: 'Financials & Runway', text: "Are there any outstanding debt obligations?", answer: "No major venture debt, just standard 30-day working capital cycles with vendors.", type: 'neutral' },
+                { id: 'q10', cat: 'Financials & Runway', text: "What is the gross margin profile per installed unit?", answer: "We yield about 38% gross margin on the subscription billing before servicing overhead.", type: 'neutral' },
+                
+                { id: 'q11', cat: 'Regulatory & Revenue', text: "How much of your unit economics rely on government MNRE subsidies?", answer: "Over 40% of our upfront CapEx is subsidized. But the government just froze the scheme, halting our deployment pipeline.", type: 'flaw_subsidy' },
+                { id: 'q12', cat: 'Regulatory & Revenue', text: "Do you have all necessary local panchayat approvals?", answer: "Yes, local authorities are very supportive of the infrastructure.", type: 'neutral' },
+                { id: 'q13', cat: 'Regulatory & Revenue', text: "Are there any pending tax litigations?", answer: "No, our audits are clean.", type: 'neutral' },
+                
+                { id: 'q14', cat: 'Tech & Product', text: "What is the adoption rate of the farmer booking app?", answer: "It's dropping fast. The UI is too complex for vernacular users, leading to high drop-offs and empty units.", type: 'flaw_app' },
+                { id: 'q15', cat: 'Tech & Product', text: "Do you hold utility patents for the thermal controller?", answer: "No, we use open-source firmware layered over off-the-shelf PLCs.", type: 'neutral' },
+                { id: 'q16', cat: 'Tech & Product', text: "Is the app dependent on high-speed internet?", answer: "It has an offline-sync mode, so 2G connectivity is sufficient.", type: 'neutral' },
+                
+                { id: 'q17', cat: 'Market Strategy', text: "What is your Total Addressable Market (TAM) calculation?", answer: "The post-harvest loss sector in India is a ₹90,000 Crore addressable problem.", type: 'fluff' },
+                { id: 'q18', cat: 'Market Strategy', text: "Who are your direct rural competitors?", answer: "Mostly fragmented diesel-generator ice plants. We are the only decentralized solar player here.", type: 'neutral' },
+                { id: 'q19', cat: 'Market Strategy', text: "What is your geographic expansion plan?", answer: "Expand through Maharashtra first, then enter Karnataka by 2028.", type: 'neutral' },
+                
+                { id: 'q20', cat: 'Team & Governance', text: "Are all founders fully vested?", answer: "Standard 4-year vesting with a 1-year cliff. We are in year 2.", type: 'neutral' },
+                { id: 'q21', cat: 'Team & Governance', text: "What happens if a larger FMCG offers a buyout?", answer: "We are committed to the impact mission, but board fiduciary duty comes first.", type: 'neutral' },
+                { id: 'q22', cat: 'Team & Governance', text: "Are there any key-man dependencies?", answer: "Our CTO is critical for the thermal firmware, but we are building a secondary engineering team.", type: 'neutral' }
             ],
+
+            // 12 Chips (Max 2 selection)
             chips: [
-                { id: 'c1', text: "Subsidized Battery Supply Chain & Thermal Recycling", target: 'bullseye_battery' },
-                { id: 'c2', text: "FPO Integration Framework to Bypass Traders", target: 'bullseye_trader' },
-                { id: 'c3', text: "Bridge Debt Line & Working Capital Restructuring", target: 'bullseye_cash' },
-                { id: 'c4', text: "Urban Consumer D2C Branding Campaign", target: 'none' }
+                { id: 'c1', text: "Thermal Battery Tech Partnership & Recycling Tie-up", target: 'flaw_battery' },
+                { id: 'c2', text: "FPO (Farmer Producer Org) Network Integration Plan", target: 'flaw_mission' },
+                { id: 'c3', text: "Emergency Bridge Debt Line (Working Capital)", target: 'flaw_cash' },
+                { id: 'c4', text: "Govt Policy Lobbyist & Alternative Carbon Credits", target: 'flaw_subsidy' },
+                { id: 'c5', text: "Vernacular UI/UX Development Agency Retainer", target: 'flaw_app' },
+                { id: 'c6', text: "Urban D2C Consumer Branding Campaign", target: 'none' },
+                { id: 'c7', text: "Blockchain Supply Chain Traceability Integration", target: 'none' },
+                { id: 'c8', text: "Global Southeast Asia Expansion Consultant", target: 'none' },
+                { id: 'c9', text: "Ammonia Refrigeration Industrial Engineers", target: 'none' },
+                { id: 'c10', text: "Social Media Influencer Marketing Blitz", target: 'none' },
+                { id: 'c11', text: "Hardware Patent Legal Retainer", target: 'none' },
+                { id: 'c12', text: "Agri-Export Licensing Consultant", target: 'none' }
             ],
+
+            // Memos (Mix of real flaw insights, safe answers, and traps)
             memos: [
-                { id: 'm1', text: "Factored in immediate CapEx write-downs for Year 2 battery cell degradation.", req: 'q1' },
-                { id: 'm2', text: "Required structural governance covenants to eliminate middleman arbitrage.", req: 'q2' },
-                { id: 'm3', text: "Priced in high liquidity risk due to sub-90-day verified operational runway.", req: 'q3' },
-                { id: 'm4', text: "Standard adjustment for early-stage off-grid infrastructure deployment.", req: 'none' },
-                { id: 'm5', text: "Premised on long-term macro tailwinds across the ₹90,000 Cr TAM.", req: 'none' },
-                { id: 'm6', text: "Buffer allocated for decentralized customer acquisition overhead.", req: 'none' }
+                { id: 'm1', text: "Accounting for the impending CapEx write-down for Year 2 battery replacements.", req: 'q1' },
+                { id: 'm2', text: "Mandating governance covenants to eliminate trader monopolization of units.", req: 'q4' },
+                { id: 'm3', text: "Priced in liquidity risk due to the sub-90-day cash runway.", req: 'q7' },
+                { id: 'm4', text: "Valuation discounted due to the frozen MNRE subsidy deployment pipeline.", req: 'q11' },
+                { id: 'm5', text: "Allocated buffer for overhauling the vernacular booking app interface.", req: 'q14' },
+                
+                { id: 'm6', text: "Factored in standard early-stage hardware execution risks.", req: 'none' },
+                { id: 'm7', text: "Premised on macro tailwinds in the ₹90,000 Cr agricultural TAM.", req: 'none' },
+                { id: 'm8', text: "Confidence in the 38% gross margin unit economics model.", req: 'none' },
+                { id: 'm9', text: "Adjustment for standard working capital and vendor payment cycles.", req: 'none' },
+                { id: 'm10', text: "Belief in the decentralized off-grid infrastructure thesis.", req: 'none' },
+                
+                // Pure traps (Sound smart but require specific questions)
+                { id: 'm11', text: "Risk adjusted for the 2% failure rate in the phase-change compressors.", req: 'q2' },
+                { id: 'm12', text: "Concerned about the over-reliance on Vietnamese Tier-1 panel imports.", req: 'q3' },
+                { id: 'm13', text: "Discounted due to lack of registered utility patents on the firmware.", req: 'q15' },
+                { id: 'm14', text: "Accounted for potential FMCG buyout scenarios disrupting the mission.", req: 'q21' }
             ]
         };
 
-        // --- TYPEWRITER TERMINAL ---
-        function typeDialogue(text, speed = 20) {
+        // --- TYPEWRITER ---
+        function typeText(text, speed = 20) {
             const el = document.getElementById('dialogue-text');
             el.innerHTML = '';
+            document.getElementById('terminal-controls').style.display = 'none';
             let i = 0;
             return new Promise(resolve => {
                 function write() {
-                    if (i < text.length) {
-                        el.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(write, speed);
-                    } else {
-                        resolve();
-                    }
+                    if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(write, speed); } 
+                    else { document.getElementById('terminal-controls').style.display = 'block'; resolve(); }
                 }
                 write();
             });
         }
 
-        // --- INITIALIZATION ---
         window.onload = async () => {
-            await typeDialogue("Welcome to the iSEC Venture Suite, Partner. Vikram Sethi is offering 15% equity in Prakruti ColdChain for ₹5.00 Crore (₹33.33 Cr Valuation). Review the data room before making an offer.", 15);
+            await typeText("Welcome, Partner. Vikram Sethi is raising ₹5.00 Crore for 15% equity (₹33.33 Cr Valuation) for Prakruti ColdChain. Access the Data Room to begin due diligence.", 15);
         };
 
-        function handlePrimaryAction() {
+        // --- STAGE 1: DOSSIER ---
+        function openDossier() {
             document.getElementById('hud-stage').innerText = 'DUE DILIGENCE';
-            renderDossier();
             document.getElementById('dossier-modal').classList.add('active');
+            document.getElementById('cheque-modal').classList.remove('active');
+            renderDossierGrid();
         }
 
-        // --- STAGE 1: DUE DILIGENCE ---
-        function renderDossier() {
-            const grid = document.getElementById('dossier-grid');
-            grid.innerHTML = '';
-            gameState.questions.forEach(q => {
-                const card = document.createElement('div');
-                card.className = 'q-card';
-                if (gameState.askedQuestions.some(item => item.id === q.id)) {
-                    card.classList.add('investigated');
-                } else if (gameState.questionsRemaining <= 0) {
-                    card.classList.add('locked');
-                }
-                card.innerHTML = `
-                    <div>
-                        <div class="q-badge">${q.category}</div>
-                        <div style="font-size:0.95rem; font-weight:600; line-height:1.4;">${q.text}</div>
-                    </div>
-                    <div style="font-size:0.75rem; color:var(--gold); margin-top:10px;">${gameState.askedQuestions.some(item => item.id === q.id) ? '✓ AUDITED' : 'AUDIT COST: ₹50,000'}</div>
-                `;
-                card.onclick = () => auditQuestion(q, card);
-                grid.appendChild(card);
+        function renderDossierGrid() {
+            const container = document.getElementById('dossier-questions-view');
+            container.innerHTML = '';
+            
+            // Group by category
+            const categories = [...new Set(gameState.questions.map(q => q.cat))];
+            
+            categories.forEach(cat => {
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerText = cat.toUpperCase();
+                container.appendChild(header);
+
+                const grid = document.createElement('div');
+                grid.className = 'dossier-grid';
+                
+                gameState.questions.filter(q => q.cat === cat).forEach(q => {
+                    const isAsked = gameState.questionsAsked.some(a => a.id === q.id);
+                    const isLocked = gameState.questionsAsked.length >= gameState.maxQuestions && !isAsked;
+                    
+                    const card = document.createElement('div');
+                    card.className = `q-card ${isAsked ? 'investigated' : ''} ${isLocked ? 'locked' : ''}`;
+                    card.innerHTML = `
+                        <div style="font-size:0.9rem; font-weight:600; line-height:1.4;">${q.text}</div>
+                        <div style="font-size:0.75rem; color:var(--gold); margin-top:10px;">
+                            ${isAsked ? '✓ AUDITED' : 'COST: ₹50,000'}
+                        </div>
+                    `;
+                    card.onclick = () => askQuestion(q, card);
+                    grid.appendChild(card);
+                });
+                container.appendChild(grid);
             });
         }
 
-        async function auditQuestion(q, card) {
-            if (gameState.questionsRemaining <= 0 || card.classList.contains('investigated')) return;
-            sfx.playScribble();
-            gameState.questionsRemaining--;
+        async function askQuestion(q, card) {
+            if (card.classList.contains('locked') || card.classList.contains('investigated')) return;
+            if (gameState.questionsAsked.length >= gameState.maxQuestions) return;
+
+            gameState.questionsAsked.push(q);
             gameState.budget -= 50000;
-            gameState.askedQuestions.push(q);
-
+            
             document.getElementById('hud-funds').innerText = `₹${(gameState.budget).toLocaleString('en-IN')}`;
-            document.getElementById('hud-questions').innerText = `${gameState.questionsRemaining} / 5`;
+            document.getElementById('hud-questions').innerText = gameState.maxQuestions - gameState.questionsAsked.length;
             
             document.getElementById('dossier-modal').classList.remove('active');
-            await typeDialogue(`"${q.answer}"`, 18);
+            await typeText(`"${q.answer}"`, 15);
             
-            setTimeout(() => {
-                if (gameState.questionsRemaining > 0) {
-                    document.getElementById('dossier-modal').classList.add('active');
-                    renderDossier();
+            setTimeout(() => { openDossier(); }, 1500);
+        }
+
+        function toggleHistoryView() {
+            gameState.viewingHistory = !gameState.viewingHistory;
+            const qView = document.getElementById('dossier-questions-view');
+            const hView = document.getElementById('dossier-history-view');
+            const btn = document.getElementById('btn-toggle-history');
+
+            if (gameState.viewingHistory) {
+                qView.style.display = 'none';
+                hView.style.display = 'block';
+                btn.innerText = "Back to Data Room";
+                
+                const hContainer = document.getElementById('history-container');
+                if (gameState.questionsAsked.length === 0) {
+                    hContainer.innerHTML = '<p style="color:var(--text-dim); font-style:italic;">No questions audited yet.</p>';
                 } else {
-                    document.getElementById('primary-action-btn').innerText = "Structure Term Sheet";
-                    document.getElementById('primary-action-btn').onclick = openTermSheet;
+                    hContainer.innerHTML = gameState.questionsAsked.map(q => `
+                        <div class="history-item">
+                            <div class="history-q">Q: ${q.text}</div>
+                            <div class="history-a">"${q.answer}"</div>
+                        </div>
+                    `).join('');
                 }
-            }, 3000);
+            } else {
+                qView.style.display = 'block';
+                hView.style.display = 'none';
+                btn.innerText = "View Answers History";
+            }
         }
 
-        function closeDossier() {
+        // --- STAGE 2: TERM SHEET ---
+        function goToTermSheet() {
             document.getElementById('dossier-modal').classList.remove('active');
-            document.getElementById('primary-action-btn').innerText = "Structure Term Sheet";
-            document.getElementById('primary-action-btn').onclick = openTermSheet;
-        }
-
-        // --- STAGE 2: TERM SHEET & CHEQUE ---
-        function openTermSheet() {
             document.getElementById('hud-stage').innerText = 'TERM SHEET';
             document.getElementById('cheque-modal').classList.add('active');
             
-            const container = document.getElementById('chips-container');
-            container.innerHTML = '';
-            gameState.chips.forEach(c => {
-                const btn = document.createElement('div');
-                btn.className = 'memo-btn';
-                btn.innerText = c.text;
-                btn.onclick = () => {
-                    document.querySelectorAll('#chips-container .memo-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    gameState.selectedChip = c;
-                };
-                container.appendChild(btn);
-            });
-            handleTermUpdate();
+            // Handle Back button state
+            const backBtn = document.getElementById('btn-back-diligence');
+            if (gameState.questionsAsked.length < gameState.maxQuestions) {
+                backBtn.style.display = 'inline-block';
+                backBtn.innerText = `← Back to Due Diligence (${gameState.maxQuestions - gameState.questionsAsked.length} left)`;
+            } else {
+                backBtn.style.display = 'none';
+            }
+
+            renderChips();
+            updateChequeUI();
         }
 
-        function numberToWords(num) {
-            const cr = (num / 10000000).toFixed(2);
-            return `Rupees ${cr} Crore Only`;
+        function backToDossier() {
+            document.getElementById('cheque-modal').classList.remove('active');
+            openDossier();
         }
 
-        function handleTermUpdate() {
+        function updateChequeUI() {
             const inv = parseInt(document.getElementById('slider-inv').value);
             const eq = parseInt(document.getElementById('slider-eq').value);
-            const implied = (inv / (eq / 100));
+            const implied = inv / (eq / 100);
 
             document.getElementById('slider-inv-label').innerText = `₹${(inv/10000000).toFixed(2)} Cr`;
             document.getElementById('slider-eq-label').innerText = `${eq}%`;
             document.getElementById('slider-implied-label').innerText = `₹${(implied/10000000).toFixed(2)} Cr`;
             
             document.getElementById('cheque-amount-num').innerText = `₹ ${(inv).toLocaleString('en-IN')}`;
-            document.getElementById('cheque-words').innerText = numberToWords(inv);
+            document.getElementById('cheque-words').innerText = `Rupees ${(inv/10000000).toFixed(2)} Crore Only`;
         }
 
-        function signChequeAndProceed() {
-            if (!gameState.selectedChip) {
-                alert("Please select 1 Strategic Value-Add Offering for the startup.");
-                return;
-            }
-            sfx.playScribble();
-            document.getElementById('animated-signature').classList.add('signed');
-            
-            setTimeout(() => {
-                document.getElementById('cheque-modal').classList.remove('active');
-                openMemoModal();
-            }, 1000);
-        }
-
-        // --- STAGE 3: INVESTMENT MEMO ---
-        function openMemoModal() {
-            document.getElementById('hud-stage').innerText = 'INVESTMENT MEMO';
-            document.getElementById('memo-modal').classList.add('active');
-
-            const grid = document.getElementById('memo-options-grid');
-            grid.innerHTML = '';
-            gameState.memos.forEach(m => {
+        function renderChips() {
+            const container = document.getElementById('chips-container');
+            container.innerHTML = '';
+            gameState.chips.forEach(c => {
                 const btn = document.createElement('div');
-                btn.className = 'memo-btn';
-                btn.innerText = m.text;
-                btn.onclick = () => toggleMemoSelection(m, btn);
-                grid.appendChild(btn);
+                btn.className = `chip-btn ${gameState.selectedChips.some(x => x.id === c.id) ? 'selected' : ''}`;
+                btn.innerText = c.text;
+                btn.onclick = () => {
+                    const idx = gameState.selectedChips.findIndex(x => x.id === c.id);
+                    if (idx > -1) {
+                        gameState.selectedChips.splice(idx, 1);
+                        btn.classList.remove('selected');
+                    } else if (gameState.selectedChips.length < 2) {
+                        gameState.selectedChips.push(c);
+                        btn.classList.add('selected');
+                    }
+                    
+                    const count = gameState.selectedChips.length;
+                    document.getElementById('chip-counter').innerText = `${count} / 2 Selected`;
+                    document.getElementById('btn-proceed-memo').disabled = count !== 2;
+                };
+                container.appendChild(btn);
             });
         }
 
-        function toggleMemoSelection(memo, btn) {
-            sfx.playScribble();
-            if (btn.classList.contains('selected')) {
-                btn.classList.remove('selected');
-                gameState.selectedMemos = gameState.selectedMemos.filter(item => item.id !== memo.id);
-            } else if (gameState.selectedMemos.length < 3) {
-                btn.classList.add('selected');
-                gameState.selectedMemos.push(memo);
-            }
-            renderParchment();
-            document.getElementById('seal-memo-btn').style.display = (gameState.selectedMemos.length === 3) ? 'block' : 'none';
+        // --- STAGE 3: MEMO ---
+        function goToMemo() {
+            document.getElementById('cheque-modal').classList.remove('active');
+            document.getElementById('hud-stage').innerText = 'DRAFT MEMO';
+            document.getElementById('memo-modal').classList.add('active');
+            renderMemos();
+            updateMemoParchment();
         }
 
-        function renderParchment() {
+        function backToTermSheet() {
+            document.getElementById('memo-modal').classList.remove('active');
+            goToTermSheet();
+        }
+
+        function renderMemos() {
+            const container = document.getElementById('memos-container');
+            container.innerHTML = '';
+            gameState.memos.forEach(m => {
+                const btn = document.createElement('div');
+                btn.className = `memo-btn ${gameState.selectedMemos.some(x => x.id === m.id) ? 'selected' : ''}`;
+                btn.innerText = m.text;
+                btn.onclick = () => {
+                    const idx = gameState.selectedMemos.findIndex(x => x.id === m.id);
+                    if (idx > -1) {
+                        gameState.selectedMemos.splice(idx, 1);
+                        btn.classList.remove('selected');
+                    } else if (gameState.selectedMemos.length < 3) {
+                        gameState.selectedMemos.push(m);
+                        btn.classList.add('selected');
+                    }
+                    
+                    const count = gameState.selectedMemos.length;
+                    document.getElementById('memo-counter').innerText = `${count} / 3 Selected`;
+                    document.getElementById('btn-submit-deal').disabled = count !== 3;
+                    updateMemoParchment();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function updateMemoParchment() {
             const container = document.getElementById('memo-clauses-container');
             if (gameState.selectedMemos.length === 0) {
-                container.innerHTML = `<p style="color:#64748b; font-style:italic;">Select exactly 3 core justifications below to draft your formal stance...</p>`;
-                return;
+                container.innerHTML = '<span style="color:#94a3b8; font-style:italic;">Select exactly 3 documented findings below to justify your valuation...</span>';
+            } else {
+                container.innerHTML = gameState.selectedMemos.map((m, i) => `
+                    <div style="margin-bottom:8px;"><strong>${i+1}.</strong> ${m.text}</div>
+                `).join('');
             }
-            container.innerHTML = gameState.selectedMemos.map((m, idx) => `
-                <div class="memo-clause-item">
-                    <strong>CLAUSE ${idx+1}:</strong> ${m.text}
-                </div>
-            `).join('');
         }
 
-        function sealAndSubmitMemo() {
-            sfx.playStamp();
+        function submitFinalDeal() {
             document.getElementById('memo-stamp').classList.add('stamped');
-            
             setTimeout(async () => {
                 document.getElementById('memo-modal').classList.remove('active');
                 document.getElementById('hud-stage').innerText = 'DELIBERATION';
-                await typeDialogue("The Founder is reviewing your signed cheque, valuation, and investment memorandum with legal counsel...", 30);
-                setTimeout(evaluateSimulation, 2500);
-            }, 1000);
+                await typeText("The Board is reviewing your term sheet, diligence alignment, and valuation math...", 30);
+                setTimeout(evaluateSimulation, 2000);
+            }, 800);
         }
 
-        // --- STAGE 4: EVALUATION & ANTI-CHEAT ENGINE ---
+        // --- STAGE 4: EVALUATION ---
         function evaluateSimulation() {
             const inv = parseInt(document.getElementById('slider-inv').value);
             const eq = parseInt(document.getElementById('slider-eq').value);
-            const impliedValuation = (inv / (eq / 100));
+            const impliedValuation = inv / (eq / 100);
             const secondsElapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
 
-            let founderFloor = 200000000; // Base: ₹20 Cr walkaway
+            let founderFloor = 200000000; // Base: ₹20 Cr
             let insightScore = 0;
             let log = [];
 
-            // 1. Evaluate Question Insights
-            gameState.askedQuestions.forEach(q => {
-                if (q.type.includes('bullseye')) {
-                    founderFloor -= 25000000; // Drops floor by ₹2.5 Cr
-                    insightScore += 300;
-                }
-            });
-            log.push(`• <strong>Due Diligence:</strong> Uncovered ${insightScore / 300} critical structural vulnerabilities.`);
+            // 1. Diligence Insights
+            const flawsFound = gameState.questionsAsked.filter(q => q.type.startsWith('flaw_'));
+            insightScore += flawsFound.length * 500;
+            founderFloor -= flawsFound.length * 15000000; // 1.5Cr discount per flaw
+            log.push(`• <strong>Diligence:</strong> Uncovered ${flawsFound.length} of 5 critical structural vulnerabilities.`);
 
-            // 2. Evaluate Strategic Value-Add
-            const chipMatch = gameState.askedQuestions.some(q => q.type === gameState.selectedChip.target);
-            if (chipMatch) {
-                founderFloor -= 35000000; // Drops floor by ₹3.5 Cr
-                log.push(`• <strong>Value-Add Alignment:</strong> Strategic offering matched the startup's operational bottleneck.`);
+            // 2. Value-Add Chips (Max 2)
+            let chipMatches = 0;
+            gameState.selectedChips.forEach(chip => {
+                const match = gameState.questionsAsked.some(q => q.type === chip.target);
+                if (match) chipMatches++;
+            });
+            if (chipMatches > 0) {
+                founderFloor -= chipMatches * 25000000; // 2.5Cr discount per correct chip
+                log.push(`• <strong>Strategy:</strong> Provided ${chipMatches} highly aligned strategic value-add(s) directly targeting audited flaws.`);
             } else {
-                founderFloor += 20000000;
-                log.push(`• <strong>Value-Add Alignment:</strong> Offered non-core strategic help. Founder requested premium.`);
+                founderFloor += 20000000; // Penalty
+                log.push(`• <strong>Strategy:</strong> Offered non-core or misaligned strategic help. Founder demanded a premium.`);
             }
 
-            // 3. Anti-Cheat Check on Investment Memo
+            // 3. Anti-Cheat (Memos)
             let baselessClaims = 0;
             gameState.selectedMemos.forEach(m => {
                 if (m.req !== 'none') {
-                    const verified = gameState.askedQuestions.some(q => q.id === m.req);
+                    const verified = gameState.questionsAsked.some(q => q.id === m.req);
                     if (!verified) baselessClaims++;
                 }
             });
 
-            // UI Elements
+            // Verdict UI
             const modal = document.getElementById('verdict-modal');
             const title = document.getElementById('verdict-title');
             const sub = document.getElementById('verdict-subtitle');
             const scoreEl = document.getElementById('verdict-score');
             const logEl = document.getElementById('verdict-log');
             modal.classList.add('active');
+            document.getElementById('terminal-controls').style.display = 'none';
 
             if (baselessClaims > 0) {
-                title.innerText = "OFFER DISQUALIFIED";
-                title.style.color = "var(--crimson)";
+                title.innerText = "OFFER DISQUALIFIED"; title.style.color = "var(--crimson)";
                 sub.innerText = "FOUNDER WALKED AWAY • REASON: BASELESS ASSERTIONS";
                 scoreEl.innerText = "0";
-                logEl.innerHTML = `You cited specific operational vulnerabilities in your Investment Memo that you <strong>never audited during Due Diligence</strong>. The founder identified this as bluffing and refused to sign.`;
+                logEl.innerHTML = `You cited specific vulnerabilities in your Memo that you <strong>never audited</strong> in the Data Room. The board flagged this as a massive breach of trust. Deal collapsed.`;
                 return;
             }
 
             if (impliedValuation >= founderFloor) {
-                sfx.playSuccess();
-                title.innerText = "TERM SHEET ACCEPTED";
-                title.style.color = "var(--emerald)";
-                sub.innerText = "DEAL CLOSED • EQUITY RATIFIED";
+                title.innerText = "TERM SHEET ACCEPTED"; title.style.color = "var(--emerald)";
+                sub.innerText = "DEAL RATIFIED • SYNDICATE APPROVED";
 
-                // Grandmaster scoring formula (Decimal precise, time decayed)
-                const valuationEfficiency = (333333333 - impliedValuation) / 100000;
-                const finalScore = Math.floor(
-                    (valuationEfficiency * 1.5) + insightScore + (gameState.budget / 100000) - (secondsElapsed * 0.2)
-                );
+                // Complex tie-breaker scoring formula
+                const valEfficiency = (333333333 - impliedValuation) / 100000;
+                const finalScore = Math.floor( (valEfficiency * 1.5) + insightScore + (gameState.budget / 100000) - (secondsElapsed * 0.5) );
 
                 scoreEl.innerText = finalScore.toLocaleString();
-                log.push(`• <strong>Financial Terms:</strong> Secured <strong>${eq}%</strong> for <strong>₹${(inv/10000000).toFixed(2)} Cr</strong> (Implied Valuation: ₹${(impliedValuation/10000000).toFixed(2)} Cr).`);
-                log.push(`• <strong>Execution Speed:</strong> Completed in ${secondsElapsed} seconds.`);
+                log.push(`• <strong>Financials:</strong> Secured <strong>${eq}%</strong> equity at a <strong>₹${(impliedValuation/10000000).toFixed(2)} Cr</strong> valuation.`);
+                log.push(`• <strong>Capital Efficiency:</strong> Retained ₹${(gameState.budget/100000).toFixed(1)} Lakhs in diligence fund.`);
+                log.push(`• <strong>Execution Speed:</strong> Closed the term sheet in ${secondsElapsed} seconds.`);
                 logEl.innerHTML = log.join('<br>');
             } else {
-                title.innerText = "OFFER REJECTED";
-                title.style.color = "var(--crimson)";
+                title.innerText = "OFFER REJECTED"; title.style.color = "var(--crimson)";
                 sub.innerText = "VALUATION BELOW FOUNDER THRESHOLD";
                 scoreEl.innerText = "0";
                 log.push(`• Your implied valuation was <strong>₹${(impliedValuation/10000000).toFixed(2)} Cr</strong>.`);
-                log.push(`• Given your strategic terms and diligence insights, the founder's absolute floor was <strong>₹${(founderFloor/10000000).toFixed(2)} Cr</strong>.`);
+                log.push(`• Given your specific strategic terms and insights, the founder's absolute floor was <strong>₹${(founderFloor/10000000).toFixed(2)} Cr</strong>.`);
                 logEl.innerHTML = log.join('<br>');
             }
         }
