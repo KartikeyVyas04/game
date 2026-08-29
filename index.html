@@ -9,89 +9,111 @@
 --gold:#d4af37;--gold2:#f4e7a1;--green:#19c37d;--red:#ef4444;--bg:#05070b;
 --panel:rgba(15,23,42,.94);--muted:#94a3b8;--white:#f8fafc;--wood:#24170d
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;}
 html,body{width:100%;height:100%;overflow:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--white)}
 button,input{font:inherit}.hidden{display:none!important}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#6b5717;border-radius:5px}
-#world{position:absolute;inset:0;perspective:1200px;overflow:hidden}
+
+/* WORLD & ROOM */
+#world{position:absolute;inset:0;perspective:1200px;overflow:hidden; transition: transform 0.1s;}
 #room{position:absolute;inset:0;transform-style:preserve-3d;background:radial-gradient(circle at 50% 25%,#172033 0,#080c15 48%,#020307 100%)}
-.sky{position:absolute;top:0;left:0;width:100%;height:57%;opacity:.55;background:
-linear-gradient(180deg,#020617,#101827 70%,#1e1b4b)}
-.sky:after{content:"";position:absolute;inset:15% 4% 0;background:
-repeating-linear-gradient(90deg,transparent 0 8%,rgba(2,6,23,.7) 8% 8.7%),
-repeating-linear-gradient(0deg,transparent 0 14%,rgba(2,6,23,.75) 14% 15%)}
-.window{position:absolute;inset:0 0 43% 0;border-bottom:7px solid #111827;
-box-shadow:inset 0 0 100px #000;background:repeating-linear-gradient(90deg,transparent 0 24.2%,#0b1120 24.2% 25%)}
-.table{position:absolute;left:-10%;bottom:-28%;width:120%;height:58%;transform:rotateX(67deg);
-background:radial-gradient(ellipse at 50% 0,#3b2615,#1d120a 58%,#0b0908);border-top:3px solid #80651b;
-box-shadow:inset 0 20px 80px #000,0 -20px 100px rgba(212,175,55,.1)}
-#founder{position:absolute;top:15%;left:50%;transform:translateX(-50%);text-align:center}
-.avatar{width:150px;height:150px;border-radius:50%;border:3px solid var(--gold);display:grid;place-items:center;
-background:radial-gradient(circle,rgba(25,195,125,.2),#0f172a 68%);box-shadow:0 0 50px rgba(212,175,55,.22)}
-.avatar svg{width:76px}.founder-name{margin-top:12px;border:1px solid var(--gold);border-radius:22px;padding:7px 16px;
-font-size:12px;letter-spacing:1.5px;color:var(--gold2);background:#0b1120}
-#hud{position:absolute;z-index:100;top:0;left:0;right:0;height:78px;padding:0 32px;display:flex;justify-content:space-between;align-items:center;
-background:linear-gradient(180deg,rgba(3,5,10,.97),transparent);border-bottom:1px solid rgba(255,255,255,.06)}
+.sky{position:absolute;top:0;left:0;width:100%;height:57%;opacity:.55;background:linear-gradient(180deg,#020617,#101827 70%,#1e1b4b)}
+.sky:after{content:"";position:absolute;inset:15% 4% 0;background:repeating-linear-gradient(90deg,transparent 0 8%,rgba(2,6,23,.7) 8% 8.7%),repeating-linear-gradient(0deg,transparent 0 14%,rgba(2,6,23,.75) 14% 15%)}
+.window{position:absolute;inset:0 0 43% 0;border-bottom:7px solid #111827;box-shadow:inset 0 0 100px #000;background:repeating-linear-gradient(90deg,transparent 0 24.2%,#0b1120 24.2% 25%)}
+.table{position:absolute;left:-10%;bottom:-28%;width:120%;height:58%;transform:rotateX(67deg);background:radial-gradient(ellipse at 50% 0,#3b2615,#1d120a 58%,#0b0908);border-top:3px solid #80651b;box-shadow:inset 0 20px 80px #000,0 -20px 100px rgba(212,175,55,.1)}
+
+/* FOUNDER AVATAR */
+#founder{position:absolute;top:15%;left:50%;transform:translateX(-50%);text-align:center; animation: float 4s ease-in-out infinite;}
+@keyframes float { 0%, 100% { transform: translate(-50%, 0px); } 50% { transform: translate(-50%, -10px); } }
+.avatar{width:150px;height:150px;border-radius:50%;border:3px solid var(--gold);display:grid;place-items:center;background:radial-gradient(circle,rgba(25,195,125,.2),#0f172a 68%);box-shadow:0 0 50px rgba(212,175,55,.22)}
+.avatar svg{width:76px}.founder-name{margin-top:12px;border:1px solid var(--gold);border-radius:22px;padding:7px 16px;font-size:12px;letter-spacing:1.5px;color:var(--gold2);background:#0b1120}
+
+/* HUD */
+#hud{position:absolute;z-index:100;top:0;left:0;right:0;height:78px;padding:0 32px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(3,5,10,.97),transparent);border-bottom:1px solid rgba(255,255,255,.06)}
 .brand{font-weight:900;letter-spacing:1.5px;color:var(--gold);font-size:18px}.stats{display:flex;gap:12px}
 .stat{padding:8px 15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;font-size:12px}
-.stat b{color:var(--gold2);font-size:14px}
-#terminal{position:absolute;z-index:50;bottom:17%;left:50%;transform:translateX(-50%);width:min(900px,92%);
-padding:25px 30px;text-align:center;background:rgba(12,18,30,.9);border:1px solid rgba(212,175,55,.3);
-border-radius:16px;box-shadow:0 25px 70px #000;backdrop-filter:blur(18px)}
+.stat b{color:var(--gold2);font-size:14px; transition: color 0.3s;}
+
+/* TERMINAL */
+#terminal{position:absolute;z-index:50;bottom:17%;left:50%;transform:translateX(-50%);width:min(900px,92%);padding:25px 30px;text-align:center;background:rgba(12,18,30,.9);border:1px solid rgba(212,175,55,.3);border-radius:16px;box-shadow:0 25px 70px #000;backdrop-filter:blur(18px)}
 #dialogue{min-height:72px;font-size:17px;line-height:1.65;margin-bottom:18px}
-.btn{border:0;border-radius:8px;padding:12px 22px;cursor:pointer;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
-background:linear-gradient(135deg,#e4c65a,#947716);color:#070a0f;box-shadow:0 7px 22px rgba(212,175,55,.28)}
-.btn:hover:not(:disabled){transform:translateY(-2px)}.btn:disabled{background:#334155;color:#94a3b8;box-shadow:none;cursor:not-allowed}
+
+/* BUTTONS */
+.btn{position:relative; overflow:hidden; border:0;border-radius:8px;padding:12px 22px;cursor:pointer;font-weight:800;letter-spacing:.7px;text-transform:uppercase;background:linear-gradient(135deg,#e4c65a,#947716);color:#070a0f;box-shadow:0 7px 22px rgba(212,175,55,.28); transition: transform 0.2s, filter 0.2s;}
+.btn:hover:not(:disabled){transform:translateY(-2px); filter: brightness(1.1);}
+.btn:disabled{background:#334155;color:#94a3b8;box-shadow:none;cursor:not-allowed}
 .btn.alt{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:none}
+.btn.alt:hover:not(:disabled){background:rgba(255,255,255,.12);}
+
+/* MODALS */
 .overlay{position:absolute;z-index:80;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.86);backdrop-filter:blur(9px)}
-.overlay.active{display:flex}.modal{width:min(1120px,95vw);height:90vh;background:#0c1320;border:1px solid var(--gold);border-radius:14px;display:flex;flex-direction:column;
-box-shadow:0 30px 100px #000}.mh{padding:18px 26px;border-bottom:1px solid rgba(212,175,55,.2);background:rgba(212,175,55,.06);
-display:flex;justify-content:space-between;align-items:center;gap:15px}.mh h2{color:var(--gold);font-size:18px}.mh p{font-size:12px;color:var(--muted);margin-top:5px}
+.overlay.active{display:flex}.modal{width:min(1120px,95vw);height:90vh;background:#0c1320;border:1px solid var(--gold);border-radius:14px;display:flex;flex-direction:column;box-shadow:0 30px 100px #000}
+.mh{padding:18px 26px;border-bottom:1px solid rgba(212,175,55,.2);background:rgba(212,175,55,.06);display:flex;justify-content:space-between;align-items:center;gap:15px}.mh h2{color:var(--gold);font-size:18px}.mh p{font-size:12px;color:var(--muted);margin-top:5px}
 .mb{padding:24px 28px;overflow:auto;flex:1}.mf{padding:17px 25px;border-top:1px solid rgba(255,255,255,.1);text-align:right;background:rgba(0,0,0,.2)}
+
+/* NEW SLOT MECHANICS */
+.slot-board { display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+.slot { width: 45px; height: 45px; border: 2px dashed rgba(212,175,55,0.4); border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: rgba(212,175,55,0.4); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.slot.filled { background: rgba(25,195,125,0.15); border-color: var(--green); color: var(--green); transform: scale(1.15); box-shadow: 0 0 20px rgba(25,195,125,0.3); border-style: solid; }
+.slot-label { position: absolute; font-size: 10px; color: var(--muted); margin-top: 65px; letter-spacing: 1px; text-transform: uppercase;}
+
+/* CARDS & GRIDS */
 .case-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.fact{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);padding:13px;border-radius:9px}.fact small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px}.fact strong{display:block;margin-top:4px;color:var(--gold2);font-size:17px}
 .category{color:var(--gold2);font-size:13px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.08);padding:13px 0 7px;margin-top:9px}
-.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.q{padding:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:9px;cursor:pointer}
-.q:hover:not(.locked):not(.asked){border-color:var(--gold);background:rgba(212,175,55,.06)}.q.asked{border-color:var(--green);background:rgba(25,195,125,.08);cursor:default}.q.locked{opacity:.35;cursor:not-allowed}
-.qtext{font-size:13px;line-height:1.45}.qmeta{margin-top:8px;font-size:10px;color:var(--gold)}
+.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.q{position:relative; overflow:hidden; padding:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:9px;cursor:pointer; transition: transform 0.15s, border-color 0.2s;}
+.q:hover:not(.locked):not(.asked){border-color:var(--gold);background:rgba(212,175,55,.06); transform: translateY(-2px);}
+.q:active:not(.locked){transform: scale(0.97);}
+.q.asked{border-color:var(--green);background:rgba(25,195,125,.08);cursor:default;}
+.q.locked{opacity:.35;cursor:not-allowed}
+.qtext{font-size:13px;line-height:1.45; position: relative; z-index: 2;}
+.qmeta{margin-top:8px;font-size:10px;color:var(--gold); position: relative; z-index: 2;}
+
+/* HISTORY & SEC */
 .history{background:rgba(25,195,125,.08);border-left:4px solid var(--green);padding:13px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}.history b{color:var(--gold2)}.history p{font-size:12px;line-height:1.5;margin-top:5px}
+.secretary-btn{position:absolute;right:28px;bottom:28px;z-index:120;border:1px solid var(--gold);background:rgba(8,12,20,.92);color:var(--gold2);padding:11px 16px;border-radius:10px;cursor:pointer;box-shadow:0 8px 30px #000;font-weight:800;letter-spacing:.6px; transition: transform 0.2s;}
+.secretary-btn:hover{transform:translateY(-2px);background:rgba(212,175,55,.12)}
+.secretary-panel{position:absolute;z-index:130;right:25px;bottom:78px;width:min(430px,calc(100vw - 40px));max-height:65vh;display:none;flex-direction:column;background:#0b111d;border:1px solid var(--gold);border-radius:13px;box-shadow:0 25px 70px #000;overflow:hidden}
+.secretary-panel.active{display:flex}.sec-head{padding:14px 16px;background:rgba(212,175,55,.08);border-bottom:1px solid rgba(212,175,55,.18);display:flex;justify-content:space-between;align-items:center}.sec-head b{color:var(--gold)}.sec-body{padding:14px;overflow:auto}
+.sec-card{padding:12px;margin-bottom:9px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.035)}
+.sec-card small{color:var(--gold);font-size:9px;text-transform:uppercase;letter-spacing:1px}.sec-card b{display:block;font-size:12px;margin:5px 0}.sec-card p{font-size:11px;color:#cbd5e1;line-height:1.5}
+
+/* CHEQUE & SLIDERS */
 .cheque{background:linear-gradient(135deg,#fffdf0,#f5e39a,#fff9dc);color:#161616;padding:24px;border:2px solid #9d7c0c;border-radius:10px;box-shadow:0 15px 45px #000;margin-bottom:20px}
 .cheque-head{display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#654f08;margin-bottom:20px}.crow{display:flex;align-items:center;gap:12px;border-bottom:1px dashed #80650b;padding:9px 0}.clabel{width:70px;color:#80650b;font-size:11px;font-weight:900}.written{font-family:cursive;font-size:24px;color:#10213b;flex:1}.cnum{border:2px solid #80650b;padding:7px 12px;font-weight:900}
 .terms{display:grid;grid-template-columns:1fr 1fr;gap:14px}.term{padding:15px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:9px}.term label{display:flex;justify-content:space-between;font-weight:800;font-size:13px}.term label span{color:var(--gold)}input[type=range]{width:100%;margin-top:13px;accent-color:var(--gold)}
-.valuation{margin:15px 0;padding:12px 15px;display:flex;justify-content:space-between;background:rgba(255,255,255,.035);border-radius:8px;font-size:12px}.valuation strong{color:var(--green)}
-.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.chip{padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;text-align:center}.chip.sel{border-color:var(--gold);background:rgba(212,175,55,.18);color:var(--gold2)}
-.memos{display:grid;grid-template-columns:1fr 1fr;gap:10px}.memo{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;line-height:1.45}.memo.sel{border-left:4px solid var(--gold);background:rgba(212,175,55,.13)}
-.parchment{position:relative;background:#fffdf4;color:#1f2937;padding:24px;border-radius:8px;margin-bottom:20px;min-height:145px;font-family:Georgia,serif;box-shadow:inset 0 0 30px rgba(0,0,0,.1)}.parchment h3{text-align:center;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:13px}.stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.35s}.stamp.on{opacity:.8;transform:rotate(-14deg) scale(1)}
-.verdict{width:min(820px,92vw);padding:38px;text-align:center;background:#090e17;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 100px #000}.vtitle{font-size:36px;font-weight:900;color:var(--green)}.vscore{font-size:55px;font-weight:900;color:var(--gold);margin:12px}.vlog{text-align:left;background:rgba(255,255,255,.035);padding:18px;border-radius:8px;line-height:1.7;font-size:13px;margin:18px 0}
-@media(max-width:800px){.stats{gap:4px}.stat{padding:6px}.case-grid{grid-template-columns:1fr 1fr}.qgrid,.terms,.memos{grid-template-columns:1fr}.chips{grid-template-columns:1fr 1fr}.mh{align-items:flex-start}.modal{height:94vh}}
+.valuation{margin:15px 0;padding:12px 15px;display:flex;justify-content:space-between;background:rgba(255,255,255,.035);border-radius:8px;font-size:12px}.valuation strong{color:var(--green); font-size: 14px;}
 
-/* --- Engagement layer --- */
-.secretary-btn{position:absolute;right:28px;bottom:28px;z-index:120;border:1px solid var(--gold);
-background:rgba(8,12,20,.92);color:var(--gold2);padding:11px 16px;border-radius:10px;cursor:pointer;
-box-shadow:0 8px 30px #000;font-weight:800;letter-spacing:.6px}
-.secretary-btn:hover{transform:translateY(-2px);background:rgba(212,175,55,.12)}
-.secretary-panel{position:absolute;z-index:130;right:25px;bottom:78px;width:min(430px,calc(100vw - 40px));max-height:65vh;
-display:none;flex-direction:column;background:#0b111d;border:1px solid var(--gold);border-radius:13px;
-box-shadow:0 25px 70px #000;overflow:hidden}
-.secretary-panel.active{display:flex}.sec-head{padding:14px 16px;background:rgba(212,175,55,.08);border-bottom:1px solid rgba(212,175,55,.18);
-display:flex;justify-content:space-between;align-items:center}.sec-head b{color:var(--gold)}.sec-body{padding:14px;overflow:auto}
-.sec-card{padding:12px;margin-bottom:9px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.035)}
-.sec-card small{color:var(--gold);font-size:9px;text-transform:uppercase;letter-spacing:1px}.sec-card b{display:block;font-size:12px;margin:5px 0}.sec-card p{font-size:11px;color:#cbd5e1;line-height:1.5}
-.drag-hint{font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;border:1px dashed rgba(212,175,55,.3);
-padding:9px;border-radius:8px}.dragging{opacity:.45;transform:scale(.98)}.dropzone{outline:2px dashed var(--gold)!important;outline-offset:3px}
-.q.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
-.drop-bin{position:sticky;bottom:0;margin-top:12px;padding:12px;border:1px dashed rgba(239,68,68,.45);border-radius:8px;
-text-align:center;color:#fca5a5;background:rgba(239,68,68,.05)}
-.timeline{display:flex;justify-content:center;gap:7px;margin:0 0 16px}.dot{width:9px;height:9px;border-radius:50%;background:#334155}.dot.on{background:var(--gold);box-shadow:0 0 12px var(--gold)}
-/* cinematic transitions */
+/* CHIPS & MEMOS */
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{position:relative;overflow:hidden;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;text-align:center;transition: transform 0.15s, box-shadow 0.2s;}
+.chip:active{transform: scale(0.96);}
+.chip.sel{border-color:var(--gold);background:rgba(212,175,55,.18);color:var(--gold2); box-shadow: inset 0 0 15px rgba(212,175,55,0.2);}
+.memos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.memo{position:relative;overflow:hidden;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;line-height:1.45;transition: transform 0.15s;}
+.memo:active{transform: scale(0.98);}
+.memo.sel{border-color:var(--gold);background:rgba(212,175,55,.13); box-shadow: inset 0 0 15px rgba(212,175,55,0.1);}
+
+/* PARCHMENT */
+.parchment{position:relative;background:#fffdf4;color:#1f2937;padding:24px;border-radius:8px;margin-bottom:20px;min-height:145px;font-family:Georgia,serif;box-shadow:inset 0 0 30px rgba(0,0,0,.1)}.parchment h3{text-align:center;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:13px}
+.stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.35s}.stamp.on{opacity:.8;transform:rotate(-14deg) scale(1)}
+
+/* VERDICT */
+.verdict{width:min(820px,92vw);padding:38px;text-align:center;background:#090e17;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 100px #000}.vtitle{font-size:36px;font-weight:900;color:var(--green)}.vscore{font-size:55px;font-weight:900;color:var(--gold);margin:12px}.vlog{text-align:left;background:rgba(255,255,255,.035);padding:18px;border-radius:8px;line-height:1.7;font-size:13px;margin:18px 0}
+
+/* ANIMATIONS & EFFECTS */
+.ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: rippleEffect 0.6s linear; background-color: rgba(255, 255, 255, 0.2); pointer-events: none; }
+@keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
 .overlay.active .modal,.overlay.active .verdict{animation:modalIn .42s cubic-bezier(.2,.8,.2,1)}
 @keyframes modalIn{from{opacity:0;transform:translateY(28px) scale(.97) rotateX(3deg)}to{opacity:1;transform:none}}
 @keyframes pulseGold{50%{box-shadow:0 0 0 12px rgba(212,175,55,0)}}.successPulse{animation:pulseGold 1s ease 2}
 @keyframes stampDrop{0%{opacity:0;transform:rotate(-14deg) scale(3) translateY(-20px)}70%{opacity:1;transform:rotate(-14deg) scale(.92)}100%{opacity:.85;transform:rotate(-14deg) scale(1)}}
-.stamp.on{animation:stampDrop .55s cubic-bezier(.2,.9,.2,1)}
-.vparticles{position:absolute;inset:0;pointer-events:none;overflow:hidden}.particle{position:absolute;width:6px;height:6px;border-radius:50%;
-background:var(--gold);animation:fall 2.2s linear forwards}@keyframes fall{from{transform:translateY(-20px) rotate(0);opacity:1}
-to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.stamp.on{animation:stampDrop .3s cubic-bezier(.2,.9,.2,1)}
+@keyframes screenShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px) rotate(-1deg); } 40% { transform: translateX(5px) rotate(1deg); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+.shake { animation: screenShake 0.4s ease-out; }
+.vparticles{position:absolute;inset:0;pointer-events:none;overflow:hidden}.particle{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:fall 2.2s linear forwards}@keyframes fall{from{transform:translateY(-20px) rotate(0);opacity:1}to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 
+@media(max-width:800px){.stats{gap:4px}.stat{padding:6px}.case-grid{grid-template-columns:1fr 1fr}.qgrid,.terms,.memos{grid-template-columns:1fr}.chips{grid-template-columns:1fr 1fr}.mh{align-items:flex-start}.modal{height:94vh}}
 </style>
 </head>
 <body>
@@ -100,7 +122,6 @@ to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 <div class="stats">
 <div class="stat">STAGE: <b id="stage">BRIEFING</b></div>
 <div class="stat">DILIGENCE FUND: <b id="fund">₹5,00,00,000</b></div>
-<div class="stat">QUESTIONS LEFT: <b id="left">5</b></div>
 </div>
 </header>
 
@@ -117,13 +138,24 @@ to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 <div class="founder-name">MEERA RAO • FOUNDER, SAMARTH FOODS</div></div></div>
 <section id="terminal"><div id="dialogue"></div><div id="controls"></div></section>
 
+<!-- MODAL 1: DOSSIER -->
 <div id="dossier" class="overlay"><div class="modal">
-<div class="mh"><div><h2>CONFIDENTIAL DATA ROOM</h2><p>Exactly 5 questions. Each audit costs ₹50,000. Choose for decision value, not curiosity.</p></div><button class="btn alt" onclick="toggleHistory()">Diligence History</button></div>
-<div class="mb" id="dossierBody"></div><div class="mf"><span id="dossierStatus" style="color:var(--muted);font-size:12px;margin-right:18px"></span><button class="btn" id="termBtn" disabled onclick="goTerms()">Complete 5 Audits →</button></div>
+<div class="mh"><div><h2>CONFIDENTIAL DATA ROOM</h2><p>Click to audit findings. Each selection costs ₹50,000. Choose for decision value, not curiosity.</p></div><button class="btn alt" onclick="toggleHistory()">Diligence History</button></div>
+<div class="mb" id="dossierBody"></div>
+<div class="mf" style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="text-align:left;">
+        <div style="font-size:11px; color:var(--muted); margin-bottom:5px; letter-spacing:1px;">AUDIT SLOTS FILLED:</div>
+        <div class="slot-board" id="q-slots" style="margin:0; padding:0; background:transparent; border:none; gap:6px;">
+            <div class="slot" id="qs1">1</div><div class="slot" id="qs2">2</div><div class="slot" id="qs3">3</div><div class="slot" id="qs4">4</div><div class="slot" id="qs5">5</div>
+        </div>
+    </div>
+    <button class="btn" id="termBtn" disabled onclick="goTerms()">Lock Audits & Structure Term Sheet →</button>
+</div>
 </div></div>
 
+<!-- MODAL 2: TERM SHEET -->
 <div id="terms" class="overlay"><div class="modal">
-<div class="mh"><div><h2>TERM SHEET & STRATEGIC CAPITAL</h2><p>Build an offer that compensates the founder for risk while creating measurable social value.</p></div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button><button class="btn alt" onclick="backDossier()">← Due Diligence</button></div>
+<div class="mh"><div><h2>TERM SHEET & STRATEGIC CAPITAL</h2><p>Build an offer that compensates the founder for risk while creating measurable social value.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backDossier()">← Back</button></div></div>
 <div class="mb">
 <div class="cheque"><div class="cheque-head"><span>IMPERIAL VENTURE BANK • IMPACT INVESTMENT DESK</span><span>29 AUG 2026</span></div>
 <div class="crow"><span class="clabel">PAY TO</span><b>SAMARTH FOODS PRIVATE LIMITED</b></div>
@@ -133,25 +165,40 @@ to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 <div class="term"><label>Equity Demanded <span id="eqLabel">15%</span></label><input id="eq" type="range" min="5" max="40" step="1" value="15" oninput="updateTerms()"></div>
 </div>
 <div class="valuation"><span>YOUR IMPLIED VALUATION: <strong id="valuation">₹13.33 Cr</strong></span><span style="color:var(--muted)">Founder ask: ₹5 Cr for 15% = ₹33.33 Cr</span></div>
-<h3 style="color:var(--gold);font-size:14px;margin:18px 0 10px">SELECT EXACTLY TWO STRATEGIC VALUE-ADDS</h3>
+
+<div style="display:flex; justify-content:space-between; align-items:flex-end; margin:18px 0 10px;">
+    <h3 style="color:var(--gold);font-size:14px;">SELECT EXACTLY TWO STRATEGIC VALUE-ADDS</h3>
+    <div class="slot-board" id="c-slots" style="margin:0; padding:0; background:transparent; border:none; gap:6px;">
+        <div class="slot" id="cs1">1</div><div class="slot" id="cs2">2</div>
+    </div>
+</div>
 <div class="chips" id="chips"></div>
 </div>
-<div class="mf"><span id="chipCount" style="color:var(--muted);font-size:12px;margin-right:18px">0 / 2 Selected</span><button class="btn" id="memoBtn" disabled onclick="goMemo()">Draft Investment Memo →</button></div>
+<div class="mf"><button class="btn" id="memoBtn" disabled onclick="goMemo()">Draft Investment Memo →</button></div>
 </div></div>
 
+<!-- MODAL 3: MEMO -->
 <div id="memo" class="overlay"><div class="modal">
-<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Exactly 3 claims. Any claim about an undiscovered risk is an automatic disqualification.</p></div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button><button class="btn alt" onclick="backTerms()">← Terms</button></div>
+<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Any claim about an undiscovered risk is an automatic disqualification.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backTerms()">← Back</button></div></div>
 <div class="mb"><div class="parchment"><h3>INVESTMENT COMMITTEE MEMORANDUM</h3><div id="clauses"><i>Select three audited findings below.</i></div><div id="stamp" class="stamp">EXECUTED</div></div>
-<h3 style="color:var(--gold);font-size:14px;margin-bottom:10px">SELECT EXACTLY THREE DOCUMENTED FINDINGS</h3><div class="memos" id="memos"></div></div>
-<div class="mf"><span id="memoCount" style="color:var(--muted);font-size:12px;margin-right:18px">0 / 3 Selected</span><button class="btn" id="submit" disabled onclick="submitDeal()">Seal & Submit</button></div>
+
+<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
+    <h3 style="color:var(--gold);font-size:14px;">SELECT EXACTLY THREE DOCUMENTED FINDINGS</h3>
+    <div class="slot-board" id="m-slots" style="margin:0; padding:0; background:transparent; border:none; gap:6px;">
+        <div class="slot" id="ms1">1</div><div class="slot" id="ms2">2</div><div class="slot" id="ms3">3</div>
+    </div>
+</div>
+<div class="memos" id="memos"></div></div>
+<div class="mf"><button class="btn" id="submit" disabled onclick="submitDeal()">Seal & Submit to Founder</button></div>
 </div></div>
 
+<!-- VERDICT -->
 <div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">EVALUATING</div><div id="vsub" style="letter-spacing:2px;color:var(--muted);font-size:12px"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Initiate New Negotiation</button></div></div>
 </main>
 
 <script>
 const S={
-budget:50000000,maxQ:5,asked:[],chips:[],memos:[],start:Date.now(),history:false,
+budget:50000000,maxQ:5,asked:[],chipsSel:[],memosSel:[],start:Date.now(),history:false,
 questions:[
 {id:'q1',cat:'Mission & Beneficiary Access',text:'What share of Samarth\'s producer volume actually comes from women-led SHGs?',answer:'Only 54% of current procurement comes from women-led SHGs. The remaining 46% is sourced from larger aggregators because they can meet our volume commitments faster.',type:'flaw_mission'},
 {id:'q2',cat:'Mission & Beneficiary Access',text:'What percentage of SHG members receive a direct income from the company?',answer:'About 81% of registered members receive at least one payment cycle. The rest are inactive or seasonal participants.',type:'neutral'},
@@ -216,189 +263,235 @@ memos:[
 {id:'m15',text:'Priced in the 67% digital traceability coverage.',req:'q14'}
 ]};
 
+// Utilites
 function money(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
 function cr(n){return '₹'+(n/1e7).toFixed(2)+' Cr'}
 function setStage(x){document.getElementById('stage').textContent=x}
-function updateHud(){document.getElementById('fund').textContent=money(S.budget);document.getElementById('left').textContent=S.maxQ-S.asked.length}
+function updateHud(){
+    document.getElementById('fund').textContent=money(S.budget);
+    const fundEl = document.getElementById('fund');
+    fundEl.style.color = '#ef4444';
+    setTimeout(() => fundEl.style.color = 'var(--gold2)', 300);
+}
+
+// Ripple Effect Function
+function addRipple(e, el) {
+    const circle = document.createElement('span');
+    const diameter = Math.max(el.clientWidth, el.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${e.clientX - el.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${e.clientY - el.getBoundingClientRect().top - radius}px`;
+    circle.classList.add('ripple');
+    const ripple = el.querySelector('.ripple');
+    if (ripple) ripple.remove();
+    el.appendChild(circle);
+}
+
 function typeText(t,s=12){
-const e=document.getElementById('dialogue'),c=document.getElementById('controls');e.textContent='';c.innerHTML='';let i=0;
-return new Promise(r=>{function w(){if(i<t.length){e.textContent+=t[i++];setTimeout(w,s)}else r()}w()})
+    const e=document.getElementById('dialogue'),c=document.getElementById('controls');e.textContent='';c.innerHTML='';let i=0;
+    return new Promise(r=>{function w(){if(i<t.length){e.textContent+=t[i++];setTimeout(w,s)}else r()}w()})
 }
+
 async function briefing(){
-await typeText("Welcome, Partner. The boardroom is live. Meera Rao is waiting across the table, her CFO is on standby, and your secretary has opened a clean diligence file. You are evaluating Samarth Foods Pvt Ltd, a social enterprise that connects smallholder producers and women-led self-help groups to institutional food buyers. Meera Rao is raising ₹5.00 Cr for 15% equity, implying a ₹33.33 Cr valuation. Your mandate: protect returns without destroying the social thesis.");
-const b=document.createElement('button');b.className='btn';b.textContent='Enter Investment Brief';b.onclick=openCase;document.getElementById('controls').appendChild(b)
+    await typeText("Welcome, Partner. The boardroom is live. Meera Rao is waiting across the table, her CFO is on standby, and your secretary has opened a clean diligence file. You are evaluating Samarth Foods Pvt Ltd, a social enterprise that connects smallholder producers and women-led self-help groups to institutional food buyers. Meera Rao is raising ₹5.00 Cr for 15% equity, implying a ₹33.33 Cr valuation. Your mandate: protect returns without destroying the social thesis.");
+    const b=document.createElement('button');b.className='btn';b.textContent='Enter Investment Brief';
+    b.onclick=(e)=>{ addRipple(e, b); setTimeout(openCase, 200); };
+    document.getElementById('controls').appendChild(b)
 }
+
 function openCase(){
-setStage('CASE BRIEF');document.getElementById('dossier').classList.add('active');renderDossier()
+    setStage('CASE BRIEF');document.getElementById('dossier').classList.add('active');renderDossier()
 }
+
 function renderDossier(){
-S.history=false;const body=document.getElementById('dossierBody');
-body.innerHTML=`<div class="timeline">${[1,2,3,4,5].map(i=>`<span class="dot ${i<=S.asked.length?'on':''}"></span>`).join('')}</div>
-<div class="case-grid">
-<div class="fact"><small>FY26 Revenue</small><strong>₹18.4 Cr</strong></div><div class="fact"><small>Producer Network</small><strong>12,800</strong></div>
-<div class="fact"><small>Active Producers</small><strong>7,900</strong></div><div class="fact"><small>FY26 Growth</small><strong>57%</strong></div>
-</div>
-<div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.18);padding:16px;border-radius:9px;font-size:12px;line-height:1.65;margin-bottom:15px">
-<b style="color:var(--gold2)">THE CASE:</b> Samarth Foods aggregates traceable crops from rural producer groups, processes them into institutional food ingredients and sells to schools, hotels, retailers and food-service companies.
-Its impact model is designed to shift producer economics from fragmented spot sales toward predictable institutional demand.
-The company is growing quickly, but its next ₹5 Cr must fund growth while fixing hidden operating weaknesses.
-</div>
-<div class="drag-hint">Drag a question card into the <b>audit zone</b> below, or click a card as a touch-friendly fallback. You have exactly 5 paid audits.</div>`;
-const cats=[...new Set(S.questions.map(q=>q.cat))];
-cats.forEach(cat=>{
-body.insertAdjacentHTML('beforeend',`<div class="category">${cat.toUpperCase()}</div><div class="qgrid" id="cat-${btoa(cat).replace(/=/g,'')}"></div>`);
-const g=body.lastElementChild;
-S.questions.filter(q=>q.cat===cat).forEach(q=>g.appendChild(questionEl(q)))
-});
-const bin=document.createElement('div');bin.className='drop-bin';bin.id='auditBin';
-bin.innerHTML='◎ DROP QUESTION HERE TO SPEND ₹50,000 ON THIS AUDIT';
-bin.addEventListener('dragover',e=>{e.preventDefault();bin.classList.add('dropzone')});
-bin.addEventListener('dragleave',()=>bin.classList.remove('dropzone'));
-bin.addEventListener('drop',e=>{e.preventDefault();bin.classList.remove('dropzone');const q=S.questions.find(x=>x.id===e.dataTransfer.getData('text/plain'));if(q)ask(q)});
-body.appendChild(bin);
-document.getElementById('dossierStatus').textContent=`${S.asked.length} / ${S.maxQ} audits completed`;
-document.getElementById('termBtn').disabled=S.asked.length!==S.maxQ;
-updateSecretary();
+    S.history=false;const body=document.getElementById('dossierBody');
+    body.innerHTML=`
+    <div class="case-grid">
+    <div class="fact"><small>FY26 Revenue</small><strong>₹18.4 Cr</strong></div><div class="fact"><small>Producer Network</small><strong>12,800</strong></div>
+    <div class="fact"><small>Active Producers</small><strong>7,900</strong></div><div class="fact"><small>FY26 Growth</small><strong>57%</strong></div>
+    </div>
+    <div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.18);padding:16px;border-radius:9px;font-size:12px;line-height:1.65;margin-bottom:15px">
+    <b style="color:var(--gold2)">THE CASE:</b> Samarth Foods aggregates traceable crops from rural producer groups, processes them into institutional food ingredients and sells to schools, hotels, retailers and food-service companies.
+    Its impact model is designed to shift producer economics from fragmented spot sales toward predictable institutional demand.
+    The company is growing quickly, but its next ₹5 Cr must fund growth while fixing hidden operating weaknesses.
+    </div>`;
+    
+    const cats=[...new Set(S.questions.map(q=>q.cat))];
+    cats.forEach(cat=>{
+        body.insertAdjacentHTML('beforeend',`<div class="category">${cat.toUpperCase()}</div><div class="qgrid" id="cat-${btoa(cat).replace(/=/g,'')}"></div>`);
+        const g=body.lastElementChild;
+        S.questions.filter(q=>q.cat===cat).forEach(q=>g.appendChild(questionEl(q)))
+    });
+    
+    updateSlots('q', S.asked.length, S.maxQ);
+    document.getElementById('termBtn').disabled=S.asked.length!==S.maxQ;
+    updateSecretary();
 }
+
 function questionEl(q){
-const d=document.createElement('div');
-const asked=S.asked.some(x=>x.id===q.id),locked=S.asked.length>=S.maxQ&&!asked;
-d.className='q '+(asked?'asked ':'')+(locked?'locked':'');
-d.draggable=!asked&&!locked;
-d.dataset.qid=q.id;
-d.innerHTML=`<div class="qtext">${q.text}</div><div class="qmeta">${asked?'✓ AUDITED • DRAGGED INTO SECRETARY':'DRAG TO AUDIT • ₹50,000'}</div>`;
-if(!asked&&!locked){
-  d.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',q.id);d.classList.add('dragging')});
-  d.addEventListener('dragend',()=>d.classList.remove('dragging'));
-  d.onclick=()=>ask(q); // touch/mobile fallback
+    const d=document.createElement('div');
+    const asked=S.asked.some(x=>x.id===q.id),locked=S.asked.length>=S.maxQ&&!asked;
+    d.className='q '+(asked?'asked ':'')+(locked?'locked':'');
+    d.dataset.qid=q.id;
+    d.innerHTML=`<div class="qtext">${q.text}</div><div class="qmeta">${asked?'✓ AUDIT SECURED':'CLICK TO AUDIT • ₹50,000'}</div>`;
+    
+    if(!asked&&!locked){
+        d.onclick=(e)=>{ addRipple(e, d); ask(q); }
+    }
+    return d
 }
-return d
-}
+
 async function ask(q){
-if(S.asked.length>=S.maxQ || S.asked.some(x=>x.id===q.id))return;
-S.asked.push(q);S.budget-=50000;updateHud();updateSecretary();
-document.getElementById('dossier').classList.remove('active');setStage('FOUNDER RESPONSE');
-await typeText('“'+q.answer+'”',9);
-const b=document.createElement('button');b.className='btn';b.textContent=S.asked.length<5?'Continue Diligence →':'Open Data Room →';
-b.onclick=()=>{setStage('DUE DILIGENCE');openCase();};
-document.getElementById('controls').appendChild(b);
-document.getElementById('secretary').classList.add('active');
-setTimeout(()=>document.getElementById('secretary').classList.remove('active'),1800);
+    if(S.asked.length>=S.maxQ || S.asked.some(x=>x.id===q.id))return;
+    S.asked.push(q);S.budget-=50000;updateHud();updateSecretary();
+    
+    document.getElementById('dossier').classList.remove('active');setStage('FOUNDER RESPONSE');
+    await typeText('“'+q.answer+'”',9);
+    
+    const b=document.createElement('button');b.className='btn';b.textContent=S.asked.length<5?'Continue Diligence →':'Open Data Room →';
+    b.onclick=(e)=>{ addRipple(e, b); setTimeout(()=>{ setStage('DUE DILIGENCE');openCase(); }, 200); };
+    document.getElementById('controls').appendChild(b);
+    document.getElementById('secretary').classList.add('active');
+    setTimeout(()=>document.getElementById('secretary').classList.remove('active'),1800);
 }
+
 function toggleHistory(){
-const body=document.getElementById('dossierBody');
-if(!S.history){S.history=true;body.innerHTML='<h3 style="color:var(--gold);margin-bottom:15px">DILIGENCE HISTORY</h3>';
-if(!S.asked.length)body.innerHTML+='<i style="color:var(--muted)">No audits yet.</i>';
-S.asked.forEach((q,i)=>body.innerHTML+=`<div class="history"><b>Audit ${i+1}: ${q.text}</b><p>“${q.answer}”</p></div>`)
-}else renderDossier()
+    const body=document.getElementById('dossierBody');
+    if(!S.history){
+        S.history=true;body.innerHTML='<h3 style="color:var(--gold);margin-bottom:15px">DILIGENCE HISTORY</h3>';
+        if(!S.asked.length)body.innerHTML+='<i style="color:var(--muted)">No audits yet.</i>';
+        S.asked.forEach((q,i)=>body.innerHTML+=`<div class="history"><b>Audit ${i+1}: ${q.text}</b><p>“${q.answer}”</p></div>`)
+    }else renderDossier()
 }
+
 function toggleSecretary(){document.getElementById('secretary').classList.toggle('active');updateSecretary()}
 function updateSecretary(){
-const body=document.getElementById('secretaryBody'),count=document.getElementById('secCount');
-count.textContent=`(${S.asked.length})`;
-if(!S.asked.length){body.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:25px 10px">Your secretary will automatically retain every founder response here for later reference.</div>';return}
-body.innerHTML=S.asked.map((q,i)=>`<div class="sec-card"><small>Audit ${i+1} • ${q.cat}</small><b>${q.text}</b><p>Founder: “${q.answer}”</p></div>`).join('');
+    const body=document.getElementById('secretaryBody'),count=document.getElementById('secCount');
+    count.textContent=`(${S.asked.length})`;
+    if(!S.asked.length){body.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:25px 10px">Your secretary will automatically retain every founder response here for later reference.</div>';return}
+    body.innerHTML=S.asked.map((q,i)=>`<div class="sec-card"><small>Audit ${i+1} • ${q.cat}</small><b>${q.text}</b><p>Founder: “${q.answer}”</p></div>`).join('');
 }
+
+function updateSlots(prefix, count, max) {
+    for (let i=1; i<=max; i++) {
+        const slot = document.getElementById(`${prefix}s${i}`);
+        if(i <= count) {
+            slot.classList.add('filled');
+            slot.innerHTML = '✓';
+        } else {
+            slot.classList.remove('filled');
+            slot.innerHTML = i;
+        }
+    }
+}
+
 function goTerms(){if(S.asked.length!==5)return;updateSecretary();document.getElementById('dossier').classList.remove('active');setStage('TERM SHEET');document.getElementById('terms').classList.add('active');renderChips();updateTerms()}
 function backDossier(){document.getElementById('terms').classList.remove('active');openCase()}
 function updateTerms(){
-const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
-document.getElementById('invLabel').textContent=cr(inv);document.getElementById('eqLabel').textContent=eq+'%';document.getElementById('valuation').textContent=cr(val);
-document.getElementById('num').textContent=money(inv);document.getElementById('words').textContent='Rupees '+(inv/1e7).toFixed(2)+' Crore Only'
+    const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
+    document.getElementById('invLabel').textContent=cr(inv);document.getElementById('eqLabel').textContent=eq+'%';document.getElementById('valuation').textContent=cr(val);
+    document.getElementById('num').textContent=money(inv);document.getElementById('words').textContent='Rupees '+(inv/1e7).toFixed(2)+' Crore Only'
 }
+
 function renderChips(){
-const c=document.getElementById('chips');c.innerHTML='';
-S.chips.forEach(x=>{
-const d=document.createElement('div');d.className='chip '+(S.chipsSel?.some(y=>y.id===x.id)?'sel':'');d.textContent=x.text;d.draggable=true;d.dataset.cid=x.id;
-d.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/chip',x.id);d.classList.add('dragging')});
-d.addEventListener('dragend',()=>d.classList.remove('dragging'));
-d.onclick=()=>selectChip(x);
-c.appendChild(d)
-});
-const selected=document.createElement('div');selected.className='drop-bin';selected.id='chipBin';
-selected.innerHTML='◎ DRAG TWO VALUE-ADDS INTO THIS ALLOCATION ZONE';
-selected.addEventListener('dragover',e=>{e.preventDefault();selected.classList.add('dropzone')});
-selected.addEventListener('dragleave',()=>selected.classList.remove('dropzone'));
-selected.addEventListener('drop',e=>{e.preventDefault();selected.classList.remove('dropzone');const x=S.chips.find(z=>z.id===e.dataTransfer.getData('text/chip'));if(x)selectChip(x)});
-c.appendChild(selected);
-document.getElementById('chipCount').textContent=`${S.chipsSel?.length||0} / 2 Selected`;
-document.getElementById('memoBtn').disabled=(S.chipsSel?.length||0)!==2
+    const c=document.getElementById('chips');c.innerHTML='';
+    S.chips.forEach(x=>{
+        const d=document.createElement('div');
+        d.className='chip '+(S.chipsSel.some(y=>y.id===x.id)?'sel':'');
+        d.textContent=x.text;
+        d.onclick=(e)=> { addRipple(e, d); selectChip(x); }
+        c.appendChild(d)
+    });
+    updateSlots('c', S.chipsSel.length, 2);
+    document.getElementById('memoBtn').disabled=(S.chipsSel.length!==2)
 }
+
 function selectChip(x){
-S.chipsSel=S.chipsSel||[];const i=S.chipsSel.findIndex(y=>y.id===x.id);
-if(i>=0)S.chipsSel.splice(i,1);else if(S.chipsSel.length<2)S.chipsSel.push(x);
-renderChips();
+    const i=S.chipsSel.findIndex(y=>y.id===x.id);
+    if(i>=0) S.chipsSel.splice(i,1); 
+    else if(S.chipsSel.length<2) S.chipsSel.push(x);
+    renderChips();
 }
 
 function goMemo(){document.getElementById('terms').classList.remove('active');setStage('INVESTMENT MEMO');document.getElementById('memo').classList.add('active');renderMemos()}
 function backTerms(){document.getElementById('memo').classList.remove('active');document.getElementById('terms').classList.add('active')}
+
 function renderMemos(){
-const c=document.getElementById('memos');c.innerHTML='';
-S.memos.forEach(m=>{
-const d=document.createElement('div');d.className='memo '+(S.memosSel?.some(x=>x.id===m.id)?'sel':'');d.textContent=m.text;d.draggable=true;
-d.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/memo',m.id);d.classList.add('dragging')});
-d.addEventListener('dragend',()=>d.classList.remove('dragging'));
-d.onclick=()=>selectMemo(m);c.appendChild(d)
-});
-const bin=document.createElement('div');bin.className='drop-bin';bin.id='memoBin';bin.style.gridColumn='1/-1';
-bin.innerHTML='◎ DRAG THREE DOCUMENTED FINDINGS INTO THE MEMO';
-bin.addEventListener('dragover',e=>{e.preventDefault();bin.classList.add('dropzone')});
-bin.addEventListener('dragleave',()=>bin.classList.remove('dropzone'));
-bin.addEventListener('drop',e=>{e.preventDefault();bin.classList.remove('dropzone');const m=S.memos.find(z=>z.id===e.dataTransfer.getData('text/memo'));if(m)selectMemo(m)});
-c.appendChild(bin);updateMemo()
+    const c=document.getElementById('memos');c.innerHTML='';
+    S.memos.forEach(m=>{
+        const d=document.createElement('div');
+        d.className='memo '+(S.memosSel.some(x=>x.id===m.id)?'sel':'');
+        d.textContent=m.text;
+        d.onclick=(e)=> { addRipple(e, d); selectMemo(m); }
+        c.appendChild(d)
+    });
+    updateMemo();
 }
+
 function selectMemo(m){
-S.memosSel=S.memosSel||[];const i=S.memosSel.findIndex(x=>x.id===m.id);
-if(i>=0)S.memosSel.splice(i,1);else if(S.memosSel.length<3)S.memosSel.push(m);
-renderMemos();
+    const i=S.memosSel.findIndex(x=>x.id===m.id);
+    if(i>=0) S.memosSel.splice(i,1); 
+    else if(S.memosSel.length<3) S.memosSel.push(m);
+    renderMemos();
 }
 
 function updateMemo(){
-const arr=S.memosSel||[];document.getElementById('memoCount').textContent=`${arr.length} / 3 Selected`;document.getElementById('submit').disabled=arr.length!==3;
-document.getElementById('clauses').innerHTML=arr.length?arr.map((m,i)=>`<div style="margin:7px 0"><b>${i+1}.</b> ${m.text}</div>`).join(''):'<i>Select three audited findings below.</i>'
+    const arr=S.memosSel||[];
+    updateSlots('m', arr.length, 3);
+    document.getElementById('submit').disabled=arr.length!==3;
+    document.getElementById('clauses').innerHTML=arr.length?arr.map((m,i)=>`<div style="margin:7px 0"><b>${i+1}.</b> ${m.text}</div>`).join(''):'<i>Select exactly three audited findings below to draft your stance.</i>'
 }
+
 function submitDeal(){
-document.getElementById('stamp').classList.add('on');setTimeout(evaluate,900)
+    const stamp = document.getElementById('stamp');
+    stamp.classList.add('on');
+    document.getElementById('world').classList.add('shake');
+    setTimeout(() => document.getElementById('world').classList.remove('shake'), 400);
+    setTimeout(evaluate, 1200);
 }
+
 function evaluate(){
-document.getElementById('memo').classList.remove('active');setStage('DELIBERATION');
-const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
-const flaws=['flaw_mission','flaw_cash','flaw_quality','flaw_concentration','flaw_tech'];
-const found=flaws.filter(f=>S.asked.some(q=>q.type===f)).length;
-const matches=(S.chipsSel||[]).filter(c=>S.asked.some(q=>q.type===c.target)).length;
-const baseless=(S.memosSel||[]).filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
-let floor=280000000-found*18000000-matches*15000000;
-floor=Math.max(180000000,floor);
-const seconds=Math.floor((Date.now()-S.start)/1000);
-const efficiency=Math.max(0,(333333333-val)/100000);
-const insight=found*500+matches*800;
-const spendPenalty=500-S.budget/100000;
-const score=Math.max(0,Math.floor(efficiency*1.4+insight+S.budget/100000-seconds*.35-spendPenalty*.2));
-const log=[];
-log.push(`• <b>Diligence:</b> You uncovered ${found} of 5 critical operating risks.`);
-log.push(`• <b>Strategic fit:</b> ${matches} of 2 selected value-adds directly addressed risks you audited.`);
-log.push(`• <b>Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% = implied valuation of <b>${cr(val)}</b>.`);
-log.push(`• <b>Founder threshold:</b> ${cr(floor)} after risk discounts.`);
-log.push(`• <b>Diligence capital retained:</b> ${money(S.budget)}.`);
-log.push(`• <b>Decision time:</b> ${seconds} seconds.`);
-if(baseless){showVerdict('OFFER DISQUALIFIED','FOUNDER WALKED AWAY • BASELESS ASSERTION',0,`You cited ${baseless} specific risk(s) that were never audited. In this simulation, an investor cannot manufacture diligence evidence after the fact.`);return}
-if(val>=floor){
-showVerdict('TERM SHEET ACCEPTED','DEAL RATIFIED • IMPACT SYNDICATE APPROVED',score,log.join('<br>'),true)
-}else{
-showVerdict('OFFER UNDER CONSIDERATION','FOUNDER HAS NOT REJECTED THE OFFER',score,log.join('<br>')+'<br>• The economics are below the founder’s preferred threshold, but the offer remains on the table for committee consideration. A strong strategic fit, retained diligence capital and credible risk coverage could still influence the final decision.',false)
+    document.getElementById('memo').classList.remove('active');setStage('DELIBERATION');
+    const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
+    const flaws=['flaw_mission','flaw_cash','flaw_quality','flaw_concentration','flaw_tech'];
+    const found=flaws.filter(f=>S.asked.some(q=>q.type===f)).length;
+    const matches=(S.chipsSel||[]).filter(c=>S.asked.some(q=>q.type===c.target)).length;
+    const baseless=(S.memosSel||[]).filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
+    let floor=280000000-found*18000000-matches*15000000;
+    floor=Math.max(180000000,floor);
+    const seconds=Math.floor((Date.now()-S.start)/1000);
+    const efficiency=Math.max(0,(333333333-val)/100000);
+    const insight=found*500+matches*800;
+    const spendPenalty=500-S.budget/100000;
+    const score=Math.max(0,Math.floor(efficiency*1.4+insight+S.budget/100000-seconds*.35-spendPenalty*.2));
+    const log=[];
+    log.push(`• <b>Diligence:</b> You uncovered ${found} of 5 critical operating risks.`);
+    log.push(`• <b>Strategic fit:</b> ${matches} of 2 selected value-adds directly addressed risks you audited.`);
+    log.push(`• <b>Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% = implied valuation of <b>${cr(val)}</b>.`);
+    log.push(`• <b>Founder threshold:</b> ${cr(floor)} after risk discounts.`);
+    log.push(`• <b>Diligence capital retained:</b> ${money(S.budget)}.`);
+    log.push(`• <b>Decision time:</b> ${seconds} seconds.`);
+    if(baseless){showVerdict('OFFER DISQUALIFIED','FOUNDER WALKED AWAY • BASELESS ASSERTION',0,`You cited ${baseless} specific risk(s) that were never audited. In this simulation, an investor cannot manufacture diligence evidence after the fact.`);return}
+    if(val>=floor){
+        showVerdict('TERM SHEET ACCEPTED','DEAL RATIFIED • IMPACT SYNDICATE APPROVED',score,log.join('<br>'),true)
+    }else{
+        showVerdict('OFFER UNDER CONSIDERATION','FOUNDER HAS NOT REJECTED THE OFFER',score,log.join('<br>')+'<br>• The economics are below the founder’s preferred threshold, but the offer remains on the table for committee consideration. A strong strategic fit, retained diligence capital and credible risk coverage could still influence the final decision.',false)
+    }
 }
-}
+
 function showVerdict(t,s,score,log,accepted){
-const v=document.getElementById('verdict');v.classList.add('active');
-document.getElementById('vtitle').textContent=t;
-document.getElementById('vtitle').style.color=accepted?'var(--green)':'var(--gold)';
-document.getElementById('vsub').textContent=s;document.getElementById('vscore').textContent=score.toLocaleString('en-IN');
-document.getElementById('vlog').innerHTML=log;
-if(accepted){v.classList.add('successPulse');launchParticles()}
+    const v=document.getElementById('verdict');v.classList.add('active');
+    document.getElementById('vtitle').textContent=t;
+    document.getElementById('vtitle').style.color=accepted?'var(--green)':'var(--gold)';
+    document.getElementById('vsub').textContent=s;document.getElementById('vscore').textContent=score.toLocaleString('en-IN');
+    document.getElementById('vlog').innerHTML=log;
+    if(accepted){v.classList.add('successPulse');launchParticles()}
 }
+
 function launchParticles(){
-const v=document.getElementById('verdict');const p=document.createElement('div');p.className='vparticles';v.querySelector('.verdict').appendChild(p);
-for(let i=0;i<65;i++){const x=document.createElement('i');x.className='particle';x.style.left=Math.random()*100+'%';x.style.animationDelay=Math.random()*.8+'s';x.style.width=(3+Math.random()*6)+'px';x.style.height=x.style.width;p.appendChild(x)}
+    const v=document.getElementById('verdict');const p=document.createElement('div');p.className='vparticles';v.querySelector('.verdict').appendChild(p);
+    for(let i=0;i<65;i++){const x=document.createElement('i');x.className='particle';x.style.left=Math.random()*100+'%';x.style.animationDelay=Math.random()*.8+'s';x.style.width=(3+Math.random()*6)+'px';x.style.height=x.style.width;p.appendChild(x)}
 }
 
 window.onload=()=>{updateHud();updateSecretary();briefing()}
