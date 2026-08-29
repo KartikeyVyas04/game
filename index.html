@@ -99,7 +99,7 @@ button,input{font:inherit}.hidden{display:none!important}
 .stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.35s}.stamp.on{opacity:.8;transform:rotate(-14deg) scale(1)}
 
 /* VERDICT */
-.verdict{width:min(820px,92vw);padding:38px;text-align:center;background:#090e17;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 100px #000}.vtitle{font-size:36px;font-weight:900;color:var(--green)}.vscore{font-size:55px;font-weight:900;color:var(--gold);margin:12px}.vlog{text-align:left;background:rgba(255,255,255,.035);padding:18px;border-radius:8px;line-height:1.7;font-size:13px;margin:18px 0}
+.verdict{width:min(820px,92vw);padding:38px;text-align:center;background:#090e17;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 100px #000}.vtitle{font-size:36px;font-weight:900;color:var(--gold)}.vscore{font-size:55px;font-weight:900;color:var(--gold);margin:12px}.vlog{text-align:left;background:rgba(255,255,255,.035);padding:18px;border-radius:8px;line-height:1.7;font-size:13px;margin:18px 0}
 
 /* ANIMATIONS & EFFECTS */
 .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: rippleEffect 0.6s linear; background-color: rgba(255, 255, 255, 0.2); pointer-events: none; }
@@ -179,7 +179,7 @@ button,input{font:inherit}.hidden{display:none!important}
 
 <!-- MODAL 3: MEMO -->
 <div id="memo" class="overlay"><div class="modal">
-<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Any claim about an undiscovered risk is an automatic disqualification.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backTerms()">← Back</button></div></div>
+<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Any claim about an undiscovered risk will severely damage founder trust and your final score.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backTerms()">← Back</button></div></div>
 <div class="mb"><div class="parchment"><h3>INVESTMENT COMMITTEE MEMORANDUM</h3><div id="clauses"><i>Select three audited findings below.</i></div><div id="stamp" class="stamp">EXECUTED</div></div>
 
 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
@@ -193,43 +193,44 @@ button,input{font:inherit}.hidden{display:none!important}
 </div></div>
 
 <!-- VERDICT -->
-<div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">EVALUATING</div><div id="vsub" style="letter-spacing:2px;color:var(--muted);font-size:12px"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Initiate New Negotiation</button></div></div>
+<div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">OFFER SUBMITTED</div><div id="vsub" style="letter-spacing:2px;font-weight:bold;font-size:14px"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Return to Briefing</button></div></div>
 </main>
 
 <script>
+// Included points weighting logic for every question to calculate robust scores
 const S={
 budget:50000000,maxQ:5,asked:[],chipsSel:[],memosSel:[],start:Date.now(),history:false,
 questions:[
-{id:'q1',cat:'Mission & Beneficiary Access',text:'What share of Samarth\'s producer volume actually comes from women-led SHGs?',answer:'Only 54% of current procurement comes from women-led SHGs. The remaining 46% is sourced from larger aggregators because they can meet our volume commitments faster.',type:'flaw_mission'},
-{id:'q2',cat:'Mission & Beneficiary Access',text:'What percentage of SHG members receive a direct income from the company?',answer:'About 81% of registered members receive at least one payment cycle. The rest are inactive or seasonal participants.',type:'neutral'},
-{id:'q3',cat:'Mission & Beneficiary Access',text:'How do you measure income improvement for producer households?',answer:'We compare monthly procurement payments with baseline village surveys and report median household income uplift annually.',type:'neutral'},
-{id:'q4',cat:'Mission & Beneficiary Access',text:'Do institutional buyers ever bypass the SHGs and buy directly from aggregators?',answer:'Yes. A few large buyers have requested aggregator-direct fulfilment when SHGs cannot guarantee quantity. We are trying to protect the SHG-first model.',type:'neutral'},
-{id:'q5',cat:'Mission & Beneficiary Access',text:'What is the average annual income earned by an active producer?',answer:'An active producer earns roughly ₹62,000 a year through Samarth procurement, though this varies materially by crop and season.',type:'neutral'},
-{id:'q6',cat:'Financial Quality',text:'How much cash does the company have at the current ₹42L monthly burn?',answer:'We have approximately 78 days of cash runway. A delayed institutional receivable would force us to stretch supplier payments.',type:'flaw_cash'},
-{id:'q7',cat:'Financial Quality',text:'What is the current gross margin before central overhead?',answer:'Blended gross margin is 31%. Premium institutional products can reach 38%, while entry-level SKUs are closer to 24%.',type:'neutral'},
-{id:'q8',cat:'Financial Quality',text:'How concentrated are receivables among your top institutional buyers?',answer:'Our largest buyer represents 29% of outstanding receivables. Their standard payment term is 60 days.',type:'neutral'},
-{id:'q9',cat:'Financial Quality',text:'What is your monthly operating expense excluding procurement?',answer:'Approximately ₹19 lakh, including the field team, quality staff, technology and headquarters.',type:'neutral'},
-{id:'q10',cat:'Financial Quality',text:'Have there been any accounting qualifications in the last audit?',answer:'No material qualifications. The auditor did flag the need for tighter SKU-level contribution reporting.',type:'neutral'},
-{id:'q11',cat:'Supply Chain & Quality',text:'What is the current rejection rate at institutional buyer quality gates?',answer:'It has risen to 8.6% from 4.1% last year. Moisture variation and inconsistent grading at village collection points are the biggest causes.',type:'flaw_quality'},
-{id:'q12',cat:'Supply Chain & Quality',text:'How many collection centres are company-operated?',answer:'We operate 34 centres and partner with 21 local collection points across three states.',type:'neutral'},
-{id:'q13',cat:'Supply Chain & Quality',text:'What is the average fulfilment lead time from village to buyer?',answer:'Four to six days depending on the product. Shelf-stable SKUs are faster than fresh or moisture-sensitive products.',type:'neutral'},
-{id:'q14',cat:'Supply Chain & Quality',text:'What proportion of procurement is covered by digital traceability?',answer:'Around 67% is digitally traceable from producer group to collection centre; the remaining volume uses paper records.',type:'neutral'},
-{id:'q15',cat:'Supply Chain & Quality',text:'Do you have backup logistics partners?',answer:'Yes. We have two regional logistics partners plus a small in-house coordination team.',type:'neutral'},
-{id:'q16',cat:'Buyer Economics',text:'What share of revenue comes from the top three institutional buyers?',answer:'61% of revenue comes from our top three buyers. We know this is high and are actively adding mid-sized buyers.',type:'flaw_concentration'},
-{id:'q17',cat:'Buyer Economics',text:'What is the average contract duration with institutional buyers?',answer:'Most contracts are 12 months, with renewal clauses tied to quality and service levels.',type:'neutral'},
-{id:'q18',cat:'Buyer Economics',text:'How much pricing power do buyers have during annual renewal?',answer:'Large buyers have meaningful leverage because they purchase volume. We generally negotiate on service levels rather than taking large list-price increases.',type:'neutral'},
-{id:'q19',cat:'Buyer Economics',text:'What is the current repeat-order rate?',answer:'Approximately 74% of institutional buyers reorder within two quarters.',type:'neutral'},
-{id:'q20',cat:'Buyer Economics',text:'Are there minimum-volume commitments from buyers?',answer:'Some buyers have quarterly volume bands, but most contracts do not guarantee a minimum take-or-pay quantity.',type:'neutral'},
-{id:'q21',cat:'Technology & Distribution',text:'How dependent is producer onboarding on smartphone literacy?',answer:'Our field app is Android-first. Field officers can onboard producers, but direct producer self-service remains low.',type:'neutral'},
-{id:'q22',cat:'Technology & Distribution',text:'What is the monthly active rate of the producer app?',answer:'Only 43% of registered producers are monthly active. WhatsApp and field officers still drive most communication.',type:'flaw_tech'},
-{id:'q23',cat:'Technology & Distribution',text:'Do you own the source code for the procurement platform?',answer:'Yes. The core platform is company-owned, although some analytics components use third-party services.',type:'neutral'},
-{id:'q24',cat:'Technology & Distribution',text:'What is the current cost to onboard one producer?',answer:'About ₹480 including field travel, training and verification. Digital referrals are substantially cheaper.',type:'neutral'},
-{id:'q25',cat:'Governance & Team',text:'Are founder shares subject to vesting and a founder lock-in?',answer:'Yes. Founder equity is on four-year vesting and a standard one-year cliff has already passed.',type:'neutral'},
-{id:'q26',cat:'Governance & Team',text:'Who owns the producer relationships if a field manager leaves?',answer:'Relationships are recorded centrally, but continuity is still highly dependent on experienced field managers in some districts.',type:'neutral'},
-{id:'q27',cat:'Market & Impact',text:'What is your current annual revenue?',answer:'FY26 revenue was ₹18.4 Cr, up from ₹11.7 Cr in FY25. Management is targeting ₹31 Cr in FY27.',type:'neutral'},
-{id:'q28',cat:'Market & Impact',text:'What is the estimated addressable market?',answer:'We estimate the formal institutional market for traceable rural food products at over ₹12,000 Cr in India.',type:'fluff'},
-{id:'q29',cat:'Market & Impact',text:'How many producers are currently registered?',answer:'12,800 producers across Maharashtra, Madhya Pradesh and Karnataka, with about 7,900 active in the last six months.',type:'neutral'},
-{id:'q30',cat:'Market & Impact',text:'What is the next expansion geography?',answer:'We plan to enter Rajasthan and Telangana after stabilising the current three-state network.',type:'neutral'}
+{id:'q1',cat:'Mission & Beneficiary Access',text:'What share of Samarth\'s producer volume actually comes from women-led SHGs?',answer:'Only 54% of current procurement comes from women-led SHGs. The remaining 46% is sourced from larger aggregators because they can meet our volume commitments faster.',type:'flaw_mission', pts: 500},
+{id:'q2',cat:'Mission & Beneficiary Access',text:'What percentage of SHG members receive a direct income from the company?',answer:'About 81% of registered members receive at least one payment cycle. The rest are inactive or seasonal participants.',type:'neutral', pts: 150},
+{id:'q3',cat:'Mission & Beneficiary Access',text:'How do you measure income improvement for producer households?',answer:'We compare monthly procurement payments with baseline village surveys and report median household income uplift annually.',type:'neutral', pts: 150},
+{id:'q4',cat:'Mission & Beneficiary Access',text:'Do institutional buyers ever bypass the SHGs and buy directly from aggregators?',answer:'Yes. A few large buyers have requested aggregator-direct fulfilment when SHGs cannot guarantee quantity. We are trying to protect the SHG-first model.',type:'neutral', pts: 200},
+{id:'q5',cat:'Mission & Beneficiary Access',text:'What is the average annual income earned by an active producer?',answer:'An active producer earns roughly ₹62,000 a year through Samarth procurement, though this varies materially by crop and season.',type:'neutral', pts: 100},
+{id:'q6',cat:'Financial Quality',text:'How much cash does the company have at the current ₹42L monthly burn?',answer:'We have approximately 78 days of cash runway. A delayed institutional receivable would force us to stretch supplier payments.',type:'flaw_cash', pts: 500},
+{id:'q7',cat:'Financial Quality',text:'What is the current gross margin before central overhead?',answer:'Blended gross margin is 31%. Premium institutional products can reach 38%, while entry-level SKUs are closer to 24%.',type:'neutral', pts: 150},
+{id:'q8',cat:'Financial Quality',text:'How concentrated are receivables among your top institutional buyers?',answer:'Our largest buyer represents 29% of outstanding receivables. Their standard payment term is 60 days.',type:'neutral', pts: 200},
+{id:'q9',cat:'Financial Quality',text:'What is your monthly operating expense excluding procurement?',answer:'Approximately ₹19 lakh, including the field team, quality staff, technology and headquarters.',type:'neutral', pts: 150},
+{id:'q10',cat:'Financial Quality',text:'Have there been any accounting qualifications in the last audit?',answer:'No material qualifications. The auditor did flag the need for tighter SKU-level contribution reporting.',type:'neutral', pts: 150},
+{id:'q11',cat:'Supply Chain & Quality',text:'What is the current rejection rate at institutional buyer quality gates?',answer:'It has risen to 8.6% from 4.1% last year. Moisture variation and inconsistent grading at village collection points are the biggest causes.',type:'flaw_quality', pts: 500},
+{id:'q12',cat:'Supply Chain & Quality',text:'How many collection centres are company-operated?',answer:'We operate 34 centres and partner with 21 local collection points across three states.',type:'neutral', pts: 150},
+{id:'q13',cat:'Supply Chain & Quality',text:'What is the average fulfilment lead time from village to buyer?',answer:'Four to six days depending on the product. Shelf-stable SKUs are faster than fresh or moisture-sensitive products.',type:'neutral', pts: 100},
+{id:'q14',cat:'Supply Chain & Quality',text:'What proportion of procurement is covered by digital traceability?',answer:'Around 67% is digitally traceable from producer group to collection centre; the remaining volume uses paper records.',type:'neutral', pts: 150},
+{id:'q15',cat:'Supply Chain & Quality',text:'Do you have backup logistics partners?',answer:'Yes. We have two regional logistics partners plus a small in-house coordination team.',type:'neutral', pts: 100},
+{id:'q16',cat:'Buyer Economics',text:'What share of revenue comes from the top three institutional buyers?',answer:'61% of revenue comes from our top three buyers. We know this is high and are actively adding mid-sized buyers.',type:'flaw_concentration', pts: 500},
+{id:'q17',cat:'Buyer Economics',text:'What is the average contract duration with institutional buyers?',answer:'Most contracts are 12 months, with renewal clauses tied to quality and service levels.',type:'neutral', pts: 100},
+{id:'q18',cat:'Buyer Economics',text:'How much pricing power do buyers have during annual renewal?',answer:'Large buyers have meaningful leverage because they purchase volume. We generally negotiate on service levels rather than taking large list-price increases.',type:'neutral', pts: 150},
+{id:'q19',cat:'Buyer Economics',text:'What is the current repeat-order rate?',answer:'Approximately 74% of institutional buyers reorder within two quarters.',type:'neutral', pts: 150},
+{id:'q20',cat:'Buyer Economics',text:'Are there minimum-volume commitments from buyers?',answer:'Some buyers have quarterly volume bands, but most contracts do not guarantee a minimum take-or-pay quantity.',type:'neutral', pts: 150},
+{id:'q21',cat:'Technology & Distribution',text:'How dependent is producer onboarding on smartphone literacy?',answer:'Our field app is Android-first. Field officers can onboard producers, but direct producer self-service remains low.',type:'neutral', pts: 150},
+{id:'q22',cat:'Technology & Distribution',text:'What is the monthly active rate of the producer app?',answer:'Only 43% of registered producers are monthly active. WhatsApp and field officers still drive most communication.',type:'flaw_tech', pts: 500},
+{id:'q23',cat:'Technology & Distribution',text:'Do you own the source code for the procurement platform?',answer:'Yes. The core platform is company-owned, although some analytics components use third-party services.',type:'neutral', pts: 100},
+{id:'q24',cat:'Technology & Distribution',text:'What is the current cost to onboard one producer?',answer:'About ₹480 including field travel, training and verification. Digital referrals are substantially cheaper.',type:'neutral', pts: 100},
+{id:'q25',cat:'Governance & Team',text:'Are founder shares subject to vesting and a founder lock-in?',answer:'Yes. Founder equity is on four-year vesting and a standard one-year cliff has already passed.',type:'neutral', pts: 150},
+{id:'q26',cat:'Governance & Team',text:'Who owns the producer relationships if a field manager leaves?',answer:'Relationships are recorded centrally, but continuity is still highly dependent on experienced field managers in some districts.',type:'neutral', pts: 150},
+{id:'q27',cat:'Market & Impact',text:'What is your current annual revenue?',answer:'FY26 revenue was ₹18.4 Cr, up from ₹11.7 Cr in FY25. Management is targeting ₹31 Cr in FY27.',type:'neutral', pts: 100},
+{id:'q28',cat:'Market & Impact',text:'What is the estimated addressable market?',answer:'We estimate the formal institutional market for traceable rural food products at over ₹12,000 Cr in India.',type:'fluff', pts: 10},
+{id:'q29',cat:'Market & Impact',text:'How many producers are currently registered?',answer:'12,800 producers across Maharashtra, Madhya Pradesh and Karnataka, with about 7,900 active in the last six months.',type:'neutral', pts: 100},
+{id:'q30',cat:'Market & Impact',text:'What is the next expansion geography?',answer:'We plan to enter Rajasthan and Telangana after stabilising the current three-state network.',type:'neutral', pts: 100}
 ],
 chips:[
 {id:'c1',text:'SHG-first procurement covenant + FPO network integration',target:'flaw_mission'},
@@ -454,39 +455,74 @@ function submitDeal(){
 function evaluate(){
     document.getElementById('memo').classList.remove('active');setStage('DELIBERATION');
     const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
+    
+    // Evaluate Data Points
     const flaws=['flaw_mission','flaw_cash','flaw_quality','flaw_concentration','flaw_tech'];
     const found=flaws.filter(f=>S.asked.some(q=>q.type===f)).length;
+    let diligencePts = S.asked.reduce((sum, q) => sum + (q.pts || 0), 0);
+    
     const matches=(S.chipsSel||[]).filter(c=>S.asked.some(q=>q.type===c.target)).length;
+    const mismatches=(S.chipsSel||[]).length - matches;
     const baseless=(S.memosSel||[]).filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
-    let floor=280000000-found*18000000-matches*15000000;
-    floor=Math.max(180000000,floor);
+    
+    // Evaluate Pricing Mechanics
+    let floor=280000000 - (found*15000000) - (matches*15000000);
+    floor=Math.max(150000000,floor); // Hard floor 15 Cr
+
+    // Calculate Mathematical Score 
     const seconds=Math.floor((Date.now()-S.start)/1000);
-    const efficiency=Math.max(0,(333333333-val)/100000);
-    const insight=found*500+matches*800;
-    const spendPenalty=500-S.budget/100000;
-    const score=Math.max(0,Math.floor(efficiency*1.4+insight+S.budget/100000-seconds*.35-spendPenalty*.2));
-    const log=[];
-    log.push(`• <b>Diligence:</b> You uncovered ${found} of 5 critical operating risks.`);
-    log.push(`• <b>Strategic fit:</b> ${matches} of 2 selected value-adds directly addressed risks you audited.`);
-    log.push(`• <b>Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% = implied valuation of <b>${cr(val)}</b>.`);
-    log.push(`• <b>Founder threshold:</b> ${cr(floor)} after risk discounts.`);
-    log.push(`• <b>Diligence capital retained:</b> ${money(S.budget)}.`);
-    log.push(`• <b>Decision time:</b> ${seconds} seconds.`);
-    if(baseless){showVerdict('OFFER DISQUALIFIED','FOUNDER WALKED AWAY • BASELESS ASSERTION',0,`You cited ${baseless} specific risk(s) that were never audited. In this simulation, an investor cannot manufacture diligence evidence after the fact.`);return}
-    if(val>=floor){
-        showVerdict('TERM SHEET ACCEPTED','DEAL RATIFIED • IMPACT SYNDICATE APPROVED',score,log.join('<br>'),true)
-    }else{
-        showVerdict('OFFER UNDER CONSIDERATION','FOUNDER HAS NOT REJECTED THE OFFER',score,log.join('<br>')+'<br>• The economics are below the founder’s preferred threshold, but the offer remains on the table for committee consideration. A strong strategic fit, retained diligence capital and credible risk coverage could still influence the final decision.',false)
+    const chipScore = (matches * 1000) - (mismatches * 250);
+    const efficiency=Math.max(0,(333333333-val)/100000); // Higher score for cheaper valuations
+    const penaltyScore = baseless * 1500;
+    const fundScore = S.budget / 100000;
+    const timeScore = seconds * 0.4;
+    
+    let score=Math.floor((efficiency * 1.5) + diligencePts + chipScore + fundScore - timeScore - penaltyScore);
+    score = Math.max(0, score); // Prevent negative display
+    
+    // Determine Founder Sentiment (No Rejections)
+    let sentiment = '';
+    let sentimentColor = '';
+    
+    if (baseless >= 2 || val < floor * 0.7) {
+        sentiment = 'NOT MUCH INTERESTED';
+        sentimentColor = 'var(--red)';
+    } else if (baseless === 1 || val < floor) {
+        sentiment = 'NEUTRAL / EVALUATING';
+        sentimentColor = 'var(--gold)';
+    } else {
+        sentiment = 'HIGHLY INTERESTED';
+        sentimentColor = 'var(--green)';
     }
+
+    // Build the Evaluation Log
+    const log=[];
+    log.push(`• <b>Diligence Conducted:</b> You uncovered ${found} of 5 critical operating risks.`);
+    log.push(`• <b>Strategic Alignment:</b> ${matches} of 2 value-adds directly targeted an audited risk.`);
+    log.push(`• <b>Financial Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% (Implied Valuation: <b>${cr(val)}</b>).`);
+    log.push(`• <b>Founder Walk-Away Floor:</b> ${cr(floor)} after risk discounts.`);
+    log.push(`• <b>Diligence Capital Retained:</b> ${money(S.budget)}.`);
+    
+    if (baseless > 0) {
+        log.push(`<span style="color:var(--red);">• <b>Trust Penalty:</b> You cited ${baseless} specific risk(s) in your memo that were never audited.</span>`);
+    }
+
+    log.push(`<br><b style="color:var(--gold2)">FINAL EVENT RANKING:</b> To be declared live on stage.`);
+
+    showVerdict('OFFER UNDER CONSIDERATION', sentiment, score, log.join('<br>'), sentimentColor);
 }
 
-function showVerdict(t,s,score,log,accepted){
+function showVerdict(t,s,score,log,color){
     const v=document.getElementById('verdict');v.classList.add('active');
     document.getElementById('vtitle').textContent=t;
-    document.getElementById('vtitle').style.color=accepted?'var(--green)':'var(--gold)';
-    document.getElementById('vsub').textContent=s;document.getElementById('vscore').textContent=score.toLocaleString('en-IN');
+    document.getElementById('vtitle').style.color=color;
+    document.getElementById('vsub').textContent=s;
+    document.getElementById('vsub').style.color=color;
+    document.getElementById('vscore').textContent=score.toLocaleString('en-IN');
+    document.getElementById('vscore').style.color=color;
     document.getElementById('vlog').innerHTML=log;
-    if(accepted){v.classList.add('successPulse');launchParticles()}
+    
+    if(color === 'var(--green)'){ v.classList.add('successPulse'); launchParticles(); }
 }
 
 function launchParticles(){
