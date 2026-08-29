@@ -3,443 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iSEC Impact Term Sheet Simulation</title>
+    <title>iSEC Term Sheet Simulator</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --panel: rgba(30, 41, 59, 0.8);
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
             --primary: #10b981;
             --primary-hover: #059669;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
             --danger: #ef4444;
-            --glass-border: rgba(255,255,255,0.1);
-        }
-
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
-            color: var(--text); overflow: hidden;
-        }
-
-        /* Top HUD */
-        #hud {
-            position: absolute; top: 0; left: 0; width: 100%;
-            padding: 15px 30px; box-sizing: border-box;
-            display: flex; justify-content: space-between;
-            background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--glass-border);
-            z-index: 100; backdrop-filter: blur(10px);
-        }
-        .stat { font-size: 1.2rem; font-weight: bold; }
-        .stat span { color: var(--primary); }
-
-        /* Central Character Area */
-        #stage {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; position: relative;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
         
-        .character-container {
-            position: relative;
-            animation: float 4s ease-in-out infinite;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* Dialog Box */
-        #dialog-box {
-            background: var(--panel); border: 1px solid var(--glass-border);
-            padding: 20px; border-radius: 12px; max-width: 600px;
-            text-align: center; margin-top: 20px; min-height: 80px;
-            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            font-size: 1.1rem; line-height: 1.5;
-        }
-
-        #action-btn {
-            margin-top: 20px; padding: 12px 30px; font-size: 1.1rem;
-            background: var(--primary); color: white; border: none;
-            border-radius: 8px; cursor: pointer; font-weight: bold;
-            transition: 0.2s;
-        }
-        #action-btn:hover { background: var(--primary-hover); transform: scale(1.05); }
-
-        /* Overlays / Popups */
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            display: none; align-items: center; justify-content: center; z-index: 200;
-        }
-
-        .panel {
-            background: #1e293b; border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 30px; width: 90%; max-width: 800px;
-            max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-        }
-
-        h2 { margin-top: 0; color: var(--primary); }
-
-        /* Questions Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .card-btn {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-            padding: 15px; border-radius: 8px; color: var(--text); cursor: pointer;
-            text-align: left; transition: 0.2s;
-        }
-        .card-btn:hover:not(.disabled) { background: rgba(255,255,255,0.1); border-color: var(--primary); }
-        .card-btn.disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--primary); background: rgba(16, 185, 129, 0.1); }
-        .card-btn.selected-memo { border-color: var(--primary); background: rgba(16, 185, 129, 0.2); }
-
-        /* Sliders */
-        .slider-group { margin: 20px 0; }
-        .slider-group label { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold;}
-        input[type=range] { width: 100%; cursor: pointer; accent-color: var(--primary); }
-
-        .close-panel-btn {
-            margin-top: 20px; padding: 12px; width: 100%; background: var(--primary);
-            color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
-        }
+        body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        #result-screen h1 { font-size: 3rem; margin-bottom: 10px; }
-        .success { color: var(--primary); }
-        .fail { color: var(--danger); }
+        header { display: flex; justify-content: space-between; padding: 1rem 2rem; background: var(--card-bg); border-bottom: 2px solid var(--primary); }
+        .stats { display: flex; gap: 2rem; font-weight: bold; font-size: 1.1rem; }
+        .stat-highlight { color: var(--primary); }
+
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 2rem; }
+
+        /* The Stage & Character */
+        .stage { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; max-width: 800px; width: 100%; z-index: 10; transition: all 0.5s ease; }
+        
+        .avatar { font-size: 5rem; background: var(--card-bg); height: 120px; width: 120px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        
+        .dialogue-box { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary); width: 100%; min-height: 100px; font-size: 1.2rem; line-height: 1.5; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); position: relative; }
+        .dialogue-box::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border-width: 0 10px 10px 10px; border-style: solid; border-color: transparent transparent var(--card-bg) transparent; }
+
+        /* Action Panels */
+        .action-panel { margin-top: 2rem; width: 100%; max-width: 800px; display: none; background: var(--card-bg); padding: 2rem; border-radius: 12px; max-height: 50vh; overflow-y: auto; }
+        .action-panel.active { display: block; animation: slideUp 0.4s ease forwards; }
+
+        .btn { background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .btn:hover { background: var(--primary-hover); }
+        .btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+        
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: rgba(16, 185, 129, 0.1); }
+        .btn-outline.selected { background: var(--primary); color: white; }
+
+        /* Grids & Forms */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+        
+        .slider-group { margin-bottom: 1.5rem; }
+        .slider-group label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        input[type="range"] { width: 100%; accent-color: var(--primary); }
+
+        .hidden { display: none !important; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- HUD -->
-    <div id="hud">
-        <div class="stat">Phase: <span id="hud-phase">Briefing</span></div>
-        <div class="stat">Funds: <span id="hud-funds">₹5,00,00,000</span></div>
-    </div>
-
-    <!-- Main Stage -->
-    <div id="stage">
-        <div class="character-container">
-            <!-- Sleek SVG Avatar for Founder -->
-            <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+    <header>
+        <div class="logo">iSEC <span class="stat-highlight">Ventures</span></div>
+        <div class="stats">
+            <div>Timer: <span id="timerText" class="stat-highlight">0:00</span></div>
+            <div>Phase: <span id="phaseText" class="stat-highlight">Briefing</span></div>
         </div>
-        <div id="dialog-box">
-            <span id="dialog-text"></span>
-        </div>
-        <button id="action-btn" onclick="nextPhase()">Start Due Diligence</button>
-    </div>
+    </header>
 
-    <!-- Phase 2: Due Diligence Overlay -->
-    <div id="qa-overlay" class="overlay">
-        <div class="panel">
-            <h2>Data Room (Questions left: <span id="q-left">5</span>)</h2>
-            <p>Asking a question costs ₹50,000 in legal/diligence fees.</p>
-            <div class="grid" id="q-grid"></div>
-            <button class="close-panel-btn" id="finish-qa-btn" style="display:none;" onclick="closeQA()">Move to Term Sheet</button>
+    <main>
+        <!-- Character Stage -->
+        <div class="stage" id="stage">
+            <div class="avatar" id="avatar">🧑‍🌾</div>
+            <div class="dialogue-box" id="dialogue">...</div>
+            <button id="nextBtn" class="btn hidden" onclick="nextPhase()">Continue</button>
         </div>
-    </div>
 
-    <!-- Phase 3: Term Sheet Overlay -->
-    <div id="ts-overlay" class="overlay">
-        <div class="panel">
-            <h2>Draft Term Sheet</h2>
-            <p>Prakruti ColdChain Ask: ₹5,00,00,000 for 15% Equity (₹33.3 Cr Valuation)</p>
+        <!-- Panel 1: Due Diligence -->
+        <div class="action-panel" id="panel-dd">
+            <h3>Data Room: Ask 5 Questions (<span id="qCount">0</span>/5 asked)</h3>
+            <div class="grid" id="qGrid"></div>
+            <button id="ddDoneBtn" class="btn hidden" style="margin-top: 1rem; width:100%" onclick="nextPhase()">Move to Value-Add</button>
+        </div>
+
+        <!-- Panel 2: Value Add -->
+        <div class="action-panel" id="panel-chips">
+            <h3>Select 2 Value-Add Chips to Offer</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">What strategic value do you bring besides money?</p>
+            <div class="grid" id="chipGrid"></div>
+            <button id="chipDoneBtn" class="btn hidden" style="margin-top: 1rem; width:100%" onclick="nextPhase()">Draft Term Sheet</button>
+        </div>
+
+        <!-- Panel 3: Term Sheet & Rationale -->
+        <div class="action-panel" id="panel-terms">
+            <h3>The Term Sheet</h3>
+            <div class="slider-group mt-2">
+                <label>Investment Amount: <span id="invValue" class="stat-highlight">₹2.0 Cr</span></label>
+                <input type="range" id="invSlider" min="0.5" max="5.0" step="0.1" value="2.0" oninput="updateTerms()">
+            </div>
+            <div class="slider-group">
+                <label>Equity Demanded: <span id="eqValue" class="stat-highlight">15%</span></label>
+                <input type="range" id="eqSlider" min="5" max="40" step="1" value="15" oninput="updateTerms()">
+            </div>
+            <p style="text-align: right; margin-bottom: 1.5rem;">Implied Valuation: <span id="impValuation" class="stat-highlight">₹13.33 Cr</span></p>
+
+            <h3>Investment Rationale</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Select 2 reasons to justify this valuation to the Founder.</p>
+            <div class="grid" id="rationaleGrid"></div>
             
-            <div class="slider-group">
-                <label>Investment Amount: <span id="val-inv">₹2.00 Cr</span></label>
-                <input type="range" id="slider-inv" min="5000000" max="50000000" step="1000000" value="20000000" oninput="updateTS()">
-            </div>
-            
-            <div class="slider-group">
-                <label>Equity Demanded: <span id="val-eq">15%</span></label>
-                <input type="range" id="slider-eq" min="5" max="40" step="1" value="15" oninput="updateTS()">
-            </div>
-
-            <div class="slider-group">
-                <label>Implied Valuation: <span id="val-implied" style="color:var(--primary)">₹13.33 Cr</span></label>
-            </div>
-
-            <h3>Select 1 Value-Add Chip</h3>
-            <div class="grid" id="chip-grid"></div>
-
-            <button class="close-panel-btn" onclick="openMemo()">Lock Terms & Write Memo</button>
+            <button id="submitBtn" class="btn hidden" style="margin-top: 1.5rem; width:100%" onclick="evaluateDeal()">Sign & Submit Offer</button>
         </div>
-    </div>
+    </main>
 
-    <!-- Phase 4: Investment Memo Overlay -->
-    <div id="memo-overlay" class="overlay">
-        <div class="panel">
-            <h2>Investment Rationale</h2>
-            <p>Select exactly 3 reasons to justify your valuation to the Founder. (Choose carefully based on what you actually investigated!)</p>
-            <div class="grid" id="memo-grid"></div>
-            <button class="close-panel-btn" id="submit-deal-btn" style="display:none;" onclick="submitFinalDeal()">Submit Final Offer</button>
-        </div>
-    </div>
-
-    <!-- Phase 5: Result Overlay -->
-    <div id="result-overlay" class="overlay" style="background:#020617; z-index: 300;">
-        <div class="panel" style="text-align: center;">
-            <h1 id="result-title"></h1>
-            <h3 id="result-subtitle"></h3>
-            <div id="result-breakdown" style="text-align: left; margin-top: 20px; color: var(--text-muted); line-height: 1.8;"></div>
-            <button class="close-panel-btn" onclick="location.reload()">Play Again</button>
-        </div>
-    </div>
-
-    <!-- GAME ENGINE LOGIC -->
     <script>
         // --- GAME DATA ---
         const gameData = {
-            budget: 50000000,
-            questionsAsked: [],
-            selectedChip: null,
-            selectedMemos: [],
-            maxQuestions: 5,
             questions: [
-                { id: 'q1', text: "What is the replacement cycle for the solar batteries?", answer: "Well... they degrade in extreme rural heat after 2 years. We haven't factored replacement costs into next year's budget.", type: 'bullseye_battery' },
-                { id: 'q2', text: "Who exactly is booking the cold storage units?", answer: "Honestly, 70% of bookings are from wealthy middlemen traders bulk-storing, not the smallholder farmers we pitched.", type: 'bullseye_trader' },
-                { id: 'q3', text: "What is your current runway with the ₹25L/month burn?", answer: "We have exactly 90 days of cash left before we miss payroll.", type: 'bullseye_cash' },
-                { id: 'q4', text: "What is your Total Addressable Market?", answer: "The rural cold-chain market in India is expected to reach $10 Billion by 2028.", type: 'fluff' },
-                { id: 'q5', text: "Who are your main competitors?", answer: "Mostly fragmented local ice-block suppliers and expensive diesel generators.", type: 'fluff' },
-                { id: 'q6', text: "What are your unit economics per storage unit?", answer: "Each unit costs ₹4L to build and generates ₹2L a year in subscription revenue.", type: 'standard' },
-                { id: 'q7', text: "Do you have any patents?", answer: "No, we use off-the-shelf solar panels and compressors to keep costs low.", type: 'standard' },
-                { id: 'q8', text: "What is your 10-year vision?", answer: "To be the backbone of rural logistics across Southeast Asia.", type: 'fluff' }
+                { id: 'q1', text: "What is your TAM in India?", ans: "About $2 Billion.", type: 'fluff', flag: null },
+                { id: 'q2', text: "What is your CAC?", ans: "₹5,000 per village onboarded.", type: 'standard', flag: null },
+                { id: 'q3', text: "What is the CapEx lifecycle of the solar batteries?", ans: "*Sighs* They degrade fully in 2 years due to the rural heat. It's a huge upcoming cost.", type: 'bullseye', flag: 'battery' },
+                { id: 'q4', text: "Who exactly uses the cold storage most?", ans: "Well, we aimed at farmers, but wealthy traders are bulk-booking 70% of our capacity.", type: 'bullseye', flag: 'trader' },
+                { id: 'q5', text: "What is your monthly cash burn?", ans: "About ₹25 Lakhs. We have 3 months of runway left.", type: 'standard', flag: 'cash' },
+                { id: 'q6', text: "What is your 5-year vision?", ans: "To be the AWS of rural cold chains.", type: 'fluff', flag: null }
             ],
             chips: [
-                { id: 'c1', text: "Supply Chain & Battery Recycling Network", target: 'bullseye_battery' },
-                { id: 'c2', text: "FPO Integration to Bypass Traders", target: 'bullseye_trader' },
-                { id: 'c3', text: "D2C Urban Marketing Agency", target: 'none' },
-                { id: 'c4', text: "Financial Debt Restructuring", target: 'bullseye_cash' }
+                { id: 'c1', text: "Subsidized Battery Recycling Network", solves: 'battery' },
+                { id: 'c2', text: "Local FPO (Farmer Org) Integration", solves: 'trader' },
+                { id: 'c3', text: "Urban D2C Influencer Marketing", solves: 'none' },
+                { id: 'c4', text: "Supply Chain Blockchain Tracking", solves: 'none' }
             ],
-            memos: [
-                { id: 'm1', text: "Factoring in the impending CapEx hit for Year 2 battery replacements.", req: 'q1' },
-                { id: 'm2', text: "Addressing mission drift risk (traders crowding out farmers).", req: 'q2' },
-                { id: 'm3', text: "Providing an emergency bridge for your 90-day runway.", req: 'q3' },
-                { id: 'm4', text: "Accounting for standard hardware scaling risks.", req: 'none' },
-                { id: 'm5', text: "Belief in the massive $10B TAM in India.", req: 'none' },
-                { id: 'm6', text: "Focusing on aggressive competitor displacement.", req: 'none' }
+            rationales: [
+                { id: 'r1', text: "Factoring in Year 2 battery CapEx replacements.", requires: 'battery' },
+                { id: 'r2', text: "Risk of middlemen pushing out target farmers.", requires: 'trader' },
+                { id: 'r3', text: "Standard early-stage hardware execution risks.", requires: 'none' },
+                { id: 'r4', text: "Adjusting for standard rural distribution costs.", requires: 'none' }
             ]
         };
 
-        // --- UI UTILS ---
-        const $ = id => document.getElementById(id);
-        const formatMoney = num => '₹' + (num / 10000000).toFixed(2) + ' Cr';
+        // --- GAME STATE ---
+        let state = {
+            phase: 0,
+            seconds: 0,
+            timerInt: null,
+            unlockedFlags: new Set(),
+            askedCount: 0,
+            selectedChips: [],
+            selectedRationales: []
+        };
 
-        function typeText(text, elementId, speed = 30) {
-            const el = $(elementId);
-            el.innerHTML = '';
+        // --- UTILS ---
+        const $ = id => document.getElementById(id);
+        
+        function formatCr(num) { return '₹' + num.toFixed(2) + ' Cr'; }
+
+        let typeInt;
+        function speak(text, callback) {
+            $('dialogue').innerHTML = '';
             let i = 0;
-            return new Promise(resolve => {
-                function typeWriter() {
-                    if (i < text.length) {
-                        el.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, speed);
-                    } else {
-                        resolve();
-                    }
+            clearInterval(typeInt);
+            typeInt = setInterval(() => {
+                $('dialogue').innerHTML += text.charAt(i);
+                i++;
+                if(i >= text.length) {
+                    clearInterval(typeInt);
+                    if(callback) callback();
                 }
-                typeWriter();
+            }, 30);
+        }
+
+        // --- GAME FLOW ---
+        function initGame() {
+            state.timerInt = setInterval(() => {
+                state.seconds++;
+                let m = Math.floor(state.seconds / 60);
+                let s = state.seconds % 60;
+                $('timerText').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            }, 1000);
+            
+            speak("Welcome to iSEC Ventures. I'm the founder of Prakruti ColdChain. We build solar cold-storage for rural farmers. I am raising ₹5 Crores for 15% equity. Shall we begin?", () => {
+                $('nextBtn').classList.remove('hidden');
             });
         }
 
-        // --- PHASE 1: BRIEFING ---
-        window.onload = async () => {
-            const pitch = "Welcome to iSEC. I'm the founder of Prakruti ColdChain. We've deployed 50 solar micro-cold storages. We're raising ₹5 Cr for 15% equity. Let's open the data room.";
-            await typeText(pitch, 'dialog-text', 20);
-        };
-
         function nextPhase() {
-            $('hud-phase').innerText = 'Due Diligence';
-            $('qa-overlay').style.display = 'flex';
-            renderQuestions();
+            state.phase++;
+            $('nextBtn').classList.add('hidden');
+            
+            if(state.phase === 1) setupDiligence();
+            if(state.phase === 2) setupChips();
+            if(state.phase === 3) setupTermSheet();
         }
 
-        // --- PHASE 2: DUE DILIGENCE ---
-        function renderQuestions() {
-            const grid = $('q-grid');
-            grid.innerHTML = '';
+        // --- PHASE 1: DUE DILIGENCE ---
+        function setupDiligence() {
+            $('phaseText').innerText = "Due Diligence";
+            $('panel-dd').classList.add('active');
+            speak("My data room is open. You can ask exactly 5 questions.");
+            
+            let grid = $('qGrid');
             gameData.questions.forEach(q => {
-                const btn = document.createElement('button');
-                btn.className = 'card-btn';
+                let btn = document.createElement('button');
+                btn.className = 'btn btn-outline';
                 btn.innerText = q.text;
-                btn.onclick = () => askQuestion(q, btn);
+                btn.onclick = () => askQuestion(btn, q);
                 grid.appendChild(btn);
             });
         }
 
-        async function askQuestion(q, btn) {
-            if (gameData.questionsAsked.length >= gameData.maxQuestions || btn.classList.contains('disabled')) return;
+        function askQuestion(btn, q) {
+            if(state.askedCount >= 5 || btn.classList.contains('selected')) return;
             
-            // Logic
-            gameData.questionsAsked.push(q);
-            gameData.budget -= 50000;
-            $('hud-funds').innerText = `₹${(gameData.budget).toLocaleString('en-IN')}`;
+            btn.classList.add('selected');
+            state.askedCount++;
+            $('qCount').innerText = state.askedCount;
             
-            // UI Update
-            btn.classList.add('disabled');
-            $('q-left').innerText = gameData.maxQuestions - gameData.questionsAsked.length;
-            $('qa-overlay').style.display = 'none'; // hide temporarily to show character
+            if(q.flag) state.unlockedFlags.add(q.flag);
             
-            await typeText(`"${q.answer}"`, 'dialog-text', 20);
-            
+            speak(`"${q.text}"\n\nFounder: "${q.ans}"`, () => {
+                if(state.askedCount >= 5) $('ddDoneBtn').classList.remove('hidden');
+            });
+        }
+
+        // --- PHASE 2: VALUE ADD ---
+        function setupChips() {
+            $('panel-dd').classList.remove('active');
+            $('panel-chips').classList.add('active');
+            $('phaseText').innerText = "Value Add";
+            speak("Money is cheap. What strategic value do you actually bring to Prakruti?");
+
+            let grid = $('chipGrid');
+            gameData.chips.forEach(c => {
+                let btn = document.createElement('button');
+                btn.className = 'btn btn-outline';
+                btn.innerText = c.text;
+                btn.onclick = () => toggleSelection(btn, state.selectedChips, c.id, 2, 'chipDoneBtn');
+                grid.appendChild(btn);
+            });
+        }
+
+        // --- PHASE 3: TERM SHEET ---
+        function setupTermSheet() {
+            $('panel-chips').classList.remove('active');
+            $('panel-terms').classList.add('active');
+            $('phaseText').innerText = "Term Sheet";
+            speak("Submit your final offer and your rationale. I am reviewing other term sheets, so make it count.");
+
+            let grid = $('rationaleGrid');
+            gameData.rationales.forEach(r => {
+                let btn = document.createElement('button');
+                btn.className = 'btn btn-outline';
+                btn.innerText = r.text;
+                btn.onclick = () => toggleSelection(btn, state.selectedRationales, r.id, 2, 'submitBtn');
+                grid.appendChild(btn);
+            });
+            updateTerms();
+        }
+
+        function updateTerms() {
+            let inv = parseFloat($('invSlider').value);
+            let eq = parseFloat($('eqSlider').value);
+            $('invValue').innerText = formatCr(inv);
+            $('eqValue').innerText = eq + '%';
+            $('impValuation').innerText = formatCr(inv / (eq / 100));
+        }
+
+        function toggleSelection(btn, arr, id, max, nxtBtnId) {
+            let idx = arr.indexOf(id);
+            if(idx > -1) {
+                arr.splice(idx, 1);
+                btn.classList.remove('selected');
+            } else {
+                if(arr.length >= max) return;
+                arr.push(id);
+                btn.classList.add('selected');
+            }
+            if(arr.length === max) $(nxtBtnId).classList.remove('hidden');
+            else $(nxtBtnId).classList.add('hidden');
+        }
+
+        // --- PHASE 4: EVALUATION ALGORITHM ---
+        function evaluateDeal() {
+            clearInterval(state.timerInt);
+            $('panel-terms').classList.remove('active');
+            $('avatar').innerText = "🤔";
+            speak("Reviewing your term sheet with the board...");
+
             setTimeout(() => {
-                if (gameData.questionsAsked.length < gameData.maxQuestions) {
-                    $('qa-overlay').style.display = 'flex';
+                let inv = parseFloat($('invSlider').value);
+                let eq = parseFloat($('eqSlider').value);
+                let impliedVal = inv / (eq / 100);
+                
+                let baseFloor = 14.0; // Walkaway Valuation Floor in Cr
+                let penaltyPoints = 0;
+                let insightBonus = 0;
+
+                // Check Rationales vs Due Diligence (The Anti-Cheat)
+                let rationaleMismatches = 0;
+                state.selectedRationales.forEach(rId => {
+                    let r = gameData.rationales.find(x => x.id === rId);
+                    if(r.requires !== 'none' && !state.unlockedFlags.has(r.requires)) {
+                        rationaleMismatches++; // They guessed!
+                    } else if (r.requires !== 'none') {
+                        insightBonus += 1.5; // Good rationale
+                    }
+                });
+
+                if(rationaleMismatches > 0) {
+                    $('avatar').innerText = "😡";
+                    speak(`DEAL REJECTED.\n\nYou cited risks (${rationaleMismatches}) that you never even asked about in Due Diligence. You made baseless assumptions. We are done here.`);
+                    return;
+                }
+
+                // Check Chips
+                state.selectedChips.forEach(cId => {
+                    let c = gameData.chips.find(x => x.id === cId);
+                    if(state.unlockedFlags.has(c.solves)) insightBonus += 2.0; // Perfect chip
+                });
+
+                // Adjust floor based on smarts
+                let adjustedFloor = baseFloor - insightBonus; 
+                
+                if(impliedVal >= adjustedFloor) {
+                    $('avatar').innerText = "🤝";
+                    // Generate Score
+                    let score = Math.floor(((impliedVal - adjustedFloor) * 100) - (state.seconds * 0.5));
+                    speak(`DEAL CRACKED! ✅\n\nI love the strategic value you bring. \nImplied Valuation: ${formatCr(impliedVal)}\nFinal Leaderboard Score: ${score} pts`);
                 } else {
-                    $('action-btn').innerText = "Draft Term Sheet";
-                    $('action-btn').onclick = openTermSheet;
+                    $('avatar').innerText = "🚪";
+                    speak(`DEAL REJECTED ❌\n\nYour valuation of ${formatCr(impliedVal)} is too low for the value you bring. My adjusted floor was ${formatCr(adjustedFloor)}.`);
                 }
             }, 3000);
         }
 
-        // --- PHASE 3: TERM SHEET ---
-        function openTermSheet() {
-            $('hud-phase').innerText = 'Term Sheet';
-            $('ts-overlay').style.display = 'flex';
-            
-            const grid = $('chip-grid');
-            grid.innerHTML = '';
-            gameData.chips.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'card-btn chip-btn';
-                btn.innerText = c.text;
-                btn.onclick = () => {
-                    document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('selected-memo'));
-                    btn.classList.add('selected-memo');
-                    gameData.selectedChip = c;
-                };
-                grid.appendChild(btn);
-            });
-            updateTS();
-        }
-
-        function updateTS() {
-            const inv = parseInt($('slider-inv').value);
-            const eq = parseInt($('slider-eq').value);
-            const val = (inv / (eq / 100));
-            $('val-inv').innerText = formatMoney(inv);
-            $('val-eq').innerText = eq + '%';
-            $('val-implied').innerText = formatMoney(val);
-        }
-
-        function openMemo() {
-            if(!gameData.selectedChip) { alert("Select a Value-Add Chip!"); return; }
-            $('ts-overlay').style.display = 'none';
-            $('hud-phase').innerText = 'Investment Memo';
-            $('memo-overlay').style.display = 'flex';
-
-            const grid = $('memo-grid');
-            grid.innerHTML = '';
-            gameData.memos.forEach(m => {
-                const btn = document.createElement('button');
-                btn.className = 'card-btn';
-                btn.innerText = m.text;
-                btn.onclick = () => {
-                    if(btn.classList.contains('selected-memo')) {
-                        btn.classList.remove('selected-memo');
-                        gameData.selectedMemos = gameData.selectedMemos.filter(id => id !== m.id);
-                    } else if (gameData.selectedMemos.length < 3) {
-                        btn.classList.add('selected-memo');
-                        gameData.selectedMemos.push(m.id);
-                    }
-                    $('submit-deal-btn').style.display = (gameData.selectedMemos.length === 3) ? 'block' : 'none';
-                };
-                grid.appendChild(btn);
-            });
-        }
-
-        // --- PHASE 4: EVALUATION ALGORITHM ---
-        async function submitFinalDeal() {
-            $('memo-overlay').style.display = 'none';
-            $('hud-phase').innerText = 'Evaluation...';
-            await typeText("Reviewing your term sheet with the board...", 'dialog-text', 50);
-            
-            setTimeout(calculateResult, 2000);
-        }
-
-        function calculateResult() {
-            // 1. Get Values
-            const inv = parseInt($('slider-inv').value);
-            const eq = parseInt($('slider-eq').value);
-            const impliedValuation = inv / (eq / 100);
-            
-            // 2. Base Threshold
-            let founderWalkAway = 200000000; // ₹20 Cr Base
-            let scoreLog = [];
-            
-            // 3. Evaluate Questions (Insight)
-            let insightCount = 0;
-            gameData.questionsAsked.forEach(q => {
-                if(q.type.includes('bullseye')) {
-                    founderWalkAway -= 20000000; // Drops threshold by 2Cr per bullseye
-                    insightCount++;
-                }
-            });
-            scoreLog.push(`> Found ${insightCount} hidden flaws.`);
-
-            // 4. Evaluate Chips (Value Add)
-            const chipMatch = gameData.questionsAsked.some(q => q.type === gameData.selectedChip.target);
-            if (chipMatch) {
-                founderWalkAway -= 30000000; // Drop 3Cr if chip matches a discovered flaw
-                scoreLog.push(`> Strategic Value-Add aligned perfectly with our needs.`);
-            } else {
-                founderWalkAway += 20000000; // Penalty for offering wrong help
-                scoreLog.push(`> Value-Add chip was misaligned with core problems.`);
-            }
-
-            // 5. Evaluate Memo (The Anti-Cheat / Penalty System)
-            let cheatPenalty = false;
-            gameData.selectedMemos.forEach(mId => {
-                const memo = gameData.memos.find(m => m.id === mId);
-                if (memo.req !== 'none') {
-                    // Did they ask the required question?
-                    const askedReq = gameData.questionsAsked.some(q => q.id === memo.req);
-                    if (!askedReq) {
-                        cheatPenalty = true;
-                    }
-                }
-            });
-
-            // 6. Final Verdict
-            const uiOverlay = $('result-overlay');
-            const uiTitle = $('result-title');
-            const uiSub = $('result-subtitle');
-            const uiBreakdown = $('result-breakdown');
-            uiOverlay.style.display = 'flex';
-
-            if (cheatPenalty) {
-                uiTitle.innerText = "❌ DEAL REJECTED";
-                uiTitle.className = "fail";
-                uiSub.innerText = "Trust Broken: Baseless Claims Detected";
-                uiBreakdown.innerHTML = `You cited operational flaws in your memo that you never actually asked about in Due Diligence. The founder felt you were making baseless assumptions and walked away.`;
-                return;
-            }
-
-            if (impliedValuation >= founderWalkAway) {
-                uiTitle.innerText = "✅ DEAL CRACKED!";
-                uiTitle.className = "success";
-                
-                // Calculate Final Score (Lower valuation = higher score for investor)
-                const valueCreated = 333000000 - impliedValuation; // Compare vs initial 33Cr ask
-                let score = Math.floor(valueCreated / 100000) * (1 + (insightCount * 0.2));
-                
-                uiSub.innerText = `Final Score: ${score.toLocaleString()}`;
-                scoreLog.push(`<br><strong>Financials:</strong> You secured <strong>${eq}%</strong> for <strong>${formatMoney(inv)}</strong>.`);
-                scoreLog.push(`<strong>Implied Valuation:</strong> ${formatMoney(impliedValuation)}`);
-                uiBreakdown.innerHTML = scoreLog.join('<br>');
-            } else {
-                uiTitle.innerText = "❌ DEAL REJECTED";
-                uiTitle.className = "fail";
-                uiSub.innerText = "Valuation too low / Terms too aggressive";
-                scoreLog.push(`<br>Your implied valuation was ${formatMoney(impliedValuation)}.`);
-                scoreLog.push(`Given your strategic value, the Founder's absolute floor was ${formatMoney(founderWalkAway)}.`);
-                uiBreakdown.innerHTML = scoreLog.join('<br>');
-            }
-        }
+        // Start
+        window.onload = initGame;
     </script>
 </body>
 </html>
