@@ -1,771 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iSEC Executive Boardroom | Venture Term Sheet Simulation</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #d4af37;
-            --gold-light: #f3e5ab;
-            --emerald: #10b981;
-            --crimson: #ef4444;
-            --dark-leather: #14110f;
-            --wood-dark: #1b120c;
-            --wood-light: #2c1d11;
-            --glass-bg: rgba(18, 24, 38, 0.85);
-            --glass-border: rgba(212, 175, 55, 0.25);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-        }
-
-        * { box-sizing: border-box; user-select: none; margin: 0; padding: 0; }
-        body, html {
-            width: 100%; height: 100%; overflow: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #05070b; color: var(--text-main);
-        }
-
-        /* Scrollbar styling for internal panels */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
-
-        /* 3D BOARDROOM WORLD */
-        #world {
-            position: absolute; inset: 0; perspective: 1200px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        #room {
-            width: 100vw; height: 100vh; position: absolute; transform-style: preserve-3d;
-        }
-        .skyline {
-            position: absolute; top: 0; left: 0; width: 100%; height: 55%;
-            background: linear-gradient(to bottom, #020617 0%, #0f172a 70%, #1e1b4b 100%);
-            display: flex; justify-content: space-around; align-items: flex-end; opacity: 0.6; filter: blur(1px);
-        }
-        .window-frame {
-            position: absolute; top: 0; left: 0; width: 100%; height: 55%; border-bottom: 8px solid #0f172a;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
-            background: repeating-linear-gradient(90deg, transparent 0, transparent calc(25% - 6px), #0b1120 calc(25% - 6px), #0b1120 25%);
-        }
-        .table-surface {
-            position: absolute; bottom: -120px; left: -10%; width: 120%; height: 60%;
-            background: radial-gradient(ellipse at 50% 0%, var(--wood-light) 0%, var(--wood-dark) 60%, var(--dark-leather) 100%);
-            transform: rotateX(68deg);
-            box-shadow: inset 0 20px 80px rgba(0,0,0,0.9), 0 -20px 100px rgba(212, 175, 55, 0.08);
-            border-top: 3px solid rgba(212, 175, 55, 0.4); border-radius: 50% 50% 0 0 / 20% 20% 0 0;
-        }
-
-        /* Founder */
-        #founder-avatar {
-            position: absolute; top: 22%; left: 50%; transform: translateX(-50%) translateZ(-150px);
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .avatar-card {
-            width: 170px; height: 170px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(15, 23, 42, 0.9) 70%);
-            border: 3px solid var(--gold);
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(16, 185, 129, 0.3);
-            display: flex; align-items: center; justify-content: center;
-            animation: founderBreathe 4s ease-in-out infinite;
-        }
-        @keyframes founderBreathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.02); } }
-        .founder-tag {
-            margin-top: 14px; padding: 6px 18px; border-radius: 20px;
-            background: rgba(15, 23, 42, 0.9); border: 1px solid var(--gold);
-            font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px; color: var(--gold-light);
-        }
-
-        /* HUD Header */
-        #executive-hud {
-            position: absolute; top: 0; left: 0; width: 100%; height: 75px;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 40px; z-index: 100;
-            background: linear-gradient(180deg, rgba(5,7,11,0.95) 0%, transparent 100%);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .hud-brand { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 900; color: var(--gold); display: flex; align-items: center; gap: 12px; }
-        .hud-stats { display: flex; gap: 30px; }
-        .hud-item { background: rgba(255,255,255,0.03); padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; }
-        .hud-item span { color: var(--gold-light); font-weight: 700; font-size: 1rem; }
-
-        /* Speech Terminal */
-        #dialogue-terminal {
-            position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 800px; z-index: 50;
-            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 24px 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); text-align: center;
-        }
-        #dialogue-text { font-size: 1.25rem; line-height: 1.6; color: #f1f5f9; min-height: 50px; margin-bottom: 20px;}
-        
-        .cta-btn {
-            padding: 12px 24px; font-family: 'Cinzel', serif; font-size: 0.90rem; font-weight: 700;
-            letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(135deg, var(--gold) 0%, #997b19 100%);
-            color: #05070b; border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35); transition: all 0.25s ease; margin: 0 5px;
-        }
-        .cta-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6); }
-        .cta-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
-        .cta-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
-        .cta-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
-
-        /* INTERACTION PANELS */
-        .stage-panel {
-            position: absolute; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center;
-            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s ease;
-        }
-        .stage-panel.active { display: flex; opacity: 1; }
-
-        /* MODAL CONTAINERS */
-        .modal-box {
-            width: 95vw; max-width: 1000px; height: 88vh; background: #0f172a;
-            border: 1px solid var(--gold); border-radius: 14px; display: flex; flex-direction: column;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.9); animation: slideUp3D 0.4s ease;
-        }
-        @keyframes slideUp3D { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal-header {
-            padding: 20px 30px; background: rgba(212, 175, 55, 0.08); border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
-        }
-        .modal-body { padding: 25px 30px; overflow-y: auto; flex-grow: 1; }
-        .modal-footer { padding: 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); text-align: right; flex-shrink: 0; }
-
-        /* DOSSIER (Questions) */
-        .category-header { font-family: 'Cinzel', serif; color: var(--gold-light); margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-size: 1.1rem; }
-        .category-header:first-child { margin-top: 0; }
-        .dossier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 14px; }
-        .q-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s ease;
-        }
-        .q-card:hover:not(.locked):not(.investigated) { border-color: var(--gold); background: rgba(212, 175, 55, 0.06); transform: translateY(-2px); }
-        .q-card.locked { opacity: 0.4; cursor: not-allowed; }
-        .q-card.investigated { border-color: var(--emerald); background: rgba(16, 185, 129, 0.08); cursor: default; }
-
-        /* HISTORY PANEL */
-        .history-item {
-            background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--emerald);
-            padding: 15px 20px; margin-bottom: 15px; border-radius: 0 8px 8px 0;
-        }
-        .history-q { font-weight: bold; color: var(--gold-light); margin-bottom: 8px; font-size: 0.95rem;}
-        .history-a { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; font-style: italic;}
-
-        /* CHEQUE DESK */
-        .bank-cheque {
-            background: linear-gradient(135deg, #fef9e7 0%, #f9e79f 40%, #fcf3cf 100%);
-            color: #1a1a1a; border-radius: 10px; padding: 25px 30px; position: relative;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(212, 175, 55, 0.2);
-            border: 2px solid #b7950b; font-family: 'Special Elite', monospace; overflow: hidden; margin-bottom: 25px;
-        }
-        .cheque-top { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .cheque-row { display: flex; align-items: center; margin-bottom: 16px; border-bottom: 1px dashed #7d6608; padding-bottom: 4px; }
-        .cheque-label { font-size: 0.85rem; font-weight: bold; width: 80px; color: #7d6608; }
-        .cheque-val-written { flex: 1; font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: #0a192f; padding-left: 10px; }
-        .cheque-box { border: 2px solid #7d6608; background: #fffdf2; padding: 6px 16px; font-size: 1.3rem; font-weight: bold; font-family: 'Plus Jakarta Sans', sans-serif; color: #0b1120; }
-        .controls-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 20px; }
-        .term-group { background: rgba(255,255,255,0.03); padding: 16px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); }
-        .term-slider { width: 100%; height: 6px; border-radius: 3px; background: #1e293b; outline: none; accent-color: var(--gold); cursor: pointer; margin-top: 10px;}
-
-        /* CHIPS GRID */
-        .chips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .chip-btn {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-            color: #e2e8f0; padding: 12px; border-radius: 8px; font-size: 0.85rem;
-            cursor: pointer; transition: all 0.2s; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 60px;
-        }
-        .chip-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
-        .chip-btn.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.25); color: var(--gold-light); box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2); }
-
-        /* MEMO GRID */
-        .memo-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .memo-btn {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            color: #cbd5e1; padding: 14px 18px; border-radius: 8px; font-size: 0.85rem;
-            cursor: pointer; text-align: left; transition: 0.2s;
-        }
-        .memo-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .memo-btn.selected { border-left: 4px solid var(--gold); background: rgba(212, 175, 55, 0.15); color: white;}
-
-        /* PARCHMENT */
-        .parchment-sheet {
-            background: #fffdf5; color: #1e293b; border-radius: 8px; padding: 25px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1); font-family: 'Special Elite', monospace;
-            margin-bottom: 25px; min-height: 120px; border-left: 6px solid var(--gold);
-        }
-        .stamp-mark {
-            position: absolute; bottom: 30px; right: 40px; border: 4px double var(--crimson); color: var(--crimson);
-            font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 900; padding: 8px 24px;
-            transform: rotate(-15deg) scale(2); opacity: 0; transition: all 0.3s; pointer-events: none;
-        }
-        .stamp-mark.stamped { opacity: 0.85; transform: rotate(-15deg) scale(1); }
-
-        /* VERDICT */
-        .verdict-box { width: 800px; text-align: center; padding: 40px; background: #0a0e17; border: 2px solid var(--gold); border-radius: 16px; animation: slideUp3D 0.5s ease; }
-        .verdict-title { font-family: 'Cinzel', serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; }
-        .verdict-log { text-align: left; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin: 20px 0; line-height: 1.6; font-size: 0.95rem;}
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>iSEC | Samarth Foods Venture Simulation</title>
+<style>
+:root{
+--gold:#d4af37;--gold2:#f4e7a1;--green:#19c37d;--red:#ef4444;--bg:#05070b;
+--panel:rgba(15,23,42,.94);--muted:#94a3b8;--white:#f8fafc;--wood:#24170d
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--white)}
+button,input{font:inherit}.hidden{display:none!important}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#6b5717;border-radius:5px}
+#world{position:absolute;inset:0;perspective:1200px;overflow:hidden}
+#room{position:absolute;inset:0;transform-style:preserve-3d;background:radial-gradient(circle at 50% 25%,#172033 0,#080c15 48%,#020307 100%)}
+.sky{position:absolute;top:0;left:0;width:100%;height:57%;opacity:.55;background:
+linear-gradient(180deg,#020617,#101827 70%,#1e1b4b)}
+.sky:after{content:"";position:absolute;inset:15% 4% 0;background:
+repeating-linear-gradient(90deg,transparent 0 8%,rgba(2,6,23,.7) 8% 8.7%),
+repeating-linear-gradient(0deg,transparent 0 14%,rgba(2,6,23,.75) 14% 15%)}
+.window{position:absolute;inset:0 0 43% 0;border-bottom:7px solid #111827;
+box-shadow:inset 0 0 100px #000;background:repeating-linear-gradient(90deg,transparent 0 24.2%,#0b1120 24.2% 25%)}
+.table{position:absolute;left:-10%;bottom:-28%;width:120%;height:58%;transform:rotateX(67deg);
+background:radial-gradient(ellipse at 50% 0,#3b2615,#1d120a 58%,#0b0908);border-top:3px solid #80651b;
+box-shadow:inset 0 20px 80px #000,0 -20px 100px rgba(212,175,55,.1)}
+#founder{position:absolute;top:15%;left:50%;transform:translateX(-50%);text-align:center}
+.avatar{width:150px;height:150px;border-radius:50%;border:3px solid var(--gold);display:grid;place-items:center;
+background:radial-gradient(circle,rgba(25,195,125,.2),#0f172a 68%);box-shadow:0 0 50px rgba(212,175,55,.22)}
+.avatar svg{width:76px}.founder-name{margin-top:12px;border:1px solid var(--gold);border-radius:22px;padding:7px 16px;
+font-size:12px;letter-spacing:1.5px;color:var(--gold2);background:#0b1120}
+#hud{position:absolute;z-index:100;top:0;left:0;right:0;height:78px;padding:0 32px;display:flex;justify-content:space-between;align-items:center;
+background:linear-gradient(180deg,rgba(3,5,10,.97),transparent);border-bottom:1px solid rgba(255,255,255,.06)}
+.brand{font-weight:900;letter-spacing:1.5px;color:var(--gold);font-size:18px}.stats{display:flex;gap:12px}
+.stat{padding:8px 15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;font-size:12px}
+.stat b{color:var(--gold2);font-size:14px}
+#terminal{position:absolute;z-index:50;bottom:17%;left:50%;transform:translateX(-50%);width:min(900px,92%);
+padding:25px 30px;text-align:center;background:rgba(12,18,30,.9);border:1px solid rgba(212,175,55,.3);
+border-radius:16px;box-shadow:0 25px 70px #000;backdrop-filter:blur(18px)}
+#dialogue{min-height:72px;font-size:17px;line-height:1.65;margin-bottom:18px}
+.btn{border:0;border-radius:8px;padding:12px 22px;cursor:pointer;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+background:linear-gradient(135deg,#e4c65a,#947716);color:#070a0f;box-shadow:0 7px 22px rgba(212,175,55,.28)}
+.btn:hover:not(:disabled){transform:translateY(-2px)}.btn:disabled{background:#334155;color:#94a3b8;box-shadow:none;cursor:not-allowed}
+.btn.alt{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:none}
+.overlay{position:absolute;z-index:80;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.86);backdrop-filter:blur(9px)}
+.overlay.active{display:flex}.modal{width:min(1120px,95vw);height:90vh;background:#0c1320;border:1px solid var(--gold);border-radius:14px;display:flex;flex-direction:column;
+box-shadow:0 30px 100px #000}.mh{padding:18px 26px;border-bottom:1px solid rgba(212,175,55,.2);background:rgba(212,175,55,.06);
+display:flex;justify-content:space-between;align-items:center;gap:15px}.mh h2{color:var(--gold);font-size:18px}.mh p{font-size:12px;color:var(--muted);margin-top:5px}
+.mb{padding:24px 28px;overflow:auto;flex:1}.mf{padding:17px 25px;border-top:1px solid rgba(255,255,255,.1);text-align:right;background:rgba(0,0,0,.2)}
+.case-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.fact{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);padding:13px;border-radius:9px}.fact small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px}.fact strong{display:block;margin-top:4px;color:var(--gold2);font-size:17px}
+.category{color:var(--gold2);font-size:13px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.08);padding:13px 0 7px;margin-top:9px}
+.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.q{padding:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:9px;cursor:pointer}
+.q:hover:not(.locked):not(.asked){border-color:var(--gold);background:rgba(212,175,55,.06)}.q.asked{border-color:var(--green);background:rgba(25,195,125,.08);cursor:default}.q.locked{opacity:.35;cursor:not-allowed}
+.qtext{font-size:13px;line-height:1.45}.qmeta{margin-top:8px;font-size:10px;color:var(--gold)}
+.history{background:rgba(25,195,125,.08);border-left:4px solid var(--green);padding:13px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}.history b{color:var(--gold2)}.history p{font-size:12px;line-height:1.5;margin-top:5px}
+.cheque{background:linear-gradient(135deg,#fffdf0,#f5e39a,#fff9dc);color:#161616;padding:24px;border:2px solid #9d7c0c;border-radius:10px;box-shadow:0 15px 45px #000;margin-bottom:20px}
+.cheque-head{display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#654f08;margin-bottom:20px}.crow{display:flex;align-items:center;gap:12px;border-bottom:1px dashed #80650b;padding:9px 0}.clabel{width:70px;color:#80650b;font-size:11px;font-weight:900}.written{font-family:cursive;font-size:24px;color:#10213b;flex:1}.cnum{border:2px solid #80650b;padding:7px 12px;font-weight:900}
+.terms{display:grid;grid-template-columns:1fr 1fr;gap:14px}.term{padding:15px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:9px}.term label{display:flex;justify-content:space-between;font-weight:800;font-size:13px}.term label span{color:var(--gold)}input[type=range]{width:100%;margin-top:13px;accent-color:var(--gold)}
+.valuation{margin:15px 0;padding:12px 15px;display:flex;justify-content:space-between;background:rgba(255,255,255,.035);border-radius:8px;font-size:12px}.valuation strong{color:var(--green)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.chip{padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;text-align:center}.chip.sel{border-color:var(--gold);background:rgba(212,175,55,.18);color:var(--gold2)}
+.memos{display:grid;grid-template-columns:1fr 1fr;gap:10px}.memo{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.035);font-size:12px;cursor:pointer;line-height:1.45}.memo.sel{border-left:4px solid var(--gold);background:rgba(212,175,55,.13)}
+.parchment{position:relative;background:#fffdf4;color:#1f2937;padding:24px;border-radius:8px;margin-bottom:20px;min-height:145px;font-family:Georgia,serif;box-shadow:inset 0 0 30px rgba(0,0,0,.1)}.parchment h3{text-align:center;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:13px}.stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.35s}.stamp.on{opacity:.8;transform:rotate(-14deg) scale(1)}
+.verdict{width:min(820px,92vw);padding:38px;text-align:center;background:#090e17;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 100px #000}.vtitle{font-size:36px;font-weight:900;color:var(--green)}.vscore{font-size:55px;font-weight:900;color:var(--gold);margin:12px}.vlog{text-align:left;background:rgba(255,255,255,.035);padding:18px;border-radius:8px;line-height:1.7;font-size:13px;margin:18px 0}
+@media(max-width:800px){.stats{gap:4px}.stat{padding:6px}.case-grid{grid-template-columns:1fr 1fr}.qgrid,.terms,.memos{grid-template-columns:1fr}.chips{grid-template-columns:1fr 1fr}.mh{align-items:flex-start}.modal{height:94vh}}
+</style>
 </head>
 <body>
+<header id="hud">
+<div class="brand">◈ iSEC VENTURE BOARDROOM</div>
+<div class="stats">
+<div class="stat">STAGE: <b id="stage">BRIEFING</b></div>
+<div class="stat">DILIGENCE FUND: <b id="fund">₹5,00,00,000</b></div>
+<div class="stat">QUESTIONS LEFT: <b id="left">5</b></div>
+</div>
+</header>
 
-    <!-- HUD -->
-    <header id="executive-hud">
-        <div class="hud-brand">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 12 12 16 14"></polygon></svg>
-            iSEC VENTURE BOARDROOM
-        </div>
-        <div class="hud-stats">
-            <div class="hud-item">STAGE: <span id="hud-stage">BRIEFING</span></div>
-            <div class="hud-item">FUND: <span id="hud-funds">₹5,00,00,000</span></div>
-            <div class="hud-item">QUERIES LEFT: <span id="hud-questions">5</span></div>
-        </div>
-    </header>
+<main id="world">
+<div id="room"><div class="sky"></div><div class="window"></div><div class="table"></div>
+<div id="founder"><div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.2"><circle cx="12" cy="7" r="4"/><path d="M4 21c.5-4 3-6 8-6s7.5 2 8 6"/><path d="M15 11l3 3m0 0l-3 3m3-3h-5"/></svg></div>
+<div class="founder-name">MEERA RAO • FOUNDER, SAMARTH FOODS</div></div></div>
+<section id="terminal"><div id="dialogue"></div><div id="controls"></div></section>
 
-    <main id="world">
-        <!-- 3D Environment -->
-        <div id="room">
-            <div class="skyline">
-                <div style="width:70px; height:240px; background:#0b1120;"></div>
-                <div style="width:110px; height:320px; background:#090d16;"></div>
-                <div style="width:140px; height:280px; background:#080c14;"></div>
-            </div>
-            <div class="window-frame"></div>
-            <div class="table-surface"></div>
-            <div id="founder-avatar">
-                <div class="avatar-card">
-                    <svg width="85" height="85" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle><path d="M12 14l3-3m0 0l-3-3m3 3H9"></path>
-                    </svg>
-                </div>
-                <div class="founder-tag">Vikram Sethi • Founder, Prakruti ColdChain</div>
-            </div>
-        </div>
+<div id="dossier" class="overlay"><div class="modal">
+<div class="mh"><div><h2>CONFIDENTIAL DATA ROOM</h2><p>Exactly 5 questions. Each audit costs ₹50,000. Choose for decision value, not curiosity.</p></div><button class="btn alt" onclick="toggleHistory()">Diligence History</button></div>
+<div class="mb" id="dossierBody"></div><div class="mf"><span id="dossierStatus" style="color:var(--muted);font-size:12px;margin-right:18px"></span><button class="btn" id="termBtn" disabled onclick="goTerms()">Complete 5 Audits →</button></div>
+</div></div>
 
-        <!-- Dialogue Terminal -->
-        <section id="dialogue-terminal">
-            <div id="dialogue-text"></div>
-            <div id="terminal-controls">
-                <button id="primary-action-btn" class="cta-btn" onclick="openDossier()">Enter Data Room</button>
-            </div>
-        </section>
+<div id="terms" class="overlay"><div class="modal">
+<div class="mh"><div><h2>TERM SHEET & STRATEGIC CAPITAL</h2><p>Build an offer that compensates the founder for risk while creating measurable social value.</p></div><button class="btn alt" onclick="backDossier()">← Due Diligence</button></div>
+<div class="mb">
+<div class="cheque"><div class="cheque-head"><span>IMPERIAL VENTURE BANK • IMPACT INVESTMENT DESK</span><span>29 AUG 2026</span></div>
+<div class="crow"><span class="clabel">PAY TO</span><b>SAMARTH FOODS PRIVATE LIMITED</b></div>
+<div class="crow"><span class="clabel">SUM OF</span><span class="written" id="words">Rupees Two Crore Only</span><span class="cnum" id="num">₹2,00,00,000</span></div></div>
+<div class="terms">
+<div class="term"><label>Investment Capital <span id="invLabel">₹2.00 Cr</span></label><input id="inv" type="range" min="5000000" max="50000000" step="500000" value="20000000" oninput="updateTerms()"></div>
+<div class="term"><label>Equity Demanded <span id="eqLabel">15%</span></label><input id="eq" type="range" min="5" max="40" step="1" value="15" oninput="updateTerms()"></div>
+</div>
+<div class="valuation"><span>YOUR IMPLIED VALUATION: <strong id="valuation">₹13.33 Cr</strong></span><span style="color:var(--muted)">Founder ask: ₹5 Cr for 15% = ₹33.33 Cr</span></div>
+<h3 style="color:var(--gold);font-size:14px;margin:18px 0 10px">SELECT EXACTLY TWO STRATEGIC VALUE-ADDS</h3>
+<div class="chips" id="chips"></div>
+</div>
+<div class="mf"><span id="chipCount" style="color:var(--muted);font-size:12px;margin-right:18px">0 / 2 Selected</span><button class="btn" id="memoBtn" disabled onclick="goMemo()">Draft Investment Memo →</button></div>
+</div></div>
 
-        <!-- MODAL 1: DOSSIER & HISTORY -->
-        <div id="dossier-modal" class="stage-panel">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <div>
-                        <h2 style="font-family:'Cinzel', serif; color:var(--gold);">CONFIDENTIAL DATA ROOM</h2>
-                        <p style="font-size:0.85rem; color:var(--text-dim);">Queries cost ₹50,000 each. Uncover hidden risks before drafting your term sheet.</p>
-                    </div>
-                    <div>
-                        <button class="cta-btn cta-secondary" id="btn-toggle-history" onclick="toggleHistoryView()">View Answers History</button>
-                    </div>
-                </div>
-                
-                <!-- Questions View -->
-                <div class="modal-body" id="dossier-questions-view">
-                    <!-- Populated dynamically -->
-                </div>
+<div id="memo" class="overlay"><div class="modal">
+<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Exactly 3 claims. Any claim about an undiscovered risk is an automatic disqualification.</p></div><button class="btn alt" onclick="backTerms()">← Terms</button></div>
+<div class="mb"><div class="parchment"><h3>INVESTMENT COMMITTEE MEMORANDUM</h3><div id="clauses"><i>Select three audited findings below.</i></div><div id="stamp" class="stamp">EXECUTED</div></div>
+<h3 style="color:var(--gold);font-size:14px;margin-bottom:10px">SELECT EXACTLY THREE DOCUMENTED FINDINGS</h3><div class="memos" id="memos"></div></div>
+<div class="mf"><span id="memoCount" style="color:var(--muted);font-size:12px;margin-right:18px">0 / 3 Selected</span><button class="btn" id="submit" disabled onclick="submitDeal()">Seal & Submit</button></div>
+</div></div>
 
-                <!-- History View -->
-                <div class="modal-body" id="dossier-history-view" style="display:none;">
-                    <h3 style="color:var(--gold); margin-bottom: 20px;">Diligence History Log</h3>
-                    <div id="history-container">
-                        <p style="color:var(--text-dim); font-style:italic;">No questions asked yet.</p>
-                    </div>
-                </div>
+<div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">EVALUATING</div><div id="vsub" style="letter-spacing:2px;color:var(--muted);font-size:12px"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Initiate New Negotiation</button></div></div>
+</main>
 
-                <div class="modal-footer">
-                    <button class="cta-btn" onclick="goToTermSheet()">Proceed to Term Sheet</button>
-                </div>
-            </div>
-        </div>
+<script>
+const S={
+budget:50000000,maxQ:5,asked:[],chips:[],memos:[],start:Date.now(),history:false,
+questions:[
+{id:'q1',cat:'Mission & Beneficiary Access',text:'What share of Samarth\'s producer volume actually comes from women-led SHGs?',answer:'Only 54% of current procurement comes from women-led SHGs. The remaining 46% is sourced from larger aggregators because they can meet our volume commitments faster.',type:'flaw_mission'},
+{id:'q2',cat:'Mission & Beneficiary Access',text:'What percentage of SHG members receive a direct income from the company?',answer:'About 81% of registered members receive at least one payment cycle. The rest are inactive or seasonal participants.',type:'neutral'},
+{id:'q3',cat:'Mission & Beneficiary Access',text:'How do you measure income improvement for producer households?',answer:'We compare monthly procurement payments with baseline village surveys and report median household income uplift annually.',type:'neutral'},
+{id:'q4',cat:'Mission & Beneficiary Access',text:'Do institutional buyers ever bypass the SHGs and buy directly from aggregators?',answer:'Yes. A few large buyers have requested aggregator-direct fulfilment when SHGs cannot guarantee quantity. We are trying to protect the SHG-first model.',type:'neutral'},
+{id:'q5',cat:'Mission & Beneficiary Access',text:'What is the average annual income earned by an active producer?',answer:'An active producer earns roughly ₹62,000 a year through Samarth procurement, though this varies materially by crop and season.',type:'neutral'},
+{id:'q6',cat:'Financial Quality',text:'How much cash does the company have at the current ₹42L monthly burn?',answer:'We have approximately 78 days of cash runway. A delayed institutional receivable would force us to stretch supplier payments.',type:'flaw_cash'},
+{id:'q7',cat:'Financial Quality',text:'What is the current gross margin before central overhead?',answer:'Blended gross margin is 31%. Premium institutional products can reach 38%, while entry-level SKUs are closer to 24%.',type:'neutral'},
+{id:'q8',cat:'Financial Quality',text:'How concentrated are receivables among your top institutional buyers?',answer:'Our largest buyer represents 29% of outstanding receivables. Their standard payment term is 60 days.',type:'neutral'},
+{id:'q9',cat:'Financial Quality',text:'What is your monthly operating expense excluding procurement?',answer:'Approximately ₹19 lakh, including the field team, quality staff, technology and headquarters.',type:'neutral'},
+{id:'q10',cat:'Financial Quality',text:'Have there been any accounting qualifications in the last audit?',answer:'No material qualifications. The auditor did flag the need for tighter SKU-level contribution reporting.',type:'neutral'},
+{id:'q11',cat:'Supply Chain & Quality',text:'What is the current rejection rate at institutional buyer quality gates?',answer:'It has risen to 8.6% from 4.1% last year. Moisture variation and inconsistent grading at village collection points are the biggest causes.',type:'flaw_quality'},
+{id:'q12',cat:'Supply Chain & Quality',text:'How many collection centres are company-operated?',answer:'We operate 34 centres and partner with 21 local collection points across three states.',type:'neutral'},
+{id:'q13',cat:'Supply Chain & Quality',text:'What is the average fulfilment lead time from village to buyer?',answer:'Four to six days depending on the product. Shelf-stable SKUs are faster than fresh or moisture-sensitive products.',type:'neutral'},
+{id:'q14',cat:'Supply Chain & Quality',text:'What proportion of procurement is covered by digital traceability?',answer:'Around 67% is digitally traceable from producer group to collection centre; the remaining volume uses paper records.',type:'neutral'},
+{id:'q15',cat:'Supply Chain & Quality',text:'Do you have backup logistics partners?',answer:'Yes. We have two regional logistics partners plus a small in-house coordination team.',type:'neutral'},
+{id:'q16',cat:'Buyer Economics',text:'What share of revenue comes from the top three institutional buyers?',answer:'61% of revenue comes from our top three buyers. We know this is high and are actively adding mid-sized buyers.',type:'flaw_concentration'},
+{id:'q17',cat:'Buyer Economics',text:'What is the average contract duration with institutional buyers?',answer:'Most contracts are 12 months, with renewal clauses tied to quality and service levels.',type:'neutral'},
+{id:'q18',cat:'Buyer Economics',text:'How much pricing power do buyers have during annual renewal?',answer:'Large buyers have meaningful leverage because they purchase volume. We generally negotiate on service levels rather than taking large list-price increases.',type:'neutral'},
+{id:'q19',cat:'Buyer Economics',text:'What is the current repeat-order rate?',answer:'Approximately 74% of institutional buyers reorder within two quarters.',type:'neutral'},
+{id:'q20',cat:'Buyer Economics',text:'Are there minimum-volume commitments from buyers?',answer:'Some buyers have quarterly volume bands, but most contracts do not guarantee a minimum take-or-pay quantity.',type:'neutral'},
+{id:'q21',cat:'Technology & Distribution',text:'How dependent is producer onboarding on smartphone literacy?',answer:'Our field app is Android-first. Field officers can onboard producers, but direct producer self-service remains low.',type:'neutral'},
+{id:'q22',cat:'Technology & Distribution',text:'What is the monthly active rate of the producer app?',answer:'Only 43% of registered producers are monthly active. WhatsApp and field officers still drive most communication.',type:'flaw_tech'},
+{id:'q23',cat:'Technology & Distribution',text:'Do you own the source code for the procurement platform?',answer:'Yes. The core platform is company-owned, although some analytics components use third-party services.',type:'neutral'},
+{id:'q24',cat:'Technology & Distribution',text:'What is the current cost to onboard one producer?',answer:'About ₹480 including field travel, training and verification. Digital referrals are substantially cheaper.',type:'neutral'},
+{id:'q25',cat:'Governance & Team',text:'Are founder shares subject to vesting and a founder lock-in?',answer:'Yes. Founder equity is on four-year vesting and a standard one-year cliff has already passed.',type:'neutral'},
+{id:'q26',cat:'Governance & Team',text:'Who owns the producer relationships if a field manager leaves?',answer:'Relationships are recorded centrally, but continuity is still highly dependent on experienced field managers in some districts.',type:'neutral'},
+{id:'q27',cat:'Market & Impact',text:'What is your current annual revenue?',answer:'FY26 revenue was ₹18.4 Cr, up from ₹11.7 Cr in FY25. Management is targeting ₹31 Cr in FY27.',type:'neutral'},
+{id:'q28',cat:'Market & Impact',text:'What is the estimated addressable market?',answer:'We estimate the formal institutional market for traceable rural food products at over ₹12,000 Cr in India.',type:'fluff'},
+{id:'q29',cat:'Market & Impact',text:'How many producers are currently registered?',answer:'12,800 producers across Maharashtra, Madhya Pradesh and Karnataka, with about 7,900 active in the last six months.',type:'neutral'},
+{id:'q30',cat:'Market & Impact',text:'What is the next expansion geography?',answer:'We plan to enter Rajasthan and Telangana after stabilising the current three-state network.',type:'neutral'}
+],
+chips:[
+{id:'c1',text:'SHG-first procurement covenant + FPO network integration',target:'flaw_mission'},
+{id:'c2',text:'Receivables-backed bridge facility + CFO cash-control sprint',target:'flaw_cash'},
+{id:'c3',text:'Village quality labs + producer grading incentive system',target:'flaw_quality'},
+{id:'c4',text:'Institutional buyer diversification war-room + pipeline support',target:'flaw_concentration'},
+{id:'c5',text:'Vernacular producer app redesign + assisted digital onboarding',target:'flaw_tech'},
+{id:'c6',text:'Premium D2C brand launch in metro markets',target:'none'},
+{id:'c7',text:'Blockchain provenance platform',target:'none'},
+{id:'c8',text:'International market-entry consultant',target:'none'},
+{id:'c9',text:'Celebrity impact ambassador campaign',target:'none'},
+{id:'c10',text:'Patent portfolio and IP litigation retainer',target:'none'},
+{id:'c11',text:'Luxury packaging redesign',target:'none'},
+{id:'c12',text:'Overseas food expo sponsorship',target:'none'}
+],
+memos:[
+{id:'m1',text:'Protected the social thesis by addressing the 46% procurement leakage away from women-led SHGs.',req:'q1'},
+{id:'m2',text:'Priced the transaction for the 78-day cash runway and delayed institutional receivables.',req:'q6'},
+{id:'m3',text:'Built a quality reserve around the 8.6% institutional rejection rate.',req:'q11'},
+{id:'m4',text:'Discounted valuation for 61% revenue concentration in the top three buyers.',req:'q16'},
+{id:'m5',text:'Allocated execution capital to fix the 43% monthly-active producer app problem.',req:'q22'},
+{id:'m6',text:'Valuation reflects a credible 31% blended gross margin.',req:'q7'},
+{id:'m7',text:'Valuation reflects the 74% institutional reorder rate.',req:'q19'},
+{id:'m8',text:'Confidence in the ₹12,000 Cr formal traceable-food market.',req:'q28'},
+{id:'m9',text:'Assumed founder alignment because founder shares are on four-year vesting.',req:'q25'},
+{id:'m10',text:'Factored in the 34 company-operated collection centres.',req:'q12'},
+{id:'m11',text:'Adjusted for the 60-day payment terms of the largest buyer.',req:'q8'},
+{id:'m12',text:'Assumed the next expansion into Rajasthan will be immediately accretive.',req:'q30'},
+{id:'m13',text:'Discounted for smartphone literacy risk among rural producers.',req:'none'},
+{id:'m14',text:'Factored in the company’s strong annual revenue growth trajectory.',req:'q27'},
+{id:'m15',text:'Priced in the 67% digital traceability coverage.',req:'q14'}
+]};
 
-        <!-- MODAL 2: TERM SHEET & STRATEGIC CHIPS -->
-        <div id="cheque-modal" class="stage-panel">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h2 style="font-family:'Cinzel', serif; color:var(--gold);">DRAFT TERM SHEET & STRATEGY</h2>
-                    <button class="cta-btn cta-secondary" onclick="backToDossier()" id="btn-back-diligence">← Back to Due Diligence</button>
-                </div>
-                
-                <div class="modal-body">
-                    <!-- Cheque -->
-                    <div class="bank-cheque">
-                        <div class="cheque-top">
-                            <div style="font-family:'Cinzel'; font-weight:bold; color:#5b4606;">IMPERIAL VENTURE BANK • INDIA</div>
-                            <div style="color:#7d6608; font-size:0.8rem; font-weight:bold;">DATE: 29 AUG 2026</div>
-                        </div>
-                        <div class="cheque-row"><div class="cheque-label">PAY TO:</div><div style="font-weight:bold; font-size:1.1rem;">PRAKRUTI COLDCHAIN PVT LTD</div></div>
-                        <div class="cheque-row"><div class="cheque-label">SUM OF:</div><div class="cheque-val-written" id="cheque-words">Rupees Two Crore Only</div><div class="cheque-box" id="cheque-amount-num">₹ 2,00,00,000</div></div>
-                    </div>
-
-                    <!-- Sliders -->
-                    <div class="controls-row">
-                        <div class="term-group">
-                            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>Investment Capital</span><span id="slider-inv-label" style="color:var(--gold);">₹2.00 Cr</span></div>
-                            <input type="range" class="term-slider" id="slider-inv" min="5000000" max="50000000" step="1000000" value="20000000" oninput="updateChequeUI()">
-                        </div>
-                        <div class="term-group">
-                            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>Equity Demanded</span><span id="slider-eq-label" style="color:var(--gold);">15%</span></div>
-                            <input type="range" class="term-slider" id="slider-eq" min="5" max="40" step="1" value="15" oninput="updateChequeUI()">
-                        </div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; margin-bottom:25px; display:flex; justify-content:space-between;">
-                        <span>IMPLIED VALUATION: <strong id="slider-implied-label" style="color:var(--emerald);">₹13.33 Cr</strong></span>
-                        <span style="color:var(--text-dim); font-size:0.85rem;">Founder Ask: ₹33.33 Cr (₹5 Cr for 15%)</span>
-                    </div>
-
-                    <!-- Chips Selection -->
-                    <h3 style="color:var(--gold); margin-bottom:15px; font-size:1rem;">Select up to TWO (2) Strategic Value-Adds for the company:</h3>
-                    <div class="chips-grid" id="chips-container"></div>
-                </div>
-
-                <div class="modal-footer">
-                    <span style="color:var(--text-dim); margin-right: 20px; font-size:0.9rem;" id="chip-counter">0 / 2 Selected</span>
-                    <button class="cta-btn" onclick="goToMemo()" id="btn-proceed-memo" disabled>Draft Investment Memo →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- MODAL 3: INVESTMENT MEMO (Anti-Cheat) -->
-        <div id="memo-modal" class="stage-panel">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h2 style="font-family:'Cinzel', serif; color:var(--gold);">BOARD JUSTIFICATION MEMO</h2>
-                    <button class="cta-btn cta-secondary" onclick="backToTermSheet()">← Back to Terms</button>
-                </div>
-                
-                <div class="modal-body">
-                    <div class="parchment-sheet" style="position:relative;">
-                        <h3 style="text-align:center; border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom:15px; font-family:'Cinzel';">MEMORANDUM OF UNDERSTANDING</h3>
-                        <div id="memo-clauses-container" style="line-height:1.8; font-size:0.95rem;">
-                            <span style="color:#94a3b8; font-style:italic;">Select exactly 3 documented findings below to justify your valuation...</span>
-                        </div>
-                        <div class="stamp-mark" id="memo-stamp">EXECUTED</div>
-                    </div>
-
-                    <h3 style="color:var(--gold); margin-bottom:15px; font-size:1rem;">Select exactly THREE (3) Justifications based on your Data Room Audits:</h3>
-                    <div class="memo-options-grid" id="memos-container"></div>
-                </div>
-
-                <div class="modal-footer">
-                    <span style="color:var(--text-dim); margin-right: 20px; font-size:0.9rem;" id="memo-counter">0 / 3 Selected</span>
-                    <button class="cta-btn" onclick="submitFinalDeal()" id="btn-submit-deal" disabled>Seal & Submit to Founder</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- MODAL 4: VERDICT -->
-        <div id="verdict-modal" class="stage-panel">
-            <div class="verdict-box">
-                <div class="verdict-title" id="verdict-title">EVALUATING...</div>
-                <div style="font-weight:bold; letter-spacing:2px; color:var(--text-dim);" id="verdict-subtitle"></div>
-                
-                <div style="font-size:3.5rem; font-weight:800; color:var(--gold); margin:15px 0;" id="verdict-score"></div>
-                
-                <div class="verdict-log" id="verdict-log"></div>
-                
-                <button class="cta-btn" onclick="location.reload()">Initiate New Negotiation</button>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // --- GAME DATA & STATE ---
-        const gameState = {
-            budget: 50000000,
-            maxQuestions: 5,
-            questionsAsked: [],
-            selectedChips: [],
-            selectedMemos: [],
-            startTime: Date.now(),
-            viewingHistory: false,
-
-            // ~26 Comprehensive Questions
-            questions: [
-                { id: 'q1', cat: 'Hardware & CapEx', text: "What is the degradation curve of the solar batteries in rural heat?", answer: "Our lithium-ion packs degrade in 24 months due to extreme ambient temps. Replacing them will wipe out Year 3 margins completely.", type: 'flaw_battery' },
-                { id: 'q2', cat: 'Hardware & CapEx', text: "What is the failure rate of the phase-change compressor?", answer: "Less than 2%. The compressor is solid, it's just the power storage that concerns us.", type: 'neutral' },
-                { id: 'q3', cat: 'Hardware & CapEx', text: "Who is your primary supplier for solar panels?", answer: "We import Tier-1 panels from a reliable vendor in Vietnam. Supply chain is stable.", type: 'neutral' },
-                
-                { id: 'q4', cat: 'Mission & Impact', text: "What percentage of unit volume is utilized by smallholder farmers vs middlemen?", answer: "Currently, 72% of our cold volume is monopolized by wealthy traders bulk-booking the units, pushing out the small farmers.", type: 'flaw_mission' },
-                { id: 'q5', cat: 'Mission & Impact', text: "What is the average income increase for a farmer using the unit?", answer: "Farmers who actually get space see a 35% increase in crop realization value by avoiding distress sales.", type: 'neutral' },
-                { id: 'q6', cat: 'Mission & Impact', text: "How are you tracking ESG metrics for investors?", answer: "We do annual surveys, but mostly rely on aggregate volume metrics.", type: 'neutral' },
-                
-                { id: 'q7', cat: 'Financials & Runway', text: "At your current ₹25L/month burn, what is your verified cash runway?", answer: "We have exactly 85 days of cash remaining. If we don't close this round, we default on vendor payments.", type: 'flaw_cash' },
-                { id: 'q8', cat: 'Financials & Runway', text: "What is your blended Customer Acquisition Cost (CAC)?", answer: "Around ₹45,000 per village, mostly spent on initial awareness campaigns.", type: 'neutral' },
-                { id: 'q9', cat: 'Financials & Runway', text: "Are there any outstanding debt obligations?", answer: "No major venture debt, just standard 30-day working capital cycles with vendors.", type: 'neutral' },
-                { id: 'q10', cat: 'Financials & Runway', text: "What is the gross margin profile per installed unit?", answer: "We yield about 38% gross margin on the subscription billing before servicing overhead.", type: 'neutral' },
-                
-                { id: 'q11', cat: 'Regulatory & Revenue', text: "How much of your unit economics rely on government MNRE subsidies?", answer: "Over 40% of our upfront CapEx is subsidized. But the government just froze the scheme, halting our deployment pipeline.", type: 'flaw_subsidy' },
-                { id: 'q12', cat: 'Regulatory & Revenue', text: "Do you have all necessary local panchayat approvals?", answer: "Yes, local authorities are very supportive of the infrastructure.", type: 'neutral' },
-                { id: 'q13', cat: 'Regulatory & Revenue', text: "Are there any pending tax litigations?", answer: "No, our audits are clean.", type: 'neutral' },
-                
-                { id: 'q14', cat: 'Tech & Product', text: "What is the adoption rate of the farmer booking app?", answer: "It's dropping fast. The UI is too complex for vernacular users, leading to high drop-offs and empty units.", type: 'flaw_app' },
-                { id: 'q15', cat: 'Tech & Product', text: "Do you hold utility patents for the thermal controller?", answer: "No, we use open-source firmware layered over off-the-shelf PLCs.", type: 'neutral' },
-                { id: 'q16', cat: 'Tech & Product', text: "Is the app dependent on high-speed internet?", answer: "It has an offline-sync mode, so 2G connectivity is sufficient.", type: 'neutral' },
-                
-                { id: 'q17', cat: 'Market Strategy', text: "What is your Total Addressable Market (TAM) calculation?", answer: "The post-harvest loss sector in India is a ₹90,000 Crore addressable problem.", type: 'fluff' },
-                { id: 'q18', cat: 'Market Strategy', text: "Who are your direct rural competitors?", answer: "Mostly fragmented diesel-generator ice plants. We are the only decentralized solar player here.", type: 'neutral' },
-                { id: 'q19', cat: 'Market Strategy', text: "What is your geographic expansion plan?", answer: "Expand through Maharashtra first, then enter Karnataka by 2028.", type: 'neutral' },
-                
-                { id: 'q20', cat: 'Team & Governance', text: "Are all founders fully vested?", answer: "Standard 4-year vesting with a 1-year cliff. We are in year 2.", type: 'neutral' },
-                { id: 'q21', cat: 'Team & Governance', text: "What happens if a larger FMCG offers a buyout?", answer: "We are committed to the impact mission, but board fiduciary duty comes first.", type: 'neutral' },
-                { id: 'q22', cat: 'Team & Governance', text: "Are there any key-man dependencies?", answer: "Our CTO is critical for the thermal firmware, but we are building a secondary engineering team.", type: 'neutral' }
-            ],
-
-            // 12 Chips (Max 2 selection)
-            chips: [
-                { id: 'c1', text: "Thermal Battery Tech Partnership & Recycling Tie-up", target: 'flaw_battery' },
-                { id: 'c2', text: "FPO (Farmer Producer Org) Network Integration Plan", target: 'flaw_mission' },
-                { id: 'c3', text: "Emergency Bridge Debt Line (Working Capital)", target: 'flaw_cash' },
-                { id: 'c4', text: "Govt Policy Lobbyist & Alternative Carbon Credits", target: 'flaw_subsidy' },
-                { id: 'c5', text: "Vernacular UI/UX Development Agency Retainer", target: 'flaw_app' },
-                { id: 'c6', text: "Urban D2C Consumer Branding Campaign", target: 'none' },
-                { id: 'c7', text: "Blockchain Supply Chain Traceability Integration", target: 'none' },
-                { id: 'c8', text: "Global Southeast Asia Expansion Consultant", target: 'none' },
-                { id: 'c9', text: "Ammonia Refrigeration Industrial Engineers", target: 'none' },
-                { id: 'c10', text: "Social Media Influencer Marketing Blitz", target: 'none' },
-                { id: 'c11', text: "Hardware Patent Legal Retainer", target: 'none' },
-                { id: 'c12', text: "Agri-Export Licensing Consultant", target: 'none' }
-            ],
-
-            // Memos (Mix of real flaw insights, safe answers, and traps)
-            memos: [
-                { id: 'm1', text: "Accounting for the impending CapEx write-down for Year 2 battery replacements.", req: 'q1' },
-                { id: 'm2', text: "Mandating governance covenants to eliminate trader monopolization of units.", req: 'q4' },
-                { id: 'm3', text: "Priced in liquidity risk due to the sub-90-day cash runway.", req: 'q7' },
-                { id: 'm4', text: "Valuation discounted due to the frozen MNRE subsidy deployment pipeline.", req: 'q11' },
-                { id: 'm5', text: "Allocated buffer for overhauling the vernacular booking app interface.", req: 'q14' },
-                
-                { id: 'm6', text: "Factored in standard early-stage hardware execution risks.", req: 'none' },
-                { id: 'm7', text: "Premised on macro tailwinds in the ₹90,000 Cr agricultural TAM.", req: 'none' },
-                { id: 'm8', text: "Confidence in the 38% gross margin unit economics model.", req: 'none' },
-                { id: 'm9', text: "Adjustment for standard working capital and vendor payment cycles.", req: 'none' },
-                { id: 'm10', text: "Belief in the decentralized off-grid infrastructure thesis.", req: 'none' },
-                
-                // Pure traps (Sound smart but require specific questions)
-                { id: 'm11', text: "Risk adjusted for the 2% failure rate in the phase-change compressors.", req: 'q2' },
-                { id: 'm12', text: "Concerned about the over-reliance on Vietnamese Tier-1 panel imports.", req: 'q3' },
-                { id: 'm13', text: "Discounted due to lack of registered utility patents on the firmware.", req: 'q15' },
-                { id: 'm14', text: "Accounted for potential FMCG buyout scenarios disrupting the mission.", req: 'q21' }
-            ]
-        };
-
-        // --- TYPEWRITER ---
-        function typeText(text, speed = 20) {
-            const el = document.getElementById('dialogue-text');
-            el.innerHTML = '';
-            document.getElementById('terminal-controls').style.display = 'none';
-            let i = 0;
-            return new Promise(resolve => {
-                function write() {
-                    if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(write, speed); } 
-                    else { document.getElementById('terminal-controls').style.display = 'block'; resolve(); }
-                }
-                write();
-            });
-        }
-
-        window.onload = async () => {
-            await typeText("Welcome, Partner. Vikram Sethi is raising ₹5.00 Crore for 15% equity (₹33.33 Cr Valuation) for Prakruti ColdChain. Access the Data Room to begin due diligence.", 15);
-        };
-
-        // --- STAGE 1: DOSSIER ---
-        function openDossier() {
-            document.getElementById('hud-stage').innerText = 'DUE DILIGENCE';
-            document.getElementById('dossier-modal').classList.add('active');
-            document.getElementById('cheque-modal').classList.remove('active');
-            renderDossierGrid();
-        }
-
-        function renderDossierGrid() {
-            const container = document.getElementById('dossier-questions-view');
-            container.innerHTML = '';
-            
-            // Group by category
-            const categories = [...new Set(gameState.questions.map(q => q.cat))];
-            
-            categories.forEach(cat => {
-                const header = document.createElement('div');
-                header.className = 'category-header';
-                header.innerText = cat.toUpperCase();
-                container.appendChild(header);
-
-                const grid = document.createElement('div');
-                grid.className = 'dossier-grid';
-                
-                gameState.questions.filter(q => q.cat === cat).forEach(q => {
-                    const isAsked = gameState.questionsAsked.some(a => a.id === q.id);
-                    const isLocked = gameState.questionsAsked.length >= gameState.maxQuestions && !isAsked;
-                    
-                    const card = document.createElement('div');
-                    card.className = `q-card ${isAsked ? 'investigated' : ''} ${isLocked ? 'locked' : ''}`;
-                    card.innerHTML = `
-                        <div style="font-size:0.9rem; font-weight:600; line-height:1.4;">${q.text}</div>
-                        <div style="font-size:0.75rem; color:var(--gold); margin-top:10px;">
-                            ${isAsked ? '✓ AUDITED' : 'COST: ₹50,000'}
-                        </div>
-                    `;
-                    card.onclick = () => askQuestion(q, card);
-                    grid.appendChild(card);
-                });
-                container.appendChild(grid);
-            });
-        }
-
-        async function askQuestion(q, card) {
-            if (card.classList.contains('locked') || card.classList.contains('investigated')) return;
-            if (gameState.questionsAsked.length >= gameState.maxQuestions) return;
-
-            gameState.questionsAsked.push(q);
-            gameState.budget -= 50000;
-            
-            document.getElementById('hud-funds').innerText = `₹${(gameState.budget).toLocaleString('en-IN')}`;
-            document.getElementById('hud-questions').innerText = gameState.maxQuestions - gameState.questionsAsked.length;
-            
-            document.getElementById('dossier-modal').classList.remove('active');
-            await typeText(`"${q.answer}"`, 15);
-            
-            setTimeout(() => { openDossier(); }, 1500);
-        }
-
-        function toggleHistoryView() {
-            gameState.viewingHistory = !gameState.viewingHistory;
-            const qView = document.getElementById('dossier-questions-view');
-            const hView = document.getElementById('dossier-history-view');
-            const btn = document.getElementById('btn-toggle-history');
-
-            if (gameState.viewingHistory) {
-                qView.style.display = 'none';
-                hView.style.display = 'block';
-                btn.innerText = "Back to Data Room";
-                
-                const hContainer = document.getElementById('history-container');
-                if (gameState.questionsAsked.length === 0) {
-                    hContainer.innerHTML = '<p style="color:var(--text-dim); font-style:italic;">No questions audited yet.</p>';
-                } else {
-                    hContainer.innerHTML = gameState.questionsAsked.map(q => `
-                        <div class="history-item">
-                            <div class="history-q">Q: ${q.text}</div>
-                            <div class="history-a">"${q.answer}"</div>
-                        </div>
-                    `).join('');
-                }
-            } else {
-                qView.style.display = 'block';
-                hView.style.display = 'none';
-                btn.innerText = "View Answers History";
-            }
-        }
-
-        // --- STAGE 2: TERM SHEET ---
-        function goToTermSheet() {
-            document.getElementById('dossier-modal').classList.remove('active');
-            document.getElementById('hud-stage').innerText = 'TERM SHEET';
-            document.getElementById('cheque-modal').classList.add('active');
-            
-            // Handle Back button state
-            const backBtn = document.getElementById('btn-back-diligence');
-            if (gameState.questionsAsked.length < gameState.maxQuestions) {
-                backBtn.style.display = 'inline-block';
-                backBtn.innerText = `← Back to Due Diligence (${gameState.maxQuestions - gameState.questionsAsked.length} left)`;
-            } else {
-                backBtn.style.display = 'none';
-            }
-
-            renderChips();
-            updateChequeUI();
-        }
-
-        function backToDossier() {
-            document.getElementById('cheque-modal').classList.remove('active');
-            openDossier();
-        }
-
-        function updateChequeUI() {
-            const inv = parseInt(document.getElementById('slider-inv').value);
-            const eq = parseInt(document.getElementById('slider-eq').value);
-            const implied = inv / (eq / 100);
-
-            document.getElementById('slider-inv-label').innerText = `₹${(inv/10000000).toFixed(2)} Cr`;
-            document.getElementById('slider-eq-label').innerText = `${eq}%`;
-            document.getElementById('slider-implied-label').innerText = `₹${(implied/10000000).toFixed(2)} Cr`;
-            
-            document.getElementById('cheque-amount-num').innerText = `₹ ${(inv).toLocaleString('en-IN')}`;
-            document.getElementById('cheque-words').innerText = `Rupees ${(inv/10000000).toFixed(2)} Crore Only`;
-        }
-
-        function renderChips() {
-            const container = document.getElementById('chips-container');
-            container.innerHTML = '';
-            gameState.chips.forEach(c => {
-                const btn = document.createElement('div');
-                btn.className = `chip-btn ${gameState.selectedChips.some(x => x.id === c.id) ? 'selected' : ''}`;
-                btn.innerText = c.text;
-                btn.onclick = () => {
-                    const idx = gameState.selectedChips.findIndex(x => x.id === c.id);
-                    if (idx > -1) {
-                        gameState.selectedChips.splice(idx, 1);
-                        btn.classList.remove('selected');
-                    } else if (gameState.selectedChips.length < 2) {
-                        gameState.selectedChips.push(c);
-                        btn.classList.add('selected');
-                    }
-                    
-                    const count = gameState.selectedChips.length;
-                    document.getElementById('chip-counter').innerText = `${count} / 2 Selected`;
-                    document.getElementById('btn-proceed-memo').disabled = count !== 2;
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        // --- STAGE 3: MEMO ---
-        function goToMemo() {
-            document.getElementById('cheque-modal').classList.remove('active');
-            document.getElementById('hud-stage').innerText = 'DRAFT MEMO';
-            document.getElementById('memo-modal').classList.add('active');
-            renderMemos();
-            updateMemoParchment();
-        }
-
-        function backToTermSheet() {
-            document.getElementById('memo-modal').classList.remove('active');
-            goToTermSheet();
-        }
-
-        function renderMemos() {
-            const container = document.getElementById('memos-container');
-            container.innerHTML = '';
-            gameState.memos.forEach(m => {
-                const btn = document.createElement('div');
-                btn.className = `memo-btn ${gameState.selectedMemos.some(x => x.id === m.id) ? 'selected' : ''}`;
-                btn.innerText = m.text;
-                btn.onclick = () => {
-                    const idx = gameState.selectedMemos.findIndex(x => x.id === m.id);
-                    if (idx > -1) {
-                        gameState.selectedMemos.splice(idx, 1);
-                        btn.classList.remove('selected');
-                    } else if (gameState.selectedMemos.length < 3) {
-                        gameState.selectedMemos.push(m);
-                        btn.classList.add('selected');
-                    }
-                    
-                    const count = gameState.selectedMemos.length;
-                    document.getElementById('memo-counter').innerText = `${count} / 3 Selected`;
-                    document.getElementById('btn-submit-deal').disabled = count !== 3;
-                    updateMemoParchment();
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        function updateMemoParchment() {
-            const container = document.getElementById('memo-clauses-container');
-            if (gameState.selectedMemos.length === 0) {
-                container.innerHTML = '<span style="color:#94a3b8; font-style:italic;">Select exactly 3 documented findings below to justify your valuation...</span>';
-            } else {
-                container.innerHTML = gameState.selectedMemos.map((m, i) => `
-                    <div style="margin-bottom:8px;"><strong>${i+1}.</strong> ${m.text}</div>
-                `).join('');
-            }
-        }
-
-        function submitFinalDeal() {
-            document.getElementById('memo-stamp').classList.add('stamped');
-            setTimeout(async () => {
-                document.getElementById('memo-modal').classList.remove('active');
-                document.getElementById('hud-stage').innerText = 'DELIBERATION';
-                await typeText("The Board is reviewing your term sheet, diligence alignment, and valuation math...", 30);
-                setTimeout(evaluateSimulation, 2000);
-            }, 800);
-        }
-
-        // --- STAGE 4: EVALUATION ---
-        function evaluateSimulation() {
-            const inv = parseInt(document.getElementById('slider-inv').value);
-            const eq = parseInt(document.getElementById('slider-eq').value);
-            const impliedValuation = inv / (eq / 100);
-            const secondsElapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
-
-            let founderFloor = 200000000; // Base: ₹20 Cr
-            let insightScore = 0;
-            let log = [];
-
-            // 1. Diligence Insights
-            const flawsFound = gameState.questionsAsked.filter(q => q.type.startsWith('flaw_'));
-            insightScore += flawsFound.length * 500;
-            founderFloor -= flawsFound.length * 15000000; // 1.5Cr discount per flaw
-            log.push(`• <strong>Diligence:</strong> Uncovered ${flawsFound.length} of 5 critical structural vulnerabilities.`);
-
-            // 2. Value-Add Chips (Max 2)
-            let chipMatches = 0;
-            gameState.selectedChips.forEach(chip => {
-                const match = gameState.questionsAsked.some(q => q.type === chip.target);
-                if (match) chipMatches++;
-            });
-            if (chipMatches > 0) {
-                founderFloor -= chipMatches * 25000000; // 2.5Cr discount per correct chip
-                log.push(`• <strong>Strategy:</strong> Provided ${chipMatches} highly aligned strategic value-add(s) directly targeting audited flaws.`);
-            } else {
-                founderFloor += 20000000; // Penalty
-                log.push(`• <strong>Strategy:</strong> Offered non-core or misaligned strategic help. Founder demanded a premium.`);
-            }
-
-            // 3. Anti-Cheat (Memos)
-            let baselessClaims = 0;
-            gameState.selectedMemos.forEach(m => {
-                if (m.req !== 'none') {
-                    const verified = gameState.questionsAsked.some(q => q.id === m.req);
-                    if (!verified) baselessClaims++;
-                }
-            });
-
-            // Verdict UI
-            const modal = document.getElementById('verdict-modal');
-            const title = document.getElementById('verdict-title');
-            const sub = document.getElementById('verdict-subtitle');
-            const scoreEl = document.getElementById('verdict-score');
-            const logEl = document.getElementById('verdict-log');
-            modal.classList.add('active');
-            document.getElementById('terminal-controls').style.display = 'none';
-
-            if (baselessClaims > 0) {
-                title.innerText = "OFFER DISQUALIFIED"; title.style.color = "var(--crimson)";
-                sub.innerText = "FOUNDER WALKED AWAY • REASON: BASELESS ASSERTIONS";
-                scoreEl.innerText = "0";
-                logEl.innerHTML = `You cited specific vulnerabilities in your Memo that you <strong>never audited</strong> in the Data Room. The board flagged this as a massive breach of trust. Deal collapsed.`;
-                return;
-            }
-
-            if (impliedValuation >= founderFloor) {
-                title.innerText = "TERM SHEET ACCEPTED"; title.style.color = "var(--emerald)";
-                sub.innerText = "DEAL RATIFIED • SYNDICATE APPROVED";
-
-                // Complex tie-breaker scoring formula
-                const valEfficiency = (333333333 - impliedValuation) / 100000;
-                const finalScore = Math.floor( (valEfficiency * 1.5) + insightScore + (gameState.budget / 100000) - (secondsElapsed * 0.5) );
-
-                scoreEl.innerText = finalScore.toLocaleString();
-                log.push(`• <strong>Financials:</strong> Secured <strong>${eq}%</strong> equity at a <strong>₹${(impliedValuation/10000000).toFixed(2)} Cr</strong> valuation.`);
-                log.push(`• <strong>Capital Efficiency:</strong> Retained ₹${(gameState.budget/100000).toFixed(1)} Lakhs in diligence fund.`);
-                log.push(`• <strong>Execution Speed:</strong> Closed the term sheet in ${secondsElapsed} seconds.`);
-                logEl.innerHTML = log.join('<br>');
-            } else {
-                title.innerText = "OFFER REJECTED"; title.style.color = "var(--crimson)";
-                sub.innerText = "VALUATION BELOW FOUNDER THRESHOLD";
-                scoreEl.innerText = "0";
-                log.push(`• Your implied valuation was <strong>₹${(impliedValuation/10000000).toFixed(2)} Cr</strong>.`);
-                log.push(`• Given your specific strategic terms and insights, the founder's absolute floor was <strong>₹${(founderFloor/10000000).toFixed(2)} Cr</strong>.`);
-                logEl.innerHTML = log.join('<br>');
-            }
-        }
-    </script>
+function money(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
+function cr(n){return '₹'+(n/1e7).toFixed(2)+' Cr'}
+function setStage(x){document.getElementById('stage').textContent=x}
+function updateHud(){document.getElementById('fund').textContent=money(S.budget);document.getElementById('left').textContent=S.maxQ-S.asked.length}
+function typeText(t,s=12){
+const e=document.getElementById('dialogue'),c=document.getElementById('controls');e.textContent='';c.innerHTML='';let i=0;
+return new Promise(r=>{function w(){if(i<t.length){e.textContent+=t[i++];setTimeout(w,s)}else r()}w()})
+}
+async function briefing(){
+await typeText("Welcome, Partner. You are evaluating Samarth Foods Pvt Ltd, a social enterprise that connects smallholder producers and women-led self-help groups to institutional food buyers. Meera Rao is raising ₹5.00 Cr for 15% equity, implying a ₹33.33 Cr valuation. Your mandate: protect returns without destroying the social thesis.");
+const b=document.createElement('button');b.className='btn';b.textContent='Enter Investment Brief';b.onclick=openCase;document.getElementById('controls').appendChild(b)
+}
+function openCase(){
+setStage('CASE BRIEF');document.getElementById('dossier').classList.add('active');renderDossier()
+}
+function renderDossier(){
+S.history=false;const body=document.getElementById('dossierBody');
+body.innerHTML=`<div class="case-grid">
+<div class="fact"><small>FY26 Revenue</small><strong>₹18.4 Cr</strong></div><div class="fact"><small>Producer Network</small><strong>12,800</strong></div>
+<div class="fact"><small>Active Producers</small><strong>7,900</strong></div><div class="fact"><small>FY26 Growth</small><strong>57%</strong></div>
+</div>
+<div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.18);padding:16px;border-radius:9px;font-size:12px;line-height:1.65;margin-bottom:15px">
+<b style="color:var(--gold2)">THE CASE:</b> Samarth Foods aggregates traceable crops from rural producer groups, processes them into institutional food ingredients and sells to schools, hotels, retailers and food-service companies. Its impact model is designed to shift producer economics from fragmented spot sales toward predictable institutional demand. The growth story is strong, but the next ₹5 Cr must fund growth <i>and</i> repair hidden operating weaknesses. You have exactly five paid questions before you must submit an offer.
+</div>`;
+const cats=[...new Set(S.questions.map(q=>q.cat))];
+cats.forEach(cat=>{
+body.insertAdjacentHTML('beforeend',`<div class="category">${cat.toUpperCase()}</div><div class="qgrid" id="cat-${btoa(cat).replace(/=/g,'')}"></div>`);
+const g=body.lastElementChild;
+S.questions.filter(q=>q.cat===cat).forEach(q=>g.appendChild(questionEl(q)))
+})
+document.getElementById('dossierStatus').textContent=`${S.asked.length} / ${S.maxQ} audits completed`;
+document.getElementById('termBtn').disabled=S.asked.length!==S.maxQ
+}
+function questionEl(q){
+const d=document.createElement('div');const asked=S.asked.some(x=>x.id===q.id),locked=S.asked.length>=S.maxQ&&!asked;
+d.className='q '+(asked?'asked ':'')+(locked?'locked':'');
+d.innerHTML=`<div class="qtext">${q.text}</div><div class="qmeta">${asked?'✓ AUDITED':'AUDIT COST: ₹50,000'}</div>`;
+if(!asked&&!locked)d.onclick=()=>ask(q);return d
+}
+async function ask(q){
+if(S.asked.length>=S.maxQ)return;S.asked.push(q);S.budget-=50000;updateHud();
+document.getElementById('dossier').classList.remove('active');setStage('FOUNDER RESPONSE');await typeText('“'+q.answer+'”',9);
+const b=document.createElement('button');b.className='btn';b.textContent='Return to Data Room';b.onclick=()=>{setStage('DUE DILIGENCE');openCase()};document.getElementById('controls').appendChild(b)
+}
+function toggleHistory(){
+const body=document.getElementById('dossierBody');
+if(!S.history){S.history=true;body.innerHTML='<h3 style="color:var(--gold);margin-bottom:15px">DILIGENCE HISTORY</h3>';
+if(!S.asked.length)body.innerHTML+='<i style="color:var(--muted)">No audits yet.</i>';
+S.asked.forEach((q,i)=>body.innerHTML+=`<div class="history"><b>Audit ${i+1}: ${q.text}</b><p>“${q.answer}”</p></div>`)
+}else renderDossier()
+}
+function goTerms(){if(S.asked.length!==5)return;document.getElementById('dossier').classList.remove('active');setStage('TERM SHEET');document.getElementById('terms').classList.add('active');renderChips();updateTerms()}
+function backDossier(){document.getElementById('terms').classList.remove('active');openCase()}
+function updateTerms(){
+const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
+document.getElementById('invLabel').textContent=cr(inv);document.getElementById('eqLabel').textContent=eq+'%';document.getElementById('valuation').textContent=cr(val);
+document.getElementById('num').textContent=money(inv);document.getElementById('words').textContent='Rupees '+(inv/1e7).toFixed(2)+' Crore Only'
+}
+function renderChips(){
+const c=document.getElementById('chips');c.innerHTML='';
+S.chips.forEach(x=>{const d=document.createElement('div');d.className='chip '+(S.chipsSel?.some(y=>y.id===x.id)?'sel':'');d.textContent=x.text;
+d.onclick=()=>{S.chipsSel=S.chipsSel||[];const i=S.chipsSel.findIndex(y=>y.id===x.id);if(i>=0)S.chipsSel.splice(i,1);else if(S.chipsSel.length<2)S.chipsSel.push(x);renderChips();document.getElementById('chipCount').textContent=`${S.chipsSel.length} / 2 Selected`;document.getElementById('memoBtn').disabled=S.chipsSel.length!==2};c.appendChild(d)})
+}
+function goMemo(){document.getElementById('terms').classList.remove('active');setStage('INVESTMENT MEMO');document.getElementById('memo').classList.add('active');renderMemos()}
+function backTerms(){document.getElementById('memo').classList.remove('active');document.getElementById('terms').classList.add('active')}
+function renderMemos(){
+const c=document.getElementById('memos');c.innerHTML='';S.memos.forEach(m=>{const d=document.createElement('div');d.className='memo '+(S.memosSel?.some(x=>x.id===m.id)?'sel':'');d.textContent=m.text;
+d.onclick=()=>{S.memosSel=S.memosSel||[];const i=S.memosSel.findIndex(x=>x.id===m.id);if(i>=0)S.memosSel.splice(i,1);else if(S.memosSel.length<3)S.memosSel.push(m);renderMemos();updateMemo();};c.appendChild(d)});updateMemo()
+}
+function updateMemo(){
+const arr=S.memosSel||[];document.getElementById('memoCount').textContent=`${arr.length} / 3 Selected`;document.getElementById('submit').disabled=arr.length!==3;
+document.getElementById('clauses').innerHTML=arr.length?arr.map((m,i)=>`<div style="margin:7px 0"><b>${i+1}.</b> ${m.text}</div>`).join(''):'<i>Select three audited findings below.</i>'
+}
+function submitDeal(){
+document.getElementById('stamp').classList.add('on');setTimeout(evaluate,900)
+}
+function evaluate(){
+document.getElementById('memo').classList.remove('active');setStage('DELIBERATION');
+const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
+const flaws=['flaw_mission','flaw_cash','flaw_quality','flaw_concentration','flaw_tech'];
+const found=flaws.filter(f=>S.asked.some(q=>q.type===f)).length;
+const matches=(S.chipsSel||[]).filter(c=>S.asked.some(q=>q.type===c.target)).length;
+const baseless=(S.memosSel||[]).filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
+let floor=280000000-found*18000000-matches*15000000;
+floor=Math.max(180000000,floor);
+const seconds=Math.floor((Date.now()-S.start)/1000);
+const efficiency=Math.max(0,(333333333-val)/100000);
+const insight=found*500+matches*800;
+const spendPenalty=500-S.budget/100000;
+const score=Math.max(0,Math.floor(efficiency*1.4+insight+S.budget/100000-seconds*.35-spendPenalty*.2));
+const log=[];
+log.push(`• <b>Diligence:</b> You uncovered ${found} of 5 critical operating risks.`);
+log.push(`• <b>Strategic fit:</b> ${matches} of 2 selected value-adds directly addressed risks you audited.`);
+log.push(`• <b>Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% = implied valuation of <b>${cr(val)}</b>.`);
+log.push(`• <b>Founder threshold:</b> ${cr(floor)} after risk discounts.`);
+log.push(`• <b>Diligence capital retained:</b> ${money(S.budget)}.`);
+log.push(`• <b>Decision time:</b> ${seconds} seconds.`);
+if(baseless){showVerdict('OFFER DISQUALIFIED','FOUNDER WALKED AWAY • BASELESS ASSERTION',0,`You cited ${baseless} specific risk(s) that were never audited. In this simulation, an investor cannot manufacture diligence evidence after the fact.`);return}
+if(val>=floor){
+showVerdict('TERM SHEET ACCEPTED','DEAL RATIFIED • IMPACT SYNDICATE APPROVED',score,log.join('<br>'))
+}else{
+showVerdict('OFFER REJECTED','VALUATION BELOW FOUNDER THRESHOLD',0,log.join('<br>')+'<br>• The founder would not accept the economics given the risks and strategic support offered.')
+}
+}
+function showVerdict(t,s,score,log){document.getElementById('verdict').classList.add('active');document.getElementById('vtitle').textContent=t;document.getElementById('vtitle').style.color=t.includes('ACCEPTED')?'var(--green)':'var(--red)';document.getElementById('vsub').textContent=s;document.getElementById('vscore').textContent=score.toLocaleString('en-IN');document.getElementById('vlog').innerHTML=log}
+window.onload=()=>{updateHud();briefing()}
+</script>
 </body>
 </html>
+
