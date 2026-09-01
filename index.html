@@ -3,164 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>iSEC | Samarth Foods Venture Simulation</title>
+<title>iSEC | Virtual Boardroom Challenge</title>
 <style>
 :root{
-/* Bright & Golden Premium Palette */
---gold: #d4af37;
---gold-text: #b8860b; 
---gold-light: #fef0c7;
---green: #059669; 
---green-light: #ecfdf5;
---red: #dc2626;
---bg: #fdfbf7; 
---panel: rgba(255, 255, 255, 0.95);
---muted: #64748b;
---text-main: #0f172a; 
---text-dim: #334155;
---border-light: #e2e8f0;
+--gold: #d4af37; --gold-text: #b8860b; --gold-light: #fef0c7;
+--green: #059669; --green-light: #ecfdf5; --red: #dc2626;
+--bg: #fdfbf7; --panel: rgba(255, 255, 255, 0.95); --muted: #64748b;
+--text-main: #0f172a; --text-dim: #334155; --border-light: #e2e8f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text-main)}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text-main)}
 button,input{font:inherit}.hidden{display:none!important}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:5px}
 
-/* WORLD & BRIGHT ROOM */
-#world{position:absolute;inset:0;perspective:1200px;overflow:hidden; transition: transform 0.1s; background: #fdfbf7;}
+/* WORLD & ROOM */
+#world{position:absolute;inset:0;perspective:1200px;overflow:hidden; background: #fdfbf7;}
 #room{position:absolute;inset:0;transform-style:preserve-3d; background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);}
 .sky{position:absolute;top:0;left:0;width:100%;height:57%;opacity:.8;background:linear-gradient(180deg, #e0f2fe, #fdfbf7 70%);}
-.sky:after{content:"";position:absolute;inset:15% 4% 0;background:repeating-linear-gradient(90deg,transparent 0 8%,rgba(255,255,255,.5) 8% 8.7%),repeating-linear-gradient(0deg,transparent 0 14%,rgba(255,255,255,.6) 14% 15%)}
 .window{position:absolute;inset:0 0 43% 0;border-bottom:7px solid #cbd5e1;box-shadow:inset 0 0 80px rgba(255,255,255,0.8);background:repeating-linear-gradient(90deg,transparent 0 24.2%,#e2e8f0 24.2% 25%)}
-/* Bright Marble/Light Wood Table */
 .table{position:absolute;left:-10%;bottom:-28%;width:120%;height:58%;transform:rotateX(67deg);background:radial-gradient(ellipse at 50% 0,#ffffff,#f1f5f9 58%,#e2e8f0);border-top:3px solid #cbd5e1;box-shadow:inset 0 20px 80px rgba(0,0,0,0.03),0 -20px 100px rgba(255,255,255,0.6)}
 
 /* FOUNDER AVATAR */
-#founder{position:absolute;top:15%;left:50%;transform:translateX(-50%);text-align:center; animation: float 4s ease-in-out infinite;}
-@keyframes float { 0%, 100% { transform: translate(-50%, 0px); } 50% { transform: translate(-50%, -10px); } }
-.avatar{width:150px;height:150px;border-radius:50%;border:4px solid var(--gold);display:grid;place-items:center;background:radial-gradient(circle,#f0fdf4,#ffffff 68%);box-shadow:0 15px 35px rgba(212,175,55,.25)}
-.avatar svg{width:76px; stroke: var(--gold-text);}
+#founder{position:absolute;top:12%;left:50%;transform:translateX(-50%);text-align:center; animation: float 4s ease-in-out infinite;}
+@keyframes float { 0%, 100% { transform: translate(-50%, 0px); } 50% { transform: translate(-50%, -8px); } }
+.avatar{width:160px;height:160px;border-radius:50%;border:4px solid var(--gold);display:grid;place-items:center;background:radial-gradient(circle,#f0fdf4,#ffffff 68%);box-shadow:0 15px 35px rgba(212,175,55,.25); transition: all 0.4s ease;}
+.avatar svg{width:80px; stroke: var(--gold-text); transition: stroke 0.4s;}
 .founder-name{margin-top:12px;border:1px solid var(--gold);border-radius:22px;padding:7px 16px;font-size:12px;font-weight:bold;letter-spacing:1.5px;color:var(--gold-text);background:#ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
 
-/* HUD - Light Glass */
-#hud{position:absolute;z-index:100;top:0;left:0;right:0;height:78px;padding:0 32px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.7));border-bottom:1px solid rgba(0,0,0,0.06); backdrop-filter: blur(10px);}
+/* HUD */
+#hud{position:absolute;z-index:100;top:0;left:0;right:0;height:75px;padding:0 32px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.7));border-bottom:1px solid rgba(0,0,0,0.06); backdrop-filter: blur(10px);}
 .brand{font-weight:900;letter-spacing:1.5px;color:var(--gold-text);font-size:18px}.stats{display:flex;gap:12px}
 .stat{padding:8px 15px;background:#ffffff;border:1px solid var(--border-light);border-radius:9px;font-size:12px; color: var(--muted); box-shadow: 0 2px 6px rgba(0,0,0,0.02);}
-.stat b{color:var(--gold-text);font-size:14px; transition: color 0.3s;}
+.stat b{color:var(--gold-text);font-size:14px;}
 
-/* TERMINAL - Light Mode */
-#terminal{position:absolute;z-index:50;bottom:17%;left:50%;transform:translateX(-50%);width:min(900px,92%);padding:25px 30px;text-align:center;background:rgba(255,255,255,.9);border:1px solid rgba(212,175,55,.4);border-radius:16px;box-shadow:0 25px 50px rgba(0,0,0,0.08);backdrop-filter:blur(18px)}
+/* EMOTION METER */
+#emotion-panel { position:absolute; z-index:90; right:30px; top:110px; width:70px; height:300px; background:rgba(255,255,255,0.9); border:1px solid var(--border-light); border-radius:35px; box-shadow:0 15px 35px rgba(0,0,0,0.05); display:flex; flex-direction:column; align-items:center; padding:15px 0; backdrop-filter:blur(5px); }
+.meter-label { font-size:9px; font-weight:900; color:var(--muted); writing-mode:vertical-rl; transform:rotate(180deg); letter-spacing:2px; margin-bottom:10px; }
+.meter-track { width:12px; flex:1; background:#f1f5f9; border-radius:6px; position:relative; overflow:hidden; border:1px solid inset rgba(0,0,0,0.1); }
+.meter-fill { position:absolute; bottom:0; left:0; width:100%; height:50%; background:var(--gold); transition:height 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.8s; border-radius:6px; }
+#sentiment-text { font-size:10px; font-weight:bold; color:var(--gold-text); margin-top:12px; text-transform:uppercase; text-align:center; line-height:1.2; }
+
+/* VIRTUAL SECRETARY */
+#secretary-figure { position:absolute; z-index:90; left:30px; bottom:30px; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:transform 0.2s; }
+#secretary-figure:hover { transform:translateY(-5px); }
+.sec-avatar { width:70px; height:70px; background:#ffffff; border:2px solid var(--border-light); border-radius:50%; display:grid; place-items:center; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
+.sec-name { margin-top:8px; background:#ffffff; padding:5px 12px; border-radius:15px; font-size:10px; font-weight:bold; color:var(--muted); border:1px solid var(--border-light); box-shadow:0 4px 10px rgba(0,0,0,0.03); }
+
+/* SECRETARY PANEL */
+.secretary-panel{position:absolute;z-index:130;left:110px;bottom:40px;width:350px;max-height:60vh;display:none;flex-direction:column;background:#ffffff;border:1px solid var(--gold);border-radius:13px;box-shadow:0 25px 60px rgba(0,0,0,0.15);overflow:hidden}
+.secretary-panel.active{display:flex}
+.sec-head{padding:14px 16px;background:rgba(212,175,55,.05);border-bottom:1px solid rgba(212,175,55,.2);display:flex;justify-content:space-between;align-items:center}.sec-head b{color:var(--gold-text)}.sec-body{padding:14px;overflow:auto}
+.sec-card{padding:12px;margin-bottom:9px;border:1px solid var(--border-light);border-radius:9px;background:#f8fafc;}
+.sec-card small{color:var(--gold-text);font-size:9px;text-transform:uppercase;font-weight:bold;}.sec-card b{display:block;font-size:12px;margin:5px 0}.sec-card p{font-size:11px;color:var(--text-dim);line-height:1.5}
+
+/* TERMINAL */
+#terminal{position:absolute;z-index:50;bottom:12%;left:50%;transform:translateX(-50%);width:min(900px,85%);padding:25px 30px;text-align:center;background:rgba(255,255,255,.95);border:1px solid rgba(212,175,55,.4);border-radius:16px;box-shadow:0 25px 50px rgba(0,0,0,0.08);backdrop-filter:blur(18px)}
 #dialogue{min-height:72px;font-size:17px;font-weight: 500; line-height:1.65;margin-bottom:18px; color: var(--text-main);}
 
 /* BUTTONS */
-.btn{position:relative; overflow:hidden; border:0;border-radius:8px;padding:12px 22px;cursor:pointer;font-weight:800;letter-spacing:.7px;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),#e4c65a);color:#ffffff;box-shadow:0 6px 15px rgba(212,175,55,.3); transition: transform 0.2s, filter 0.2s, box-shadow 0.2s;}
-.btn:hover:not(:disabled){transform:translateY(-2px); filter: brightness(1.05); box-shadow:0 8px 20px rgba(212,175,55,.4);}
+.btn{position:relative; overflow:hidden; border:0;border-radius:8px;padding:12px 22px;cursor:pointer;font-weight:800;letter-spacing:.7px;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),#e4c65a);color:#ffffff;box-shadow:0 6px 15px rgba(212,175,55,.3); transition: transform 0.2s, filter 0.2s;}
+.btn:hover:not(:disabled){transform:translateY(-2px); filter: brightness(1.05);}
 .btn:disabled{background:#e2e8f0;color:#94a3b8;box-shadow:none;cursor:not-allowed}
 .btn.alt{background:#ffffff;color:var(--text-dim);border:1px solid var(--border-light);box-shadow:0 2px 5px rgba(0,0,0,0.02);}
-.btn.alt:hover:not(:disabled){background:#f8fafc; border-color: var(--muted);}
 
-/* MODALS - Bright Theme */
-.overlay{position:absolute;z-index:80;inset:0;display:none;align-items:center;justify-content:center;background:rgba(248,250,252,.85);backdrop-filter:blur(12px)}
-.overlay.active{display:flex}.modal{width:min(1120px,95vw);height:90vh;background:#ffffff;border:1px solid var(--gold);border-radius:14px;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.12)}
+/* MODALS */
+.overlay{position:absolute;z-index:200;inset:0;display:none;align-items:center;justify-content:center;background:rgba(248,250,252,.9);backdrop-filter:blur(12px)}
+.overlay.active{display:flex}
+.modal{width:min(1120px,95vw);height:90vh;background:#ffffff;border:1px solid var(--gold);border-radius:14px;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.12)}
 .mh{padding:18px 26px;border-bottom:1px solid rgba(212,175,55,.3);background:rgba(212,175,55,.05);display:flex;justify-content:space-between;align-items:center;gap:15px}.mh h2{color:var(--gold-text);font-size:18px}.mh p{font-size:12px;color:var(--muted);margin-top:5px}
-.mb{padding:24px 28px;overflow:auto;flex:1}.mf{padding:17px 25px;border-top:1px solid var(--border-light);text-align:right;background:#f8fafc; border-radius: 0 0 14px 14px;}
+.mb{padding:24px 28px;overflow:auto;flex:1}.mf{padding:17px 25px;border-top:1px solid var(--border-light);text-align:right;background:#f8fafc;}
 
-/* SLOT MECHANICS */
+/* SLOTS */
 .slot-board { display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; padding: 15px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border-light); }
-.slot { width: 45px; height: 45px; border: 2px dashed rgba(212,175,55,0.4); border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: rgba(212,175,55,0.6); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #ffffff;}
-.slot.filled { background: var(--green-light); border-color: var(--green); color: var(--green); transform: scale(1.15); box-shadow: 0 4px 15px rgba(5,150,105,0.15); border-style: solid; }
+.slot { width: 45px; height: 45px; border: 2px dashed rgba(212,175,55,0.4); border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: rgba(212,175,55,0.6); transition: all 0.4s; background: #ffffff;}
+.slot.filled { background: var(--green-light); border-color: var(--green); color: var(--green); transform: scale(1.15); }
 
-/* CARDS & GRIDS (White Cards, Soft Shadows) */
+/* GRIDS */
 .case-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.fact{background:#ffffff;border:1px solid var(--border-light);padding:13px;border-radius:9px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+.fact{background:#ffffff;border:1px solid var(--border-light);padding:13px;border-radius:9px;}
 .fact small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px}.fact strong{display:block;margin-top:4px;color:var(--gold-text);font-size:17px}
 .category{color:var(--gold-text);font-size:13px;font-weight:bold; letter-spacing:1px;border-bottom:1px solid var(--border-light);padding:13px 0 7px;margin-top:9px}
 .qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.q{position:relative; overflow:hidden; padding:14px;background:#ffffff;border:1px solid var(--border-light);border-radius:9px;cursor:pointer; transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.02);}
-.q:hover:not(.locked):not(.asked){border-color:var(--gold);background:#fffbeb; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(212,175,55,0.1);}
-.q:active:not(.locked){transform: scale(0.97);}
+.q{padding:14px;background:#ffffff;border:1px solid var(--border-light);border-radius:9px;cursor:pointer; transition: transform 0.15s, border-color 0.2s;}
+.q:hover:not(.locked):not(.asked){border-color:var(--gold);background:#fffbeb; transform: translateY(-2px);}
 .q.asked{border-color:var(--green);background:var(--green-light);cursor:default;}
 .q.locked{opacity:.4;cursor:not-allowed; background: #f1f5f9;}
-.qtext{font-size:13px;line-height:1.45; position: relative; z-index: 2; font-weight: 500;}
-.qmeta{margin-top:8px;font-size:10px;color:var(--gold-text); position: relative; z-index: 2; font-weight:bold;}
+.qtext{font-size:13px;line-height:1.45; font-weight: 500;}
+.qmeta{margin-top:8px;font-size:10px;color:var(--gold-text); font-weight:bold;}
 
-/* HISTORY & SEC - Light */
-.history{background:var(--green-light);border-left:4px solid var(--green);padding:13px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}.history b{color:var(--green)}.history p{font-size:12px;line-height:1.5;margin-top:5px; color: var(--text-dim);}
-.secretary-btn{position:absolute;right:28px;bottom:28px;z-index:120;border:1px solid var(--gold);background:#ffffff;color:var(--gold-text);padding:11px 16px;border-radius:10px;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,0.1);font-weight:800;letter-spacing:.6px; transition: transform 0.2s;}
-.secretary-btn:hover{transform:translateY(-2px);background:#fffbeb}
-.secretary-panel{position:absolute;z-index:130;right:25px;bottom:78px;width:min(430px,calc(100vw - 40px));max-height:65vh;display:none;flex-direction:column;background:#ffffff;border:1px solid var(--gold);border-radius:13px;box-shadow:0 25px 60px rgba(0,0,0,0.15);overflow:hidden}
-.secretary-panel.active{display:flex}.sec-head{padding:14px 16px;background:rgba(212,175,55,.05);border-bottom:1px solid rgba(212,175,55,.2);display:flex;justify-content:space-between;align-items:center}.sec-head b{color:var(--gold-text)}.sec-body{padding:14px;overflow:auto}
-.sec-card{padding:12px;margin-bottom:9px;border:1px solid var(--border-light);border-radius:9px;background:#f8fafc; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-.sec-card small{color:var(--gold-text);font-size:9px;text-transform:uppercase;letter-spacing:1px; font-weight:bold;}.sec-card b{display:block;font-size:12px;margin:5px 0}.sec-card p{font-size:11px;color:var(--text-dim);line-height:1.5}
+/* TEAM BUILDER & LOBBY LOCK */
+#start-gateway { position:absolute; z-index:999; inset:0; background:#fdfbf7; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-main); }
+.team-builder-box { background:#ffffff; border:2px solid var(--gold); border-radius:16px; padding:40px; width:100%; max-width:550px; box-shadow:0 25px 60px rgba(0,0,0,0.08); text-align:center; }
+.team-list { margin: 20px 0; display:flex; flex-direction:column; gap:10px; text-align:left; }
+.team-member { padding:12px 16px; background:var(--green-light); border:1px solid var(--green); border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; color:var(--green); }
+.search-box { display:flex; gap:10px; margin-bottom:20px; }
+.search-box input { flex:1; padding:12px; border:1px solid var(--border-light); border-radius:8px; outline:none; transition:border-color 0.2s; user-select:text;}
+.search-box input:focus { border-color:var(--gold); }
+#search-result { min-height:50px; margin-bottom:20px; text-align:left; }
+.found-student { padding:12px 16px; background:#fffbeb; border:1px solid var(--gold); border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; color:var(--gold-text); }
+.found-student.error { background:#fef2f2; border-color:#fca5a5; color:var(--red); justify-content:center; }
+.btn-small { background:var(--gold); color:white; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; text-transform:uppercase; font-size:11px; }
+
+#lobby-lock { display:none; margin-top:25px; border-top:1px solid var(--border-light); padding-top:25px; }
+.pin-input { width:100%; padding:15px; font-size:24px; text-align:center; letter-spacing:8px; font-weight:900; text-transform:uppercase; border:2px solid var(--border-light); border-radius:8px; outline:none; color:var(--text-main); margin-bottom:15px; }
+.pin-input:focus { border-color:var(--gold); box-shadow:0 0 10px rgba(212,175,55,0.2); }
+
+/* CHEAT WARNING */
+#cheat-warning { position:absolute; z-index:1000; inset:0; background:rgba(220, 38, 38, 0.95); display:none; flex-direction:column; align-items:center; justify-content:center; color:white; text-align:center; padding:40px; }
 
 /* CHEQUE & SLIDERS */
-.cheque{background:linear-gradient(135deg,#fffdf0,#f5e39a,#fff9dc);color:#161616;padding:24px;border:2px solid #9d7c0c;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.1);margin-bottom:20px}
+.cheque{background:linear-gradient(135deg,#fffdf0,#f5e39a,#fff9dc);color:#161616;padding:24px;border:2px solid #9d7c0c;border-radius:10px;margin-bottom:20px}
 .cheque-head{display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#654f08;margin-bottom:20px}.crow{display:flex;align-items:center;gap:12px;border-bottom:1px dashed #80650b;padding:9px 0}.clabel{width:70px;color:#80650b;font-size:11px;font-weight:900}.written{font-family:cursive;font-size:24px;color:#10213b;flex:1}.cnum{border:2px solid #80650b;padding:7px 12px;font-weight:900; background:#fff;}
-.terms{display:grid;grid-template-columns:1fr 1fr;gap:14px}.term{padding:15px;background:#ffffff;border:1px solid var(--border-light);border-radius:9px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);}.term label{display:flex;justify-content:space-between;font-weight:800;font-size:13px}.term label span{color:var(--gold-text)}input[type=range]{width:100%;margin-top:13px;accent-color:var(--gold)}
+.terms{display:grid;grid-template-columns:1fr 1fr;gap:14px}.term{padding:15px;background:#ffffff;border:1px solid var(--border-light);border-radius:9px;}.term label{display:flex;justify-content:space-between;font-weight:800;font-size:13px}.term label span{color:var(--gold-text)}input[type=range]{width:100%;margin-top:13px;accent-color:var(--gold)}
 .valuation{margin:15px 0;padding:12px 15px;display:flex;justify-content:space-between;background:#f8fafc;border:1px solid var(--border-light);border-radius:8px;font-size:12px; font-weight:bold;}.valuation strong{color:var(--green); font-size: 14px;}
 
 /* CHIPS & MEMOS */
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.chip{position:relative;overflow:hidden;padding:14px;border:1px solid var(--border-light);border-radius:8px;background:#ffffff;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-.chip:hover{border-color: var(--gold); background: #fffbeb;}
-.chip:active{transform: scale(0.96);}
-.chip.sel{border-color:var(--gold);background:#fffbeb;color:var(--gold-text); font-weight:bold; box-shadow: inset 0 0 10px rgba(212,175,55,0.15), 0 4px 10px rgba(212,175,55,0.1);}
+.chip{padding:14px;border:1px solid var(--border-light);border-radius:8px;background:#ffffff;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition: transform 0.15s;}
+.chip.sel{border-color:var(--gold);background:#fffbeb;color:var(--gold-text); font-weight:bold;}
 .memos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.memo{position:relative;overflow:hidden;padding:14px;border:1px solid var(--border-light);border-radius:8px;background:#ffffff;font-size:12px;font-weight:500;cursor:pointer;line-height:1.45;transition: transform 0.15s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-.memo:hover{border-color: var(--gold); background: #fffbeb;}
-.memo:active{transform: scale(0.98);}
-.memo.sel{border-color:var(--gold);background:#fffbeb; color:var(--text-main); font-weight:bold; box-shadow: inset 0 0 10px rgba(212,175,55,0.1), 0 4px 10px rgba(212,175,55,0.05);}
+.memo{padding:14px;border:1px solid var(--border-light);border-radius:8px;background:#ffffff;font-size:12px;font-weight:500;cursor:pointer;line-height:1.45;}
+.memo.sel{border-color:var(--gold);background:#fffbeb; font-weight:bold;}
 
 /* PARCHMENT */
-.parchment{position:relative;background:#fffdf4;color:#1f2937;padding:24px;border-radius:8px;margin-bottom:20px;min-height:145px;font-family:Georgia,serif;border: 1px solid #e5e7eb; box-shadow:inset 0 0 30px rgba(0,0,0,.03), 0 10px 20px rgba(0,0,0,0.05)}.parchment h3{text-align:center;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:13px}
-.stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.35s}.stamp.on{opacity:.85;transform:rotate(-14deg) scale(1)}
+.parchment{position:relative;background:#fffdf4;color:#1f2937;padding:24px;border-radius:8px;margin-bottom:20px;min-height:145px;font-family:Georgia,serif;border: 1px solid #e5e7eb;}.parchment h3{text-align:center;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:13px}
+.stamp{position:absolute;right:30px;bottom:22px;border:4px double var(--red);color:var(--red);font-weight:900;font-size:27px;padding:6px 18px;transform:rotate(-14deg) scale(2);opacity:0;transition:.3s}.stamp.on{opacity:.85;transform:rotate(-14deg) scale(1)}
 
-/* VERDICT - Bright Clean Card */
+/* VERDICT */
 .verdict{width:min(820px,92vw);padding:45px 38px;text-align:center;background:#ffffff;border:2px solid var(--gold);border-radius:15px;box-shadow:0 30px 80px rgba(0,0,0,0.15)}
-.vtitle{font-size:32px;font-weight:900;color:var(--gold-text)}
-.vscore{font-size:55px;font-weight:900;color:var(--gold-text);margin:15px}
-.vlog{text-align:left;background:#f8fafc;padding:22px;border: 1px solid var(--border-light); border-radius:10px;line-height:1.7;font-size:13px;margin:20px 0; color: var(--text-dim); box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);}
+.vtitle{font-size:32px;font-weight:900;color:var(--gold-text)}.vscore{font-size:55px;font-weight:900;color:var(--gold-text);margin:15px}
+.vlog{text-align:left;background:#f8fafc;padding:22px;border: 1px solid var(--border-light); border-radius:10px;line-height:1.7;font-size:13px;margin:20px 0; color: var(--text-dim);}
 
-/* ANIMATIONS & EFFECTS */
 .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: rippleEffect 0.6s linear; background-color: rgba(212, 175, 55, 0.3); pointer-events: none; }
 @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
-.overlay.active .modal,.overlay.active .verdict{animation:modalIn .42s cubic-bezier(.2,.8,.2,1)}
-@keyframes modalIn{from{opacity:0;transform:translateY(28px) scale(.97) rotateX(3deg)}to{opacity:1;transform:none}}
-@keyframes pulseGold{50%{box-shadow:0 0 0 15px rgba(212,175,55,0)}}.successPulse{animation:pulseGold 1s ease 2}
-@keyframes stampDrop{0%{opacity:0;transform:rotate(-14deg) scale(3) translateY(-20px)}70%{opacity:1;transform:rotate(-14deg) scale(.92)}100%{opacity:.85;transform:rotate(-14deg) scale(1)}}
-.stamp.on{animation:stampDrop .3s cubic-bezier(.2,.9,.2,1)}
-@keyframes screenShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px) rotate(-1deg); } 40% { transform: translateX(5px) rotate(1deg); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes screenShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px) } 40% { transform: translateX(5px) } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
 .shake { animation: screenShake 0.4s ease-out; }
-.vparticles{position:absolute;inset:0;pointer-events:none;overflow:hidden}.particle{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:fall 2.2s linear forwards; box-shadow: 0 0 5px var(--gold);}
-@keyframes fall{from{transform:translateY(-20px) rotate(0);opacity:1}to{transform:translateY(105vh) rotate(720deg);opacity:0}}
-
-@media(max-width:800px){.stats{gap:4px}.stat{padding:6px}.case-grid{grid-template-columns:1fr 1fr}.qgrid,.terms,.memos{grid-template-columns:1fr}.chips{grid-template-columns:1fr 1fr}.mh{align-items:flex-start}.modal{height:94vh}}
 </style>
 </head>
 <body>
+
+<!-- TEAM BUILDER & LOBBY LOCK GATEWAY -->
+<div id="start-gateway">
+    <div class="team-builder-box">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5" style="margin-bottom:15px;">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <h1 style="margin-bottom:5px; font-weight:900; letter-spacing:1px; color:var(--text-main);">iSEC BOARDROOM</h1>
+        <p style="margin-bottom:25px; color:var(--muted); font-size:14px;">Build your syndicate (2-3 Members)</p>
+        
+        <div class="team-list" id="team-list-ui">
+            <div class="team-member">You (Team Leader) <span style="font-size:12px;">✓ Locked</span></div>
+        </div>
+
+        <div id="search-section">
+            <div class="search-box">
+                <input type="text" id="roll-input" placeholder="Enter Teammate Roll Number (e.g. IRMA001)" oninput="searchRoll()">
+            </div>
+            <div id="search-result"></div>
+        </div>
+
+        <!-- LOBBY LOCK (Revealed when team is formed) -->
+        <div id="lobby-lock">
+            <p style="font-size:12px; color:var(--red); font-weight:bold; margin-bottom:10px; letter-spacing:1px;">LOBBY LOCKED • AWAITING EVENT LAUNCH</p>
+            <input type="text" id="live-passcode" class="pin-input" placeholder="ENTER AUDITORIUM PIN" oninput="verifyLaunchCode()">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:15px;">
+                Simulation requires Fullscreen mode. Tab switching will incur severe trust penalties.
+            </div>
+            <button class="btn" id="gateway-start-btn" disabled onclick="startSimulation()" style="width:100%;">Awaiting Live Pin...</button>
+        </div>
+    </div>
+</div>
+
+<!-- ANTI-CHEAT WARNING -->
+<div id="cheat-warning">
+    <h1 style="font-size:40px; margin-bottom:15px; font-weight:900;">SECURITY ALERT</h1>
+    <p style="font-size:18px; margin-bottom:30px;">Tab switching or exiting fullscreen is prohibited during live negotiation.</p>
+    <p style="font-size:14px; opacity:0.8; margin-bottom:30px;">A trust penalty has been applied to your term sheet evaluation.</p>
+    <button class="btn" style="background:#fff; color:#dc2626;" onclick="resumeSimulation()">Acknowledge & Resume</button>
+</div>
+
 <header id="hud">
 <div class="brand">◈ iSEC VENTURE BOARDROOM</div>
 <div class="stats">
 <div class="stat">STAGE: <b id="stage">BRIEFING</b></div>
-<div class="stat">DILIGENCE FUND: <b id="fund">₹5,00,00,000</b></div>
+<div class="stat">FUND: <b id="fund">₹5,00,00,000</b></div>
 </div>
 </header>
 
 <main id="world">
-<button class="secretary-btn" onclick="toggleSecretary()">▣ Deal Secretary <span id="secCount">(0)</span></button>
+<!-- VIRTUAL SECRETARY AVATAR -->
+<div id="secretary-figure" onclick="toggleSecretary()">
+    <div class="sec-avatar">
+        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <polyline points="16 11 18 13 22 9"></polyline>
+        </svg>
+    </div>
+    <div class="sec-name">Aarti • Secretary</div>
+</div>
+
 <div id="secretary" class="secretary-panel">
-  <div class="sec-head"><div><b>DEAL SECRETARY</b><div style="font-size:10px;color:var(--muted)">Live diligence transcript • available throughout the deal</div></div>
+  <div class="sec-head"><div><b>DEAL SECRETARY</b><div style="font-size:10px;color:var(--muted)">Live diligence transcript</div></div>
   <button class="btn alt" style="padding:6px 10px" onclick="toggleSecretary()">×</button></div>
   <div class="sec-body" id="secretaryBody"></div>
 </div>
 
+<!-- EMOTION METER -->
+<div id="emotion-panel">
+    <div class="meter-label">FOUNDER SENTIMENT</div>
+    <div class="meter-track">
+        <div id="gauge-fill" class="meter-fill"></div>
+    </div>
+    <div id="sentiment-text">NEUTRAL</div>
+</div>
+
 <div id="room"><div class="sky"></div><div class="window"></div><div class="table"></div>
-<div id="founder"><div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M4 21c.5-4 3-6 8-6s7.5 2 8 6"/><path d="M15 11l3 3m0 0l-3 3m3-3h-5"/></svg></div>
-<div class="founder-name">MEERA RAO • FOUNDER, SAMARTH FOODS</div></div></div>
+<div id="founder"><div class="avatar" id="founder-avatar-ring"><svg id="founder-svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M4 21c.5-4 3-6 8-6s7.5 2 8 6"/><path d="M15 11l3 3m0 0l-3 3m3-3h-5"/></svg></div>
+<div class="founder-name">MEERA RAO • SAMARTH FOODS</div></div></div>
 <section id="terminal"><div id="dialogue"></div><div id="controls"></div></section>
 
-<!-- MODAL 1: DOSSIER -->
+<!-- MODALS -->
 <div id="dossier" class="overlay"><div class="modal">
-<div class="mh"><div><h2>CONFIDENTIAL DATA ROOM</h2><p>Click to audit findings. Each selection costs ₹50,000. Choose for decision value, not curiosity.</p></div><button class="btn alt" onclick="toggleHistory()">Diligence History</button></div>
+<div class="mh"><div><h2>DATA ROOM</h2><p>Each selection costs ₹50,000. Watch the Founder's sentiment meter.</p></div></div>
 <div class="mb" id="dossierBody"></div>
 <div class="mf" style="display:flex; justify-content:space-between; align-items:center;">
     <div style="text-align:left;">
@@ -173,18 +241,17 @@ button,input{font:inherit}.hidden{display:none!important}
 </div>
 </div></div>
 
-<!-- MODAL 2: TERM SHEET -->
 <div id="terms" class="overlay"><div class="modal">
-<div class="mh"><div><h2>TERM SHEET & STRATEGIC CAPITAL</h2><p>Build an offer that compensates the founder for risk while creating measurable social value.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backDossier()">← Back</button></div></div>
+<div class="mh"><div><h2>TERM SHEET & STRATEGIC CAPITAL</h2><p>Build an offer that compensates the founder for risk.</p></div><button class="btn alt" onclick="backDossier()">← Back</button></div>
 <div class="mb">
-<div class="cheque"><div class="cheque-head"><span>IMPERIAL VENTURE BANK • IMPACT INVESTMENT DESK</span><span>29 AUG 2026</span></div>
+<div class="cheque"><div class="cheque-head"><span>IMPERIAL VENTURE BANK</span><span>29 AUG 2026</span></div>
 <div class="crow"><span class="clabel">PAY TO</span><b>SAMARTH FOODS PRIVATE LIMITED</b></div>
 <div class="crow"><span class="clabel">SUM OF</span><span class="written" id="words">Rupees Two Crore Only</span><span class="cnum" id="num">₹2,00,00,000</span></div></div>
 <div class="terms">
 <div class="term"><label>Investment Capital <span id="invLabel">₹2.00 Cr</span></label><input id="inv" type="range" min="5000000" max="50000000" step="500000" value="20000000" oninput="updateTerms()"></div>
 <div class="term"><label>Equity Demanded <span id="eqLabel">15%</span></label><input id="eq" type="range" min="5" max="40" step="1" value="15" oninput="updateTerms()"></div>
 </div>
-<div class="valuation"><span>YOUR IMPLIED VALUATION: <strong id="valuation">₹13.33 Cr</strong></span><span style="color:var(--muted)">Founder ask: ₹5 Cr for 15% = ₹33.33 Cr</span></div>
+<div class="valuation"><span>YOUR IMPLIED VALUATION: <strong id="valuation">₹13.33 Cr</strong></span><span style="color:var(--muted)">Founder ask: ₹33.33 Cr</span></div>
 
 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin:18px 0 10px;">
     <h3 style="color:var(--gold-text);font-size:14px;">SELECT EXACTLY TWO STRATEGIC VALUE-ADDS</h3>
@@ -197,9 +264,8 @@ button,input{font:inherit}.hidden{display:none!important}
 <div class="mf"><button class="btn" id="memoBtn" disabled onclick="goMemo()">Draft Investment Memo →</button></div>
 </div></div>
 
-<!-- MODAL 3: MEMO -->
 <div id="memo" class="overlay"><div class="modal">
-<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Any claim about an undiscovered risk will severely damage founder trust and your final score.</p></div><div><button class="btn alt" onclick="toggleSecretary()">▣ Secretary</button> <button class="btn alt" onclick="backTerms()">← Back</button></div></div>
+<div class="mh"><div><h2>BOARD JUSTIFICATION MEMO</h2><p>Any claim about an undiscovered risk will severely damage founder trust.</p></div><button class="btn alt" onclick="backTerms()">← Back</button></div>
 <div class="mb"><div class="parchment"><h3>INVESTMENT COMMITTEE MEMORANDUM</h3><div id="clauses"><i>Select three audited findings below.</i></div><div id="stamp" class="stamp">EXECUTED</div></div>
 
 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
@@ -212,100 +278,183 @@ button,input{font:inherit}.hidden{display:none!important}
 <div class="mf"><button class="btn" id="submit" disabled onclick="submitDeal()">Seal & Submit to Founder</button></div>
 </div></div>
 
-<!-- VERDICT -->
-<div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">OFFER SUBMITTED</div><div id="vsub" style="letter-spacing:2px;font-weight:bold;font-size:14px; margin-top:5px;"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Return to Briefing</button></div></div>
+<div id="verdict" class="overlay"><div class="verdict"><div class="vtitle" id="vtitle">OFFER SUBMITTED</div><div id="vsub" style="letter-spacing:2px;font-weight:bold;font-size:14px; margin-top:5px;"></div><div class="vscore" id="vscore">0</div><div class="vlog" id="vlog"></div><button class="btn" onclick="location.reload()">Return to Gateway</button></div></div>
 </main>
 
 <script>
-// Game State & Data
+// Mock Directory for Team Building
+const directory = {
+    'IRMA001': { name: 'Rahul Sharma', available: true },
+    'IRMA002': { name: 'Priya Patel', available: true },
+    'IRMA003': { name: 'Amit Singh', available: true },
+    'IRMA004': { name: 'Sneha Gupta', available: false }, // Pretend already in team
+    'IRMA005': { name: 'Vikram Reddy', available: true }
+};
+let teamMembers = 1; // Leader is 1
+
+function searchRoll() {
+    const val = document.getElementById('roll-input').value.trim().toUpperCase();
+    const resBox = document.getElementById('search-result');
+    
+    if (val.length < 4) { resBox.innerHTML = ''; return; }
+    
+    const student = directory[val];
+    if (student) {
+        if (student.available) {
+            resBox.innerHTML = `
+                <div class="found-student">
+                    <span>${student.name}</span>
+                    <button class="btn-small" onclick="addTeammate('${val}')">Add</button>
+                </div>`;
+        } else {
+            resBox.innerHTML = `<div class="found-student error">Already registered in another syndicate.</div>`;
+        }
+    } else {
+        resBox.innerHTML = `<div class="found-student error">Roll number not found.</div>`;
+    }
+}
+
+function addTeammate(roll) {
+    const student = directory[roll];
+    student.available = false; // Lock them
+    teamMembers++;
+    
+    const list = document.getElementById('team-list-ui');
+    list.innerHTML += `<div class="team-member">${student.name} <span style="font-size:12px;">✓ Locked</span></div>`;
+    
+    document.getElementById('roll-input').value = '';
+    document.getElementById('search-result').innerHTML = '';
+    
+    // Unlock the Lobby mechanism once at least 2 members are present
+    if (teamMembers >= 2) {
+        document.getElementById('lobby-lock').style.display = 'block';
+    }
+    
+    if (teamMembers >= 3) {
+        document.getElementById('search-section').style.display = 'none';
+    }
+}
+
+// Auditorium Event Passcode Verification
+function verifyLaunchCode() {
+    const val = document.getElementById('live-passcode').value.toUpperCase().trim();
+    const btn = document.getElementById('gateway-start-btn');
+    
+    if (val === 'ISEC26') {
+        btn.disabled = false;
+        btn.innerHTML = 'Launch Boardroom (Go Fullscreen)';
+        btn.style.background = 'linear-gradient(135deg, var(--green), #047857)';
+        btn.style.color = '#fff';
+    } else {
+        btn.disabled = true;
+        btn.innerHTML = 'Awaiting Live Pin...';
+        btn.style.background = '';
+    }
+}
+
 const S={
-budget:50000000,maxQ:5,asked:[],chipsSel:[],memosSel:[],start:Date.now(),history:false,
+budget:50000000,maxQ:5,asked:[],chipsSel:[],memosSel:[],start:0,
+trust: 50, cheatPenalties: 0,
 questions:[
-{id:'q1',cat:'Mission & Beneficiary Access',text:'What share of Samarth\'s producer volume actually comes from women-led SHGs?',answer:'Only 54% of current procurement comes from women-led SHGs. The remaining 46% is sourced from larger aggregators because they can meet our volume commitments faster.',type:'flaw_mission', pts: 500},
-{id:'q2',cat:'Mission & Beneficiary Access',text:'What percentage of SHG members receive a direct income from the company?',answer:'About 81% of registered members receive at least one payment cycle. The rest are inactive or seasonal participants.',type:'neutral', pts: 150},
-{id:'q3',cat:'Mission & Beneficiary Access',text:'How do you measure income improvement for producer households?',answer:'We compare monthly procurement payments with baseline village surveys and report median household income uplift annually.',type:'neutral', pts: 150},
-{id:'q4',cat:'Mission & Beneficiary Access',text:'Do institutional buyers ever bypass the SHGs and buy directly from aggregators?',answer:'Yes. A few large buyers have requested aggregator-direct fulfilment when SHGs cannot guarantee quantity. We are trying to protect the SHG-first model.',type:'neutral', pts: 200},
-{id:'q5',cat:'Mission & Beneficiary Access',text:'What is the average annual income earned by an active producer?',answer:'An active producer earns roughly ₹62,000 a year through Samarth procurement, though this varies materially by crop and season.',type:'neutral', pts: 100},
-{id:'q6',cat:'Financial Quality',text:'How much cash does the company have at the current ₹42L monthly burn?',answer:'We have approximately 78 days of cash runway. A delayed institutional receivable would force us to stretch supplier payments.',type:'flaw_cash', pts: 500},
-{id:'q7',cat:'Financial Quality',text:'What is the current gross margin before central overhead?',answer:'Blended gross margin is 31%. Premium institutional products can reach 38%, while entry-level SKUs are closer to 24%.',type:'neutral', pts: 150},
-{id:'q8',cat:'Financial Quality',text:'How concentrated are receivables among your top institutional buyers?',answer:'Our largest buyer represents 29% of outstanding receivables. Their standard payment term is 60 days.',type:'neutral', pts: 200},
-{id:'q9',cat:'Financial Quality',text:'What is your monthly operating expense excluding procurement?',answer:'Approximately ₹19 lakh, including the field team, quality staff, technology and headquarters.',type:'neutral', pts: 150},
-{id:'q10',cat:'Financial Quality',text:'Have there been any accounting qualifications in the last audit?',answer:'No material qualifications. The auditor did flag the need for tighter SKU-level contribution reporting.',type:'neutral', pts: 150},
-{id:'q11',cat:'Supply Chain & Quality',text:'What is the current rejection rate at institutional buyer quality gates?',answer:'It has risen to 8.6% from 4.1% last year. Moisture variation and inconsistent grading at village collection points are the biggest causes.',type:'flaw_quality', pts: 500},
-{id:'q12',cat:'Supply Chain & Quality',text:'How many collection centres are company-operated?',answer:'We operate 34 centres and partner with 21 local collection points across three states.',type:'neutral', pts: 150},
-{id:'q13',cat:'Supply Chain & Quality',text:'What is the average fulfilment lead time from village to buyer?',answer:'Four to six days depending on the product. Shelf-stable SKUs are faster than fresh or moisture-sensitive products.',type:'neutral', pts: 100},
-{id:'q14',cat:'Supply Chain & Quality',text:'What proportion of procurement is covered by digital traceability?',answer:'Around 67% is digitally traceable from producer group to collection centre; the remaining volume uses paper records.',type:'neutral', pts: 150},
-{id:'q15',cat:'Supply Chain & Quality',text:'Do you have backup logistics partners?',answer:'Yes. We have two regional logistics partners plus a small in-house coordination team.',type:'neutral', pts: 100},
-{id:'q16',cat:'Buyer Economics',text:'What share of revenue comes from the top three institutional buyers?',answer:'61% of revenue comes from our top three buyers. We know this is high and are actively adding mid-sized buyers.',type:'flaw_concentration', pts: 500},
-{id:'q17',cat:'Buyer Economics',text:'What is the average contract duration with institutional buyers?',answer:'Most contracts are 12 months, with renewal clauses tied to quality and service levels.',type:'neutral', pts: 100},
-{id:'q18',cat:'Buyer Economics',text:'How much pricing power do buyers have during annual renewal?',answer:'Large buyers have meaningful leverage because they purchase volume. We generally negotiate on service levels rather than taking large list-price increases.',type:'neutral', pts: 150},
-{id:'q19',cat:'Buyer Economics',text:'What is the current repeat-order rate?',answer:'Approximately 74% of institutional buyers reorder within two quarters.',type:'neutral', pts: 150},
-{id:'q20',cat:'Buyer Economics',text:'Are there minimum-volume commitments from buyers?',answer:'Some buyers have quarterly volume bands, but most contracts do not guarantee a minimum take-or-pay quantity.',type:'neutral', pts: 150},
-{id:'q21',cat:'Technology & Distribution',text:'How dependent is producer onboarding on smartphone literacy?',answer:'Our field app is Android-first. Field officers can onboard producers, but direct producer self-service remains low.',type:'neutral', pts: 150},
-{id:'q22',cat:'Technology & Distribution',text:'What is the monthly active rate of the producer app?',answer:'Only 43% of registered producers are monthly active. WhatsApp and field officers still drive most communication.',type:'flaw_tech', pts: 500},
-{id:'q23',cat:'Technology & Distribution',text:'Do you own the source code for the procurement platform?',answer:'Yes. The core platform is company-owned, although some analytics components use third-party services.',type:'neutral', pts: 100},
-{id:'q24',cat:'Technology & Distribution',text:'What is the current cost to onboard one producer?',answer:'About ₹480 including field travel, training and verification. Digital referrals are substantially cheaper.',type:'neutral', pts: 100},
-{id:'q25',cat:'Governance & Team',text:'Are founder shares subject to vesting and a founder lock-in?',answer:'Yes. Founder equity is on four-year vesting and a standard one-year cliff has already passed.',type:'neutral', pts: 150},
-{id:'q26',cat:'Governance & Team',text:'Who owns the producer relationships if a field manager leaves?',answer:'Relationships are recorded centrally, but continuity is still highly dependent on experienced field managers in some districts.',type:'neutral', pts: 150},
-{id:'q27',cat:'Market & Impact',text:'What is your current annual revenue?',answer:'FY26 revenue was ₹18.4 Cr, up from ₹11.7 Cr in FY25. Management is targeting ₹31 Cr in FY27.',type:'neutral', pts: 100},
-{id:'q28',cat:'Market & Impact',text:'What is the estimated addressable market?',answer:'We estimate the formal institutional market for traceable rural food products at over ₹12,000 Cr in India.',type:'fluff', pts: 10},
-{id:'q29',cat:'Market & Impact',text:'How many producers are currently registered?',answer:'12,800 producers across Maharashtra, Madhya Pradesh and Karnataka, with about 7,900 active in the last six months.',type:'neutral', pts: 100},
-{id:'q30',cat:'Market & Impact',text:'What is the next expansion geography?',answer:'We plan to enter Rajasthan and Telangana after stabilising the current three-state network.',type:'neutral', pts: 100}
+{id:'q1',cat:'Mission',text:'What share of producer volume comes from women-led SHGs?',answer:'Only 54% comes from women-led SHGs. The rest is from larger aggregators.',type:'flaw_mission', pts: 500, trustShift: 15},
+{id:'q2',cat:'Financial Quality',text:'How much cash does the company have at the current ₹42L burn?',answer:'We have approximately 78 days of cash runway.',type:'flaw_cash', pts: 500, trustShift: 15},
+{id:'q3',cat:'Supply Chain & Quality',text:'What is the current rejection rate at quality gates?',answer:'It has risen to 8.6% from 4.1% last year due to moisture variation.',type:'flaw_quality', pts: 500, trustShift: 15},
+{id:'q4',cat:'Buyer Economics',text:'What share of revenue comes from the top three institutional buyers?',answer:'61% of revenue comes from our top three buyers.',type:'flaw_concentration', pts: 500, trustShift: 15},
+{id:'q5',cat:'Technology',text:'What is the monthly active rate of the producer app?',answer:'Only 43% of registered producers are monthly active.',type:'flaw_tech', pts: 500, trustShift: 15},
+{id:'q6',cat:'Market',text:'What is the estimated addressable market?',answer:'We estimate the market at over ₹12,000 Cr in India.',type:'fluff', pts: 10, trustShift: -15},
+{id:'q7',cat:'Mission',text:'How do you measure income improvement?',answer:'We compare monthly payments with baseline village surveys.',type:'neutral', pts: 150, trustShift: 5},
+{id:'q8',cat:'Governance',text:'Are founder shares subject to vesting?',answer:'Yes, four-year vesting with a one-year cliff.',type:'neutral', pts: 150, trustShift: 5}
 ],
 chips:[
-{id:'c1',text:'SHG-first procurement covenant + FPO network integration',target:'flaw_mission'},
-{id:'c2',text:'Receivables-backed bridge facility + CFO cash-control sprint',target:'flaw_cash'},
-{id:'c3',text:'Village quality labs + producer grading incentive system',target:'flaw_quality'},
-{id:'c4',text:'Institutional buyer diversification war-room + pipeline support',target:'flaw_concentration'},
-{id:'c5',text:'Vernacular producer app redesign + assisted digital onboarding',target:'flaw_tech'},
-{id:'c6',text:'Premium D2C brand launch in metro markets',target:'none'},
-{id:'c7',text:'Blockchain provenance platform',target:'none'},
-{id:'c8',text:'International market-entry consultant',target:'none'},
-{id:'c9',text:'Celebrity impact ambassador campaign',target:'none'},
-{id:'c10',text:'Patent portfolio and IP litigation retainer',target:'none'},
-{id:'c11',text:'Luxury packaging redesign',target:'none'},
-{id:'c12',text:'Overseas food expo sponsorship',target:'none'}
+{id:'c1',text:'SHG-first procurement covenant',target:'flaw_mission'},
+{id:'c2',text:'Receivables-backed bridge facility',target:'flaw_cash'},
+{id:'c3',text:'Village quality labs',target:'flaw_quality'},
+{id:'c4',text:'Institutional buyer diversification',target:'flaw_concentration'},
+{id:'c5',text:'Vernacular producer app redesign',target:'flaw_tech'},
+{id:'c6',text:'Premium D2C brand launch',target:'none'},
+{id:'c7',text:'Celebrity impact ambassador',target:'none'}
 ],
 memos:[
-{id:'m1',text:'Protected the social thesis by addressing the 46% procurement leakage away from women-led SHGs.',req:'q1'},
-{id:'m2',text:'Priced the transaction for the 78-day cash runway and delayed institutional receivables.',req:'q6'},
-{id:'m3',text:'Built a quality reserve around the 8.6% institutional rejection rate.',req:'q11'},
-{id:'m4',text:'Discounted valuation for 61% revenue concentration in the top three buyers.',req:'q16'},
-{id:'m5',text:'Allocated execution capital to fix the 43% monthly-active producer app problem.',req:'q22'},
-{id:'m6',text:'Valuation reflects a credible 31% blended gross margin.',req:'q7'},
-{id:'m7',text:'Valuation reflects the 74% institutional reorder rate.',req:'q19'},
-{id:'m8',text:'Confidence in the ₹12,000 Cr formal traceable-food market.',req:'q28'},
-{id:'m9',text:'Assumed founder alignment because founder shares are on four-year vesting.',req:'q25'},
-{id:'m10',text:'Factored in the 34 company-operated collection centres.',req:'q12'},
-{id:'m11',text:'Adjusted for the 60-day payment terms of the largest buyer.',req:'q8'},
-{id:'m12',text:'Assumed the next expansion into Rajasthan will be immediately accretive.',req:'q30'},
-{id:'m13',text:'Discounted for smartphone literacy risk among rural producers.',req:'none'},
-{id:'m14',text:'Factored in the company’s strong annual revenue growth trajectory.',req:'q27'},
-{id:'m15',text:'Priced in the 67% digital traceability coverage.',req:'q14'}
+{id:'m1',text:'Protected social thesis (SHG leakage).',req:'q1'},
+{id:'m2',text:'Priced the 78-day cash runway.',req:'q2'},
+{id:'m3',text:'Built a quality reserve for 8.6% rejection rate.',req:'q3'},
+{id:'m4',text:'Discounted for 61% revenue concentration.',req:'q4'},
+{id:'m5',text:'Allocated capital to fix the 43% active app rate.',req:'q5'},
+{id:'m6',text:'Confidence in the ₹12,000 Cr market.',req:'q6'},
+{id:'m7',text:'Discounted for smartphone literacy risk.',req:'none'},
+{id:'m8',text:'Factored in strong annual revenue growth.',req:'none'}
 ]};
+
+/* GATEWAY & ANTI-CHEAT */
+function startSimulation() {
+    document.documentElement.requestFullscreen().catch(console.log);
+    document.getElementById('start-gateway').style.display = 'none';
+    S.start = Date.now();
+    briefing();
+}
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden && document.getElementById('start-gateway').style.display === 'none' && !document.getElementById('verdict').classList.contains('active')) {
+        document.getElementById('cheat-warning').style.display = 'flex';
+        S.cheatPenalties++;
+        updateTrust(-20);
+    }
+});
+
+document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && document.getElementById('start-gateway').style.display === 'none' && !document.getElementById('verdict').classList.contains('active')) {
+        document.getElementById('cheat-warning').style.display = 'flex';
+        S.cheatPenalties++;
+        updateTrust(-20);
+    }
+});
+
+function resumeSimulation() {
+    document.documentElement.requestFullscreen().catch(console.log);
+    document.getElementById('cheat-warning').style.display = 'none';
+}
+
+function updateTrust(shift) {
+    S.trust = Math.max(0, Math.min(100, S.trust + shift));
+    const fill = document.getElementById('gauge-fill');
+    const text = document.getElementById('sentiment-text');
+    const ring = document.getElementById('founder-avatar-ring');
+    const svg = document.getElementById('founder-svg');
+    
+    fill.style.height = S.trust + '%';
+    
+    if (S.trust < 30) {
+        text.innerText = 'OFFENDED'; fill.style.background = 'var(--red)'; text.style.color = 'var(--red)';
+        ring.style.borderColor = 'var(--red)'; svg.style.stroke = 'var(--red)';
+    } else if (S.trust < 45) {
+        text.innerText = 'SKEPTICAL'; fill.style.background = '#f59e0b'; text.style.color = '#f59e0b';
+        ring.style.borderColor = '#f59e0b'; svg.style.stroke = '#f59e0b';
+    } else if (S.trust < 65) {
+        text.innerText = 'NEUTRAL'; fill.style.background = 'var(--gold)'; text.style.color = 'var(--gold-text)';
+        ring.style.borderColor = 'var(--gold)'; svg.style.stroke = 'var(--gold-text)';
+    } else if (S.trust < 85) {
+        text.innerText = 'INTRIGUED'; fill.style.background = '#10b981'; text.style.color = '#10b981';
+        ring.style.borderColor = '#10b981'; svg.style.stroke = '#10b981';
+    } else {
+        text.innerText = 'IMPRESSED'; fill.style.background = 'var(--green)'; text.style.color = 'var(--green)';
+        ring.style.borderColor = 'var(--green)'; svg.style.stroke = 'var(--green)';
+    }
+}
 
 // Utilites
 function money(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
 function cr(n){return '₹'+(n/1e7).toFixed(2)+' Cr'}
 function setStage(x){document.getElementById('stage').textContent=x}
-function updateHud(){
-    document.getElementById('fund').textContent=money(S.budget);
-    const fundEl = document.getElementById('fund');
-    fundEl.style.color = 'var(--red)';
-    setTimeout(() => fundEl.style.color = 'var(--gold-text)', 300);
-}
+function updateHud(){ document.getElementById('fund').textContent=money(S.budget); }
 
-// Ripple Effect Function
 function addRipple(e, el) {
     const circle = document.createElement('span');
-    const diameter = Math.max(el.clientWidth, el.clientHeight);
-    const radius = diameter / 2;
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${e.clientX - el.getBoundingClientRect().left - radius}px`;
-    circle.style.top = `${e.clientY - el.getBoundingClientRect().top - radius}px`;
+    const d = Math.max(el.clientWidth, el.clientHeight);
+    circle.style.width = circle.style.height = `${d}px`;
+    circle.style.left = `${e.clientX - el.getBoundingClientRect().left - d/2}px`;
+    circle.style.top = `${e.clientY - el.getBoundingClientRect().top - d/2}px`;
     circle.classList.add('ripple');
-    const ripple = el.querySelector('.ripple');
-    if (ripple) ripple.remove();
+    if (el.querySelector('.ripple')) el.querySelector('.ripple').remove();
     el.appendChild(circle);
 }
 
@@ -315,51 +464,33 @@ function typeText(t,s=12){
 }
 
 async function briefing(){
-    await typeText("Welcome, Partner. The boardroom is live. Meera Rao is waiting across the table, her CFO is on standby, and your secretary has opened a clean diligence file. You are evaluating Samarth Foods Pvt Ltd, a social enterprise that connects smallholder producers and women-led self-help groups to institutional food buyers. Meera Rao is raising ₹5.00 Cr for 15% equity, implying a ₹33.33 Cr valuation. Your mandate: protect returns without destroying the social thesis.");
-    const b=document.createElement('button');b.className='btn';b.textContent='Enter Investment Brief';
+    updateTrust(0);
+    await typeText("Meera Rao is raising ₹5.00 Cr for 15% equity. Access the Data Room to begin due diligence. Remember, the quality of your questions impacts her willingness to negotiate.");
+    const b=document.createElement('button');b.className='btn';b.textContent='Enter Data Room';
     b.onclick=(e)=>{ addRipple(e, b); setTimeout(openCase, 200); };
     document.getElementById('controls').appendChild(b)
 }
 
-function openCase(){
-    setStage('CASE BRIEF');document.getElementById('dossier').classList.add('active');renderDossier()
-}
+function openCase(){ setStage('DATA ROOM');document.getElementById('dossier').classList.add('active');renderDossier() }
 
 function renderDossier(){
-    S.history=false;const body=document.getElementById('dossierBody');
-    body.innerHTML=`
-    <div class="case-grid">
-    <div class="fact"><small>FY26 Revenue</small><strong>₹18.4 Cr</strong></div><div class="fact"><small>Producer Network</small><strong>12,800</strong></div>
-    <div class="fact"><small>Active Producers</small><strong>7,900</strong></div><div class="fact"><small>FY26 Growth</small><strong>57%</strong></div>
-    </div>
-    <div style="background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.2);padding:16px;border-radius:9px;font-size:12px;line-height:1.65;margin-bottom:15px; color: var(--text-dim);">
-    <b style="color:var(--gold-text)">THE CASE:</b> Samarth Foods aggregates traceable crops from rural producer groups, processes them into institutional food ingredients and sells to schools, hotels, retailers and food-service companies.
-    Its impact model is designed to shift producer economics from fragmented spot sales toward predictable institutional demand.
-    The company is growing quickly, but its next ₹5 Cr must fund growth while fixing hidden operating weaknesses.
-    </div>`;
-    
+    const body=document.getElementById('dossierBody'); body.innerHTML='';
     const cats=[...new Set(S.questions.map(q=>q.cat))];
     cats.forEach(cat=>{
         body.insertAdjacentHTML('beforeend',`<div class="category">${cat.toUpperCase()}</div><div class="qgrid" id="cat-${btoa(cat).replace(/=/g,'')}"></div>`);
         const g=body.lastElementChild;
         S.questions.filter(q=>q.cat===cat).forEach(q=>g.appendChild(questionEl(q)))
     });
-    
     updateSlots('q', S.asked.length, S.maxQ);
     document.getElementById('termBtn').disabled=S.asked.length!==S.maxQ;
-    updateSecretary();
 }
 
 function questionEl(q){
     const d=document.createElement('div');
     const asked=S.asked.some(x=>x.id===q.id),locked=S.asked.length>=S.maxQ&&!asked;
     d.className='q '+(asked?'asked ':'')+(locked?'locked':'');
-    d.dataset.qid=q.id;
-    d.innerHTML=`<div class="qtext">${q.text}</div><div class="qmeta">${asked?'✓ AUDIT SECURED':'CLICK TO AUDIT • ₹50,000'}</div>`;
-    
-    if(!asked&&!locked){
-        d.onclick=(e)=>{ addRipple(e, d); ask(q); }
-    }
+    d.innerHTML=`<div class="qtext">${q.text}</div><div class="qmeta">${asked?'✓ AUDITED':'CLICK TO AUDIT • ₹50,000'}</div>`;
+    if(!asked&&!locked) d.onclick=(e)=>{ addRipple(e, d); ask(q); }
     return d
 }
 
@@ -368,46 +499,34 @@ async function ask(q){
     S.asked.push(q);S.budget-=50000;updateHud();updateSecretary();
     
     document.getElementById('dossier').classList.remove('active');setStage('FOUNDER RESPONSE');
-    await typeText('“'+q.answer+'”',9);
     
-    const b=document.createElement('button');b.className='btn';b.textContent=S.asked.length<5?'Continue Diligence →':'Open Data Room →';
-    b.onclick=(e)=>{ addRipple(e, b); setTimeout(()=>{ setStage('DUE DILIGENCE');openCase(); }, 200); };
+    // Animate emotion shift
+    setTimeout(() => updateTrust(q.trustShift), 500);
+    
+    await typeText('“'+q.answer+'”',9);
+    const b=document.createElement('button');b.className='btn';b.textContent=S.asked.length<5?'Continue Diligence →':'Structure Term Sheet →';
+    b.onclick=(e)=>{ addRipple(e, b); setTimeout(()=>{ 
+        if(S.asked.length<5) openCase(); else goTerms(); 
+    }, 200); };
     document.getElementById('controls').appendChild(b);
-    document.getElementById('secretary').classList.add('active');
-    setTimeout(()=>document.getElementById('secretary').classList.remove('active'),1800);
-}
-
-function toggleHistory(){
-    const body=document.getElementById('dossierBody');
-    if(!S.history){
-        S.history=true;body.innerHTML='<h3 style="color:var(--gold-text);margin-bottom:15px">DILIGENCE HISTORY</h3>';
-        if(!S.asked.length)body.innerHTML+='<i style="color:var(--muted)">No audits yet.</i>';
-        S.asked.forEach((q,i)=>body.innerHTML+=`<div class="history"><b>Audit ${i+1}: ${q.text}</b><p>“${q.answer}”</p></div>`)
-    }else renderDossier()
 }
 
 function toggleSecretary(){document.getElementById('secretary').classList.toggle('active');updateSecretary()}
 function updateSecretary(){
-    const body=document.getElementById('secretaryBody'),count=document.getElementById('secCount');
-    count.textContent=`(${S.asked.length})`;
-    if(!S.asked.length){body.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:25px 10px">Your secretary will automatically retain every founder response here for later reference.</div>';return}
-    body.innerHTML=S.asked.map((q,i)=>`<div class="sec-card"><small>Audit ${i+1} • ${q.cat}</small><b>${q.text}</b><p>Founder: “${q.answer}”</p></div>`).join('');
+    const body=document.getElementById('secretaryBody'); document.getElementById('secCount').textContent=`(${S.asked.length})`;
+    if(!S.asked.length){body.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:25px 10px">Live transcript will appear here.</div>';return}
+    body.innerHTML=S.asked.map((q,i)=>`<div class="sec-card"><small>Audit ${i+1}</small><b>${q.text}</b><p>“${q.answer}”</p></div>`).join('');
 }
 
 function updateSlots(prefix, count, max) {
     for (let i=1; i<=max; i++) {
         const slot = document.getElementById(`${prefix}s${i}`);
-        if(i <= count) {
-            slot.classList.add('filled');
-            slot.innerHTML = '✓';
-        } else {
-            slot.classList.remove('filled');
-            slot.innerHTML = i;
-        }
+        if(i <= count) { slot.classList.add('filled'); slot.innerHTML = '✓'; } 
+        else { slot.classList.remove('filled'); slot.innerHTML = i; }
     }
 }
 
-function goTerms(){if(S.asked.length!==5)return;updateSecretary();document.getElementById('dossier').classList.remove('active');setStage('TERM SHEET');document.getElementById('terms').classList.add('active');renderChips();updateTerms()}
+function goTerms(){document.getElementById('dossier').classList.remove('active');setStage('TERM SHEET');document.getElementById('terms').classList.add('active');renderChips();updateTerms()}
 function backDossier(){document.getElementById('terms').classList.remove('active');openCase()}
 function updateTerms(){
     const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
@@ -430,8 +549,7 @@ function renderChips(){
 
 function selectChip(x){
     const i=S.chipsSel.findIndex(y=>y.id===x.id);
-    if(i>=0) S.chipsSel.splice(i,1); 
-    else if(S.chipsSel.length<2) S.chipsSel.push(x);
+    if(i>=0) S.chipsSel.splice(i,1); else if(S.chipsSel.length<2) S.chipsSel.push(x);
     renderChips();
 }
 
@@ -452,21 +570,18 @@ function renderMemos(){
 
 function selectMemo(m){
     const i=S.memosSel.findIndex(x=>x.id===m.id);
-    if(i>=0) S.memosSel.splice(i,1); 
-    else if(S.memosSel.length<3) S.memosSel.push(m);
+    if(i>=0) S.memosSel.splice(i,1); else if(S.memosSel.length<3) S.memosSel.push(m);
     renderMemos();
 }
 
 function updateMemo(){
-    const arr=S.memosSel||[];
-    updateSlots('m', arr.length, 3);
+    const arr=S.memosSel; updateSlots('m', arr.length, 3);
     document.getElementById('submit').disabled=arr.length!==3;
-    document.getElementById('clauses').innerHTML=arr.length?arr.map((m,i)=>`<div style="margin:7px 0"><b>${i+1}.</b> ${m.text}</div>`).join(''):'<i style="color:var(--muted)">Select exactly three audited findings below to draft your stance.</i>'
+    document.getElementById('clauses').innerHTML=arr.length?arr.map((m,i)=>`<div style="margin:7px 0"><b>${i+1}.</b> ${m.text}</div>`).join(''):'<i style="color:var(--muted)">Select exactly three audited findings below.</i>'
 }
 
 function submitDeal(){
-    const stamp = document.getElementById('stamp');
-    stamp.classList.add('on');
+    document.getElementById('stamp').classList.add('on');
     document.getElementById('world').classList.add('shake');
     setTimeout(() => document.getElementById('world').classList.remove('shake'), 400);
     setTimeout(evaluate, 1200);
@@ -476,72 +591,42 @@ function evaluate(){
     document.getElementById('memo').classList.remove('active');setStage('DELIBERATION');
     const inv=+document.getElementById('inv').value,eq=+document.getElementById('eq').value,val=inv/(eq/100);
     
-    // Evaluate Data Points
-    const flaws=['flaw_mission','flaw_cash','flaw_quality','flaw_concentration','flaw_tech'];
-    const found=flaws.filter(f=>S.asked.some(q=>q.type===f)).length;
-    let diligencePts = S.asked.reduce((sum, q) => sum + (q.pts || 0), 0);
+    const matches=S.chipsSel.filter(c=>S.asked.some(q=>q.type===c.target)).length;
+    const baseless=S.memosSel.filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
     
-    const matches=(S.chipsSel||[]).filter(c=>S.asked.some(q=>q.type===c.target)).length;
-    const mismatches=(S.chipsSel||[]).length - matches;
-    const baseless=(S.memosSel||[]).filter(m=>m.req!=='none'&&!S.asked.some(q=>q.id===m.req)).length;
-    
-    // Evaluate Pricing Mechanics
-    let floor=280000000 - (found*15000000) - (matches*15000000);
-    floor=Math.max(150000000,floor); // Hard floor 15 Cr
+    let floor=280000000 - (S.trust * 1000000); 
+    floor=Math.max(150000000,floor); 
 
-    // Calculate Mathematical Score 
     const seconds=Math.floor((Date.now()-S.start)/1000);
-    const chipScore = (matches * 1000) - (mismatches * 250);
-    const efficiency=Math.max(0,(333333333-val)/100000); // Higher score for cheaper valuations
-    const penaltyScore = baseless * 1500;
-    const fundScore = S.budget / 100000;
-    const timeScore = seconds * 0.4;
+    let score=Math.floor( ((333333333-val)/100000 * 1.5) + (S.trust * 100) + (matches * 1000) - (baseless * 2500) - (S.cheatPenalties * 5000) - (seconds*0.4) );
+    score = Math.max(0, score); 
     
-    let score=Math.floor((efficiency * 1.5) + diligencePts + chipScore + fundScore - timeScore - penaltyScore);
-    score = Math.max(0, score); // Prevent negative display
-    
-    // Determine Founder Sentiment (No Rejections)
-    let sentiment = '';
-    let sentimentColor = '';
-    
-    if (baseless >= 2 || val < floor * 0.7) {
-        sentiment = 'NOT MUCH INTERESTED';
-        sentimentColor = 'var(--red)';
-    } else if (baseless === 1 || val < floor) {
-        sentiment = 'NEUTRAL / EVALUATING';
-        sentimentColor = 'var(--gold-text)';
+    let sentiment, color;
+    if (baseless >= 1 || val < floor * 0.7 || S.cheatPenalties > 0) {
+        sentiment = 'NOT MUCH INTERESTED'; color = 'var(--red)';
+    } else if (val < floor) {
+        sentiment = 'NEUTRAL / EVALUATING'; color = 'var(--gold-text)';
     } else {
-        sentiment = 'HIGHLY INTERESTED';
-        sentimentColor = 'var(--green)';
+        sentiment = 'HIGHLY INTERESTED'; color = 'var(--green)';
     }
 
-    // Build the Evaluation Log
     const log=[];
-    log.push(`• <b>Diligence Conducted:</b> You uncovered ${found} of 5 critical operating risks.`);
-    log.push(`• <b>Strategic Alignment:</b> ${matches} of 2 value-adds directly targeted an audited risk.`);
+    log.push(`• <b>Final Founder Trust:</b> ${S.trust}% / 100%`);
     log.push(`• <b>Financial Offer:</b> ₹${(inv/1e7).toFixed(2)} Cr for ${eq}% (Implied Valuation: <b>${cr(val)}</b>).`);
-    log.push(`• <b>Founder Walk-Away Floor:</b> ${cr(floor)} after risk discounts.`);
-    log.push(`• <b>Diligence Capital Retained:</b> ${money(S.budget)}.`);
-    
-    if (baseless > 0) {
-        log.push(`<span style="color:var(--red);">• <b>Trust Penalty:</b> You cited ${baseless} specific risk(s) in your memo that were never audited.</span>`);
-    }
-
+    log.push(`• <b>Walk-Away Floor:</b> ${cr(floor)} (Adjusted by Trust).`);
+    if (baseless > 0) log.push(`<span style="color:var(--red);">• <b>Trust Penalty:</b> Cited ${baseless} unaudited risk(s) in memo.</span>`);
+    if (S.cheatPenalties > 0) log.push(`<span style="color:var(--red);">• <b>Security Penalty:</b> Tab switching detected ${S.cheatPenalties} time(s).</span>`);
     log.push(`<br><b style="color:var(--gold-text)">FINAL EVENT RANKING:</b> To be declared live on stage.`);
 
-    showVerdict('OFFER UNDER CONSIDERATION', sentiment, score, log.join('<br>'), sentimentColor);
+    showVerdict('OFFER UNDER CONSIDERATION', sentiment, score, log.join('<br>'), color);
 }
 
 function showVerdict(t,s,score,log,color){
     const v=document.getElementById('verdict');v.classList.add('active');
-    document.getElementById('vtitle').textContent=t;
-    document.getElementById('vtitle').style.color=color;
-    document.getElementById('vsub').textContent=s;
-    document.getElementById('vsub').style.color=color;
-    document.getElementById('vscore').textContent=score.toLocaleString('en-IN');
-    document.getElementById('vscore').style.color=color;
+    document.getElementById('vtitle').textContent=t; document.getElementById('vtitle').style.color=color;
+    document.getElementById('vsub').textContent=s; document.getElementById('vsub').style.color=color;
+    document.getElementById('vscore').textContent=score.toLocaleString('en-IN'); document.getElementById('vscore').style.color=color;
     document.getElementById('vlog').innerHTML=log;
-    
     if(color === 'var(--green)'){ v.classList.add('successPulse'); launchParticles(); }
 }
 
@@ -549,8 +634,6 @@ function launchParticles(){
     const v=document.getElementById('verdict');const p=document.createElement('div');p.className='vparticles';v.querySelector('.verdict').appendChild(p);
     for(let i=0;i<65;i++){const x=document.createElement('i');x.className='particle';x.style.left=Math.random()*100+'%';x.style.animationDelay=Math.random()*.8+'s';x.style.width=(3+Math.random()*6)+'px';x.style.height=x.style.width;p.appendChild(x)}
 }
-
-window.onload=()=>{updateHud();updateSecretary();briefing()}
 </script>
 </body>
 </html>
